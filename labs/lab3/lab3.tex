@@ -1,0 +1,211 @@
+\documentclass[fleqn, article, a4paper]{memoir}
+\usepackage[english]{../latex/selthcsexercise}
+
+\usepackage[utf8]{inputenc}
+% Utilities.
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{soul}
+\usepackage{varioref}
+\usepackage{nameref}
+\usepackage{microtype}
+
+\newcommand{\scode}[1]{\texttt{\small#1}}
+\newcommand{\FIXBEFORECODE}{\vspace{-0.5\baselineskip}}
+\newcommand{\FIXAFTERCODE}{\vspace{-\baselineskip}}
+
+%---------------------------------------------------------------
+\newenvironment{Hemarbete}%
+{\begin{Assignments}[H]}{\end{Assignments}}
+
+\newenvironment{Kontrollfragor}%
+{\begin{Assignments}[K]\tightlist}{\end{Assignments}}
+
+\newenvironment{Datorarbete}%
+{\begin{Assignments}[D]}{\end{Assignments}}
+
+\newenvironment{DatorarbeteCont}%
+{\begin{Assignments}[D]\setcounter{Ucount}{\theSavecount}}{\end{Assignments}}
+
+\newenvironment{Deluppgifter}%
+{\begin{enumerate}[a)]\firmlist}{\end{enumerate}}
+
+
+\newcommand{\commandchar}[1]{\textsc{#1}}
+
+% Section styles.
+\setsecheadstyle{\huge\sffamily\bfseries\raggedright} 
+\setsubsecheadstyle{\Large\sffamily\bfseries\raggedright} 
+\setsubsubsecheadstyle{\normalsize\sffamily\bfseries\raggedright} 
+
+\setsecnumformat{} % numrera inte laborationerna
+\renewcommand{\thesection}{\arabic{section}} % för referenser till laborationerna
+\renewcommand{\thefigure}{\arabic{figure}}
+
+%*****************************************************************
+\begin{document}
+\courseinfo{Web Programming}{2019}
+\maketitle
+\thispagestyle{titlepage}
+\vspace{-4cm}
+
+\subsection*{Lab 2 -- part 2}
+
+\n The second part of the lab is about routing and form validation, \emph{objectives}:
+
+\begin{enumerate}\firmlist
+\item Understanding how a web application can be slit into different pages using the react router.
+\item Get experience with passing props between components and combining them with parameters from the url.
+\item Get some experience with form validation and the html 5 form validation api.
+\end{enumerate}
+
+%\clearpage
+\subsection*{Background}
+
+The assignments here assumes you have a working solution for lab 2 part 1, i.e. a working react app with three components: \code{App}, \code{ComposeSalad}, and \code{ViewOrder}.
+
+\subsection*{Assignments}
+
+\begin{Assignments}
+
+\item We are going to move the \code{ComposeSalad} and \code{ViewOrder} to separate pages in the application. First, make sure you know what a router is and the basics of the react router, for example by reading this blog post: 
+\\ \url{https://codeburst.io/getting-started-with-react-router-5c978f70df91}
+
+\item We will use the react router. Download it from npm, and add it to your project. The start the development web server, in the terminal type (\code{ctrl-c} first, if you are running the development web server from part 1 of the lab):
+\begin{Code}
+> npm install react-router-dom
+> npm start
+\end{Code}
+
+\item We will add the routing to the \code{App} component. Open \code{App.js} and add an import:
+\begin{Code}
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+\end{Code}
+
+\item Next, create a navigation bar for your app. When using the react router, use the \code{<Link to='my-path'>} for links, instead of the native html element \code{<a href="my-path">}. Use bootstrap classes to style it, see \url{https://getbootstrap.com/docs/4.1/components/navs/}. Here is the example code adapted for the react router:
+\begin{Code}
+<ul className="nav nav-pills">
+  <li className="nav-item">
+    <Link className="nav-link" to='compose-salad'>Komponera din egen sallad</Link>
+  </li>
+  {/* more links */}
+</ul>
+\end{Code}
+Add the code above to the \code{App} component. Add a second link for the \code{ViewOrder} alternative. Go to your browser and klick on the links. The path in your browser changes, and you see the navigations in the browsers history. However, all pages looks the same.
+
+\item Let's change this. Based on the url in the address bar of the browser, we want to render either the \code{ComposeSalad}, or the \code{ViewOrder} component. \code{<Route path='/compose-salad' component=\{ComposeSalad\}>} is how you normally do this. However, it is not enough to just replace \code{<ComposeSalad ...>} with \code{<Route ...>}. \code{<Route ...>} do not interact directly with the browser. Instead, this is done by another component: \code{<BrowserRouter>}. \code{<BrowserRouter>} must be an ancestor to \code{<Route>}. It is probably easiest to place it in the root (note, \code{<BrowserRouter>} was renamed to \code{<Router>} during the import):
+\begin{Code}
+class App extends Component {
+  render() {
+    return (
+      <Router>
+        {/* all stuff you had before */}
+      </Router>
+    );
+  }
+}
+\end{Code}
+Now we can use \code{<Route ...>}, but there is one more thing. Both \code{<ComposeSalad>} and \code{<ViewOrder>} depends on props passed down from \code{App}. In this situation, we need to use the \code{<Route path='compose-salad' render=\{foo\}>} pattern. \code{foo} is a function that takes the route props and returns a react element. The easiest way to create the instance is to use an arrow function with a JSX expression in the body:
+\begin{Code}
+const foo = (params) => <ComposeSalad {...params} inventory={inventory} 
+  onOrderSalad={this.onOrderSalad} />;
+\end{Code}
+The spread operator, \code{...params}, was used to pass the router parameters to \code{<ComposeSalad>}. This is just shorthand for, \code{match=\{params.match\}}, repeated for all properties of the \code{params} object. Lets put it all together:
+\begin{Code}
+class App extends Component {
+  render() {
+    const composeSaladElem = (params) => <ComposeSalad {...params} inventory={inventory} 
+                       onOrderSalad={this.onOrderSalad} />;
+    return (
+      <Router>
+        {/* header and menu bar */}
+        <Route path='/compose-salad' render={composeSaladElem}/>
+      </Router>
+    );
+  }
+}
+\end{Code}
+Add a route for the \code{ViewOrder}.
+
+\item Let's explore how to navigate between pages using JavaScript. When the customer orders a salad, they probably want to go to the check out page. We do not have such page in our app, but let's move to the view order page when the user submits the compose salad form. \code{<Route>} passes the navigation history to the child component. This is a mutable object and if you push a new url to it, the browser will navigate to that state:
+\begin{Code}
+this.props.history.push('/view-order');
+\end{Code}
+Add the code above to a proper place in the code to your app and test it.
+
+Note, automatically changing the page can be confusing for the user and should normally be avoided. However, in some cases it can improve the user experience, for example if you add a ``order and checkout'' botton to the compose salad page. I strongly encourage you to take a course in interaction design if you want to work with user interfaces, or partner up with a designer if you focus on the technical part.
+
+\item \emph{Optional assignment 1}: View a ``404 - Page not found'' component if the user enters an invalid url like \url{http://localhost:3000/typing-error}. \emph{Hint}: use the \code{<Switch>} component and a \code{<Route>} with no path.
+
+\item \emph{Optional assignment 2}: create a component, \code{ViewIngredient}, that shows the information from the \code{inventory} object about an ingredient, i.e vegan, lactose et.c. You should be able to navigate to the \code{ViewIngredient} component by clicking on an ingredient in the \code{ComposeSalad} component. To solv this, you should:
+
+\begin{itemize}
+  \item Create the component: \code{ViewIngredient}.
+  \item Add \code{<Route path='/view-ingredient/:name' ...>} in \code{App}.
+  \item Use \code{<Link ...>} around the ingredient names in \code{ComposeSalad}.
+\end{itemize}
+Note the \code{:name} part of the path. The router will take the matching text from the url and pass it to your component in its \code{match.params} object, i.e. \code{this.props.match.params.name} in your \code{render()} function.
+
+\item Now your app is split to different pages, where each page have a clear functionality. This is good, do not confuse the user by putting too many unrelated things on one page. Let's move on to another important part of the user experience, form validation and feed back. When a user orders a salad we want to make sure that:
+\begin{itemize}
+  \item one foundation is selected
+  \item one dressing is selected
+\end{itemize}
+If these conditions are not met, an error message should be displayed and the form submission should stop.
+First, let's look at \code{<select>}. We will use html 5 form validation, which have a set of predefined constraints. One of them is \code{required}, which ensures that a value is provided for the form field. Html is text, and the default action is to send a http request, which is also text based, so in this context ``a value'' means anything but the empty string. If you do not already done this, make sure that there is not a valid default selection in the \code{<select>} filed. This is done by adding an invalid \code{<option>} at the top of the list:
+\begin{Code}
+<select required ...>
+  <option value=''>make a choice...</option>
+  ... more options
+</select>
+\end{Code}
+Now press the submit button. You should get an error message from your browser. Let's add your own error message and style it with bootstrap. There are two css classes in bootstrap for this: \code{valid-feedback}, and \code{invalid-feedback}. They should be used inside a bootstrap \code{form-group}. The css will hide the styled html element until the pseudo class \code{:valid/:invalid} is set for the input in the \code{form-group} and the css class \code{was-validated} is set on any parent element. We do not want to show error messages for fields the user have not interacted with, so set the \code{was-validated} in your \code{handleChange} and \code{handleSubmit} functions:
+\begin{Code}
+handleChange(event) {
+  event.target.parentElement.classList.add("was-validated");
+  // ...
+}
+handleSubmit(event){
+  event.preventDefault();
+  event.target.classList.add("was-validated");
+  // ...
+}
+\end{Code}
+If you only want to show error messages when the form is submitted, you skip the part in \code{handleChange}. Note, in \code{handleChange}, \code{event} points to the \code{<select>} element, but we want to update the style for \code{<div className="form-group">}. Hence the \code{parentElement}. Next, add the error message to your \code{<select>} form group:
+\begin{Code}
+<div className="form-group">
+  <label htmlFor="foundationSelect">Select foundation</label>
+  <select required className="form-control" id="foundationSelect" ...}>
+    <option value=''></option>
+    {/* more options */}
+  </select>
+  <div className="invalid-feedback">required, select one</div>
+</div>
+\end{Code}
+There is one more thing you need to do:
+\begin{Code}
+<form onSubmit={ this.handleSubmit } noValidate >
+\end{Code}
+The attribute noValidate tells the browser not to show its own error message, and makes bootstrap show the content styled with \code{valid-feedback/invalid-feedback}. The browser still do html 5 constraint validation and updates the pseudo classes \code{:valid/:invalid}. You can check if a form is valid by calling \code{formElement.checkValidity()} on the form element, in \code{handleSubmit}:
+\begin{Code}
+if(event.target.checkValidity() === false){ ... }
+\end{Code}
+
+\item \emph{Optional assignment 3}: Add validation of the following constraints:
+\begin{itemize}
+  \item one or two proteins are selected
+  \item at least four, but not more than fifteen extras are selected
+\end{itemize}
+This error is not related to a single input, but rather a group of checkboxes. It is not a good idea to write an error message on each checkbox, rater add an alert box below the group headline, see \url{https://getbootstrap.com/docs/4.1/components/alerts/}. You can check the constraint in your \code{handleChange} and \code{handleSubmit} functions and store the result in the state:
+\begin{Code}
+constructor(props) {
+  super(props);
+  this.state = { formErrors: { ignoreInvalid: false,
+                    extras: false, 
+                    proteins: false} } }
+\end{Code}
+Use this part of the component state to show and hide your alert boxes. Do not bother the user with an error when the first extra is selected. Wait until the form is submitted. After a failed submission, you want to clear the error as soon as the problem is fixed. The attribute \code{ignoreInvalid} can be used for this, or you might prefer to call it \code{submissionFailed}.
+
+\end{Assignments}
+
+\end{document}11

@@ -1,0 +1,163 @@
+\documentclass[fleqn, article, a4paper]{memoir}
+
+\usepackage[english]{../latex/selthcsexercise}
+
+\usepackage[utf8]{inputenc}
+% Utilities.
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{soul}
+\usepackage{varioref}
+\usepackage{nameref}
+\usepackage{microtype}
+
+\newcommand{\scode}[1]{\texttt{\small#1}}
+\newcommand{\FIXBEFORECODE}{\vspace{-0.5\baselineskip}}
+\newcommand{\FIXAFTERCODE}{\vspace{-\baselineskip}}
+
+%---------------------------------------------------------------
+\newenvironment{Hemarbete}%
+{\begin{Assignments}[H]}{\end{Assignments}}
+
+\newenvironment{Kontrollfragor}%
+{\begin{Assignments}[K]\tightlist}{\end{Assignments}}
+
+\newenvironment{Datorarbete}%
+{\begin{Assignments}[D]}{\end{Assignments}}
+
+\newenvironment{DatorarbeteCont}%
+{\begin{Assignments}[D]\setcounter{Ucount}{\theSavecount}}{\end{Assignments}}
+
+\newenvironment{Deluppgifter}%
+{\begin{enumerate}[a)]\firmlist}{\end{enumerate}}
+
+
+\newcommand{\commandchar}[1]{\textsc{#1}}
+
+% Section styles.
+\setsecheadstyle{\huge\sffamily\bfseries\raggedright} 
+\setsubsecheadstyle{\Large\sffamily\bfseries\raggedright} 
+\setsubsubsecheadstyle{\normalsize\sffamily\bfseries\raggedright} 
+
+\setsecnumformat{} % numrera inte laborationerna
+\renewcommand{\thesection}{\arabic{section}} % för referenser till laborationerna
+\renewcommand{\thefigure}{\arabic{figure}}
+
+%*****************************************************************
+\begin{document}
+\courseinfo{Web Programming}{2019}
+\maketitle
+\thispagestyle{titlepage}
+\vspace{-4cm}
+
+\subsubsection*{General information}
+
+\begin{itemize}\firmlist
+\item The course has four compulsory laboratory exercises. 
+\item You are to work in groups of two people. Sign up for the labs at \url{http://sam.cs.lth.se/Labs}
+\item The labs are mostly homework. Before each lab session, you must have done all the assign\-ments in the lab, written and tested the programs, and so on. Contact a teacher if you have problems solving the assignments. 
+\item Smaller problems with the assignments, e.g., details that do not function correctly, can be solved with the help of the lab assistant during the lab session. 
+\item Extra labs are organized only for students who cannot attend a lab because of illness. Notify Per Andersson (\url{Per.Andersson@cs.lth.se}) if you fall ill, \emph{before} the lab.
+\end{itemize}
+
+\section*{Laboratory Exercise 1}
+\n The first lab is about the JavaScript language, \emph{objectives}:
+
+\begin{enumerate}\firmlist
+\item Understanding how prototype based object orientation works.
+\item Develop data structures and functions to be used in later labs.
+\item Get some experience using functional style of programming.
+\item Get familiar with Node.js.
+\end{enumerate}
+
+%\clearpage
+\subsection*{Background}
+
+Later in the course you will develop a web application for ordering in a salad bar, similar to \emph{Grönt o' Gott} at the LTH campus. The customer composes their own salads from a selection of ingredients. Each salad is composed of one foundation, one or more proteins, a selection of extras, and one dressing. For example, a Caesar salad is composed of: chicken breast, bacon, croutons, cherry tomato, lettuce, parmesan cheese, and Caesar dressing.
+
+In addition to handling salad composition, the application should also provide additional information about the salad, for example the price and if it contains ingredients that could cause an allergic reaction.
+
+\noindent All ingredients will be imported from a CommonJS module named \code{inventory.js}. It looks like this:
+\begin{Code}
+exports.inventory = {
+  Sallad: {price: 10, foundation: true, vegan: true}, 
+  'Norsk fjordlax': {price: 30, protein: true},
+  Krutonger: {price: 5, extra: true},
+  Ceasardressing: {price: 5, dressing: true},
+  /* more ingredients */
+};
+\end{Code}
+\noindent The properties \code{foundation}, \code{protein}, \code{extra}, and \code{dressing} indicate which part of the salad the ingredient is to be used for.
+
+\subsubsection*{Node.js}
+
+In this lab you will use Node.js as execution environment. The tool is installed on the linux computers at LTH, but you need to run \code{initcs} to add it to the path. You can also install it on your own computer, see \url{https://nodejs.org/}. You start Node.js from the terminal with the command \code{node}. If you do not provide any arguments, you will start the REPL (Read-Eval-Print-Loop). Write \code{.exit} to quit the REPL, see \url{https://nodejs.org/api/repl.html}. This is great for testing stuff, but it is a good idea to save the code for the labs in a file. To execute the JavaScript code in a file, you simply give the file name as argument to \code{node}:
+\begin{Code}
+  node lab1.js
+\end{Code}
+ 
+\noindent Node.js do not support EXMAScript modules, so we will use CommonJs modules instead. Try the following code (you need to download the ./ingredients.js file first):
+\begin{Code}
+  const imported = require("./inventory.js");
+  console.log(imported.inventory);
+\end{Code}
+
+\noindent Have your forgotten about the terminal? Check out the introduction to LTHs computers \url{http://www.ddg.lth.se/perf/unix/unix-x.pdf}.
+
+\subsubsection*{IDE}
+
+\noindent Do you want to use an IDE when writing code? I recommend visual studio code, see \url{https://code.visualstudio.com}. It has great support for JavaScript and TypeScript. We will use TypeScript later in the course and eclipse have poor support for that language. TypeScript is JavaScript extended with static typing.
+
+\subsection*{Assignments}
+
+\begin{Assignments}
+
+\item Study the relevant material for lecture 1-2, see \url{http://cs.lth.se/edaf90/reding-instructions/lecture-1-2/}. 
+
+\item If you are using the linux system at LTH, remember to run \code{initcs} to add \code{node} to the path.
+
+\item Create a directory and add a new file named \code{lab1.js} to it:
+\begin{Code}
+'use strict';
+const imported = require("./inventory.js");
+console.log(imported.inventory['Sallad']);
+\end{Code}
+\noindent Download \code{inventory.js} to the same directory and run your \code{lab1.js} program:
+\begin{Code}
+curl -o inventory.js http://fileadmin.cs.lth.se/cs/Education/EDAF90/labs/lab1/inventory.js
+node lab1.js
+\end{Code}
+
+\item In the \code{inventory.js} file you can find all options for composing a salad. Its structure is good for looking up properties of the ingredients, i.e. \code{imported.inventory['Krutonger']}. However this structure is not ideal for presenting the options for the customers. Your first assignment is to address this. Print the choices for composing a salad. Use separate lines for foundations, proteins, extras, and dressings. The output should look like this:
+\begin{Code}
+Foundations: Sallad,Pasta,Salad + Pasta,Salad + Matvete,...
+Extras: Avocado,Fetaost,Gurka,Jalapeno,Krutonger,Lime,Majs,Oliver,...
+\end{Code}
+\emph{hint} check out \code{Object.keys()}, see \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys}. What happens if you use a \code{for\ldots in} loop instead?
+
+\noindent \emph{Note,} only the properties that holds true are declared in the objects. Reading an object property that is not declared will evaluate to \code{false}, so there is no need to do something like \code{\{lactose: false\}}.
+
+\item We need a representation for a salad. Create a JavaScript constructor/class named \code{Salad} for that. You need four properties: \code{foundation}, \code{proteins}, \code{extras}, and \code{dressing}. Create a constructor and functions to add and remove selections.
+
+\item Create an object for a cesar salad, i.e. \code{let myCesarSalad = new Salad(); /* code to add the ingredients */}
+
+\item Next task is to add additional functionality to the \code{Salad} class/prototype. Add a function, \code{price()} to calculate the price. The price is simply the sum of the prices of all ingredients. The computation should be done using functional style, i.e. no loops (\code{for}/\code{while}). \emph{hint}: check out \code{reduce()} and the other functions in \code{Array.prototype}, see \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array}. Test your price function with the cesar salad created above, i.e. run \code{myCesarSalad.price()}.
+
+\item The restaurant wants to introduce a discount salad. The price is reduced by making the foundation 30\% larger, and all other parts 50\% smaller. The principle for calculating the price is still the same, but you need to adjust the numbers from the ingredient object to compensate for the changed size (extras are 50\% cheaper). Create a \code{ExtraGreenSalad} constructor/class for this. Most functionality can be inherited from \code{Salad} You should only change the \code{price()} function.
+
+\item \code{let mySalad = ExtraGreenSalad()} creates an extra green salad object. Describe the prototype chain involving these objects. The explanation should include both the \code{mySalad} and \code{ExtraGreenSalad} objects.
+
+\item The \code{ExtraGreenSalad} was not a success. Instead the customers asked for salads with less lettuce and larger portions of the extras. Create a new class, \code{GourmetSalad}, for this. In a \code{GourmetSalad} the customer can specify the size of each ingredient when adding it to the salad. With a size of 1.0 for each ingredients, you get a normal salad. Using size of 1.3 for the foundation and extras with size 0.5 give you an extra green salad. Note, the ingredient objects imported are immutable. \emph{Hint}: if you need to copy an object and add extra properties, use the spread operator in combination with object literals.
+
+%\item Provided is an object exported in the name: \code{store}. It has properties containing the available foundations, proteins, extras, salad dressings. You are to add functions to manage the orders in this object, but you may not modify the imported file. Instead use the dynamic powers of JavaScript to add features to the imported object.
+
+\end{Assignments}
+
+\noindent Extra assignments, if you have time left.
+\begin{Assignments}
+
+\item Create an object to manage an order, example of functions needed: create an empty shopping basket, add and remove a salad, calculate the total price for all salads in the shopping basket.
+
+\end{Assignments}
+
+\end{document}

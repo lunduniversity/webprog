@@ -1,0 +1,143 @@
+% selthcsexercises.sty: LaTeX package for exercises @cs.lth.se.
+% Options: swedish (default), english.
+% Only works with the memoir package (so ought to be a 
+% documentclass, not a package).
+
+\ProvidesPackage{selthcsexercise}
+
+\RequirePackage[sc]{mathpazo} % Palatino with good math font.
+\RequirePackage{helvet}       % Helvetica as sans-serif font.
+\RequirePackage{listings}     % For code listings.
+
+% Palatino needs more leading. This must be compensated for
+% in code listings (see below).
+\linespread{1.16666667}
+
+% Typeblock size, margins.
+\settypeblocksize{247mm}{150mm}{*}
+\setlrmargins{30mm}{*}{*}
+\setulmargins{25mm}{*}{*}
+\checkandfixthelayout
+
+% Section styles.
+\setsecheadstyle{\sffamily\bfseries\raggedright} 
+\setsubsecheadstyle{\sffamily\bfseries\raggedright} 
+\setsubsubsecheadstyle{\sffamily\bfseries\raggedright} 
+
+% Pagestyle, page 2--.
+\renewcommand{\sectionmark}[1]{\markright{#1}} 
+\makepagestyle{normalpage}
+\makeevenhead{normalpage}{\small\thepage}{}{\small\slshape\rightmark}
+\makeoddhead{normalpage}{\small\slshape\rightmark}{}{\small\thepage}
+\makeheadrule{normalpage}{\textwidth}{\normalrulethickness}
+%\makefootrule{normalpage}{\textwidth}{\normalrulethickness}{\footruleskip}
+
+\pagestyle{normalpage}
+
+% Options swedish/english. Changes the language of the department
+% information on the title page.
+\newcommand{\lth}{LUNDS TEKNISKA H\"OGSKOLA}
+\newcommand{\csdept}{Institutionen f\"or datavetenskap}
+\DeclareOption{swedish}{
+}
+\DeclareOption{english}{
+\renewcommand{\lth}{LUND INSTITUTE OF TECHNOLOGY}
+\renewcommand{\csdept}{Department of Computer Science}
+}
+\ProcessOptions
+
+% Pagestyle, page 1 (use \thispagestyle{titlepage} on the first page).
+\makepagestyle{titlepage}
+\makeevenhead{titlepage}{}{}{}
+\makeoddhead{titlepage}{}{}{}
+\makeheadrule{titlepage}{\textwidth}{\normalrulethickness}
+%\makefootrule{titlepage}{\textwidth}{\normalrulethickness}{\footruleskip}
+
+% Listings.
+\lstset{language=Java}
+\lstset{tabsize=4}
+\lstset{xleftmargin=\parindent}
+\lstset{basicstyle=\ttfamily} % could use \small
+\lstset{keywordstyle=\ttfamily}
+\lstset{commentstyle=\ttfamily}
+\lstset{columns=fixed}
+\lstset{basewidth=0.50em}     % character width, tight
+\lstset{showstringspaces=false}
+\lstset{lineskip=-0.7pt} % compensate for linespread 1.1666...
+\lstset{print=true}           % print also in draft
+
+% Environment for writing code. The optional argument is the
+% distance above and below the code (default one blank line).
+\lstnewenvironment{Code}[1][\baselineskip]
+{\lstset{aboveskip=#1}
+\lstset{belowskip=#1}}
+{}
+
+% Code in floats.
+\lstnewenvironment{CodeFloat}[2]
+{\lstset{float, frame=tb, xleftmargin=0mm, 
+belowskip=0pt,
+captionpos = b, caption=#1, label = #2}}
+{}
+\renewcommand\lstlistingname{Lista}
+
+% Small text in float captions.
+\captionnamefont{\small}
+\captiontitlefont{\small}
+% Smaller distance between floats and text, and between floats.
+\setlength{\textfloatsep}{10pt}
+\setlength{\floatsep}{6pt}
+
+% Don't fill pages, but put footnotes at bottom.
+\raggedbottom
+\feetbelowfloat
+
+% Don't indent footnotes. 
+\setlength{\footmarkwidth}{1em}
+\setlength{\footmarksep}{-\footmarkwidth}
+\footmarkstyle{\textsuperscript{#1}\hfill}
+
+% Utility commands.
+\newcommand{\n}{\noindent} % Don't indent this line.
+
+\newcommand{\code}[1]{\texttt{#1}} % For code in text.
+
+\newcommand{\blankline}{\vspace{\baselineskip}}
+\newcommand{\halfblankline}{\vspace{0.5\baselineskip}}
+
+% Assignments. Use as the enumerate environment. The optional 
+% parameter is the indentation (default \parindent).
+\newlength{\asgindent}
+\setlength{\asgindent}{1cm}
+\newcounter{Ucount}
+\newcounter{Savecount}
+\newenvironment{Assignments}[1][]{% 
+\list{#1\arabic{Ucount}.\hfill}{% 
+\usecounter{Ucount} 
+\setlength{\labelsep}{0.5em} 
+\setlength{\itemindent}{0pt} 
+\setlength{\leftmargin}{\asgindent} 
+\setlength{\labelwidth}{\leftmargin} 
+\addtolength{\labelwidth}{-\labelsep} 
+\setlength{\listparindent}{\parindent} 
+\setlength{\parsep}{\parskip} 
+\setlength{\itemsep}{\onelineskip}}}{\setcounter{Savecount}{\theUcount}\endlist} 
+
+% Title control.
+\newlength{\pretitleskip}
+\setlength{\pretitleskip}{0.8cm}
+\renewcommand{\maketitlehooka}{\vspace{-1.75cm}\n\lth\hfill\cscourse\\[-2pt]\csdept\hfill\csyear\\\vspace{\pretitleskip}}
+\pretitle{\begin{center}\sffamily\huge\bfseries} 
+\posttitle{\par\end{center}}
+\predate{\begin{center}\sffamily\Large\bfseries}
+\postdate{\par\end{center}}
+
+\newcommand{\cscourse}{}
+\newcommand{\csyear}{}
+\newcommand{\courseinfo}[2]{
+\renewcommand{\cscourse}{#1}
+\renewcommand{\csyear}{#2}
+\title{}
+\date{}
+}
+
