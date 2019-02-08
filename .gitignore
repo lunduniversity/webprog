@@ -5,6 +5,14 @@
 .env.test.local
 .env.production.local
 
+#emacs
+*~
+
+# latex
+*.aux
+*.synctex.gz
+
+
 # Compiled class file
 *.class
 
