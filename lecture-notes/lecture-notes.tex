@@ -1,0 +1,85 @@
+%!TEX encoding = UTF-8 Unicode
+\documentclass[a4paper, oneside]{compendium}
+
+\usepackage[swedish, english]{babel}
+\usepackage{multicol}
+
+\usepackage{pgffor}  %% http://stackoverflow.com/questions/2561791/iteration-in-latex
+                     %  allows:  \foreach \n in {1,...,4}{ do something with \n }
+
+\usepackage{framed}  %  allows:   \begin{framed}\end{framed}
+
+\newcommand{\SlideHeading}[1]{\section*{#1}}
+
+\usepackage[most]{tcolorbox}
+\newenvironment{Slide}[2][]
+  {\vspace{0.5em}\begin{tcolorbox}[left=1.5em,%width=1.05\textwidth,
+  grow to right by=0.03\textwidth,grow to left by=0.03\textwidth,%breakable,
+                                   enhanced]\setlist{noitemsep}\SlideHeading{#2}}
+  {\end{tcolorbox}\vspace{0.5em}}
+
+\newcommand{\Subsection}[1]{} %ignore slide sections
+\newcommand{\SlideOnly}[1]{} %ignore slide font size
+
+\newif\ifkompendium  % to allow conditional text in slides only showing up in compendium
+\kompendiumtrue      % in slides: \kompendiumfalse
+
+\newif\ifPreSolution  % to allow tasks and solutions in same file
+\PreSolutiontrue      % in solutions: \PreSolutionfalse
+
+\makeatletter\@twosidefalse\@mparswitchfalse\makeatother
+\geometry{inner=45bp,outer=45bp,top=45bp,bottom=45bp} % better for screen reading
+\dottedcontents{section}[4.5em]{}{2.9em}{1pc}
+\dottedcontents{subsection}[6.5em]{}{4.2em}{1pc}
+
+
+\input{../global-constants.tex}
+
+\title{
+{\vspace{-3.0cm}\bf\sffamily\fontsize{30}{50}\selectfont  Web Programming}
+\\ {\sffamily\Huge  Lecture Notes}
+\\\vspace{1cm}
+}
+
+%\author{Redaktör: Per Andersson}
+\date{\raggedbottom%
+\vspace{-2.5em}\begin{minipage}{1.0\textwidth}\centering\fontsize{14}{17}\selectfont
+EDAF90, Lp3, spring \CurrentYear\\
+Computer Science, LTH\\
+Lund University\\
+~\\
+build date: \today \\
+\url{http://cs.lth.se/EDAF90}
+\end{minipage}
+}
+
+\begin{document}
+
+\fontsize{14pt}{17pt}\selectfont  % bigger front better for screen reading
+\pagenumbering{roman}
+
+\frontmatter
+\maketitle
+\input{prechapters/licence-contributors.tex}
+
+\setcounter{tocdepth}{2} % set headings level in table of contents
+\fontsize{13pt}{18pt}\selectfont  % bigger front better for screen reading
+\tableofcontents
+\mainmatter
+
+\fontsize{13pt}{16pt}\selectfont % bigger front better for screen reading
+\pagenumbering{arabic}
+
+
+%\part{Lecturenotes}
+\renewcommand{\chaptername}{Lecture}
+\setcounter{chapter}{6} % set headings level in table of contents
+\input{chapters/network.tex}
+
+%\part{Appendix}
+%\appendix
+%\input{postchapters/kojo.tex}
+%\input{postchapters/terminal.tex}
+
+
+\end{document}

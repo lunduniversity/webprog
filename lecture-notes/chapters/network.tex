@@ -1,0 +1,133 @@
+%!TEX encoding = UTF-8 Unicode
+%!TEX root = ../compendium1.tex
+
+%--- HTTP -------------------------------------
+\chapter{Network} \label{chapter:network}
+This lecture covers topics related to communication between web applications and servers on the internet. 
+The internet are commonly described with a four layered architecture of protocols, where each layer adds more functionality. The lowest layer, the \emph{link layer}, deals with communication on a local network and includes details on how the digital bits are converted to and from the analog signal sent over the transmission channel. Example of protocols at this layer are ethernet and the WiFi Standards 802.11a/b/g/n. The layers above add more functionality. The next layer is the \emph{Internet layer}. This layer makes it possible for packages to find it way around the globe. This is the responsibility of the IP-protocol. It also defines the IP-address and describes how the addresses are assigned to nodes on the internet. Each node on the internet have it own unique IP-address. Above this we have the transport layer and the TCP and UDP protocols. TCP is short for Transmission Control Protocol and provides flow-control, connection establishment, and reliable transmission of data. This means that TCP ensures a reliable stream of data. When data are lost, they will be retransmitted, so when using TCP, you do not need to bother about dividing your data into packages, you just write to a stream. TCP makes sure the receiver eventually get the same stream of data. For some applications, there is no value of data that arrives late. Then UDP is an alternative. UDP delivers packages, but some may be lost on the way and the packages may arrive in a different order than they were sent. On the top of the internet protocol stack you find the \emph{application layer}. This layer is the focus of this course. This is the home of protocols describing how applications communicate.
+
+\section{URI and URL} \label{section:url}
+A Uniform Resource Identifier (URI) identifies a resource, for example the ISBN number of a book. A Uniform Resource Locator (URL) is the location of a resource, i.e a web address. Both have the the same syntax:
+\begin{Code}
+URI = scheme:[//authority]path[?query][#fragment]
+authority = [userinfo@]host[:port]
+\end{Code}
+Web applications are mainly interested in fetching and posting data, so this text will focus on URLs. Here is one example:
+\begin{Code}
+https://cs.lth.se/edaf90/?firstname=per#url
+\end{Code}
+The by far most commonly used protocol is \texttt{https}, but \texttt{http} and \texttt{ftp} are also common but a url can contain any protocol your application and network stack can handle, for example Secure Shell (SSH) or Network Time Protocol (NTP). Note, a http-api, such as \code{window.fetch} can only handle http/https. 
+
+The authority part of the example url is the DNS name of the server. An IP-number may also be used. If a port is not given, the default for the protocol is used, 443 for https and 80 for http. In the labs you use port 3000, which is used by the node.js development http server.
+
+The path part of a url commonly identifies a file. If the path is a directory on the servers file system, the server usually responds with a default file from that directory, i.e. \texttt{index.html} or \texttt{index.php}. This behaviour is part of the server configuration, so do not rely on it if you do not have control over the server. 
+
+The query part of a url is commonly generated as part of a http form submit. Here is an example:
+\begin{Code}
+<form action="/view/" method="get">
+  Enter item id:<br>
+  <input type="text" name="item">
+</form>
+\end{Code}
+When the user submits the form, the browser send a request for (this can be interrupted using JavaScript, as you do in the labs):
+\begin{Code}
+https://cs.lth.se/view?item=42
+\end{Code}
+If you set the metod to POST, the form data is submitted in the body of a http POST request. POST is the only alternative if you want to upload files directly from a html form.
+
+The last part of a url, the framgent, makes it possible to refer to a specific element in a html file. The fragment is the id of the referred element, for example:
+\begin{Code}
+<h2 id="url">URI and URL</h2>
+...
+<a href="https://cs.lth.se/edaf90/#url">
+\end{Code}
+
+A few years ago, the path in a url referred always referred to a file on the server, and any additional information the server needed to respond to the http request was passed in the query part of the URL. Let's look at an example. A web shop have a page for viewing items. Using the traditional approach, the URL to item 42 is:
+\begin{Code}
+https://my-shop.com/view?item=42
+\end{Code}
+This looks like a form submission, and some customers might hesitate to click on such link. Also, thinking of the URL as a pointer to a recourse, you want the path to refer to the item, not the code that visualises the data. Today another way to structure the URLs has become popular:
+\begin{Code}
+https://my-shop.com/view/2
+\end{Code}
+This looks like a normal link. It is still a URL. The only change is that the path no longer identifies the server side script. The server needs to do some pattern matching to figure out that the script is \texttt{view} and \texttt{42} is a parameter to the script. Not all web servers support this, for example apache can not do this out of the box (you can get the functionality using a few rewrite rules). An alternative is to use yet another structure for the same information:
+\begin{Code}
+https://my-shop.com/#view/2
+\end{Code}
+The part befor the fragment (\#) identifies the script. The script needs to interpret the ``view/2'' part. The router in react support the two last alternatives: \code{BrowserRouter} handles the \texttt{/view/2} structure, and \code{HashRouter} supports the \texttt{\#view/2} alternative.
+
+\subsection{URL encoding} \label{section:http}
+URLs are text strings, specifically a sequence of 7 bit ASCII characters. 7 bit ASCII can not represent many of the characters in latin, asian, or arabic alphabets, such as åäö. Also, some characters, for example \texttt{/\#?} have special meaning in a url. Clearly, there is a need to represent these characters in URLs, especially when a URL containing the submit of a html form. This is done by URL-encoding, also known as percent-encoding. The principle is to represent any non safe character with a three character sequence, \texttt{\%nn}, where \texttt{nn} is the hexadecimal value of the 8 bits of the character, for example  ``ett två'' is encoded as ``ett\%20tv\%C3\%A5'' (space is ASCII character 20, ``å'' is a two byte sequence in utf-8: 0xC3 and 0xA5). The safe characters, those that do not need percent-encoding, are the letters \texttt{a} to \texttt{z}, \texttt{A} to \texttt{Z}, numbers \texttt{0} to \texttt{9}, and \texttt{- \_ . \textasciitilde} (minus, underscore, dot and tilde). According to the latest standard, utf-8 encoding should be used for url-encoding. However, in the context of html form submission, web browsers will use the character encoding of the web page. In JavaScript, url-encodeing is handled by the function \code{encodeURIComponent()}.
+	
+%--- HTTP -------------------------------------
+\section{HTTP} \label{section:http}
+HTTP is the protocol used for almost all communication between web browsers and servers. It is text based, simple and designed to be human readable. The communication is always initialised from the client, the server only responds to requests. The client sends a command to the server, for example a requests for a \emph{resource}. The resource is commonly a file, or a web page. The client may also provide additional information  in the request header, for example authentication details. The server execute the command and responds with the result, and possible extra information in the response header. Lets look at an example of how to fetch a page from \texttt{cs.lth.se}:
+\begin{Code}
+GET /edaf90/ HTTP/1.1
+HOST: cs.lth.se
+
+\end{Code}
+The first line always has three parts: 1, the command \texttt{GET} 2, the resource \texttt{/edaf90/} 3, protocol version \texttt{HTTP/1.1}.
+
+The http protocol defines the following commands: \texttt{GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH}. We discuss them in more details in the section about REST. More information can also be found at mozilla's documentation: \url{https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods}.
+
+The resource is the \texttt{ ``path[?query][\#fragment]''} part of a url. Do not put the authority part of the url here (server name). This information goes to the header section.
+ 
+The optional header section starts at line 2. Each line contain one header field following the syntax: \texttt{header-name: value}. The value is the text until the next new line character. Leading white spaces are trimmed from the value.
+A complete list of the http standard headers can be found here \url{https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers}. You are free to use any name, so the protocol can be extended to the needs of your application. In earlier versions of the protocol custom headers should start with X-, but that was later dropped as some custom headers later became part of the standard. 
+
+The header section and the request body are separated by one empty line. The body contains additional information sent to the server, for example the content of a http-form for \texttt{POST} requests. The body is normally empty for \texttt{GET} requests.
+
+Here is the server response for the example above:
+\begin{Code}
+HTTP/1.1 200 OK
+Date: Sat, 09 Feb 2019 15:51:26 GMT
+Server: Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips PHP/7.0.27
+Content-Language: sv
+ETag: "7dc5c74268a1b0ea90ce76b44ebe3181"
+Content-Type: text/html; charset=utf-8
+x-url: /edaf90/
+Age: 44
+X-Cache: cached
+X-Cache-Hits: 1
+Content-Length: 38430
+Connection: keep-alive
+Accept-Ranges: bytes
+
+<!DOCTYPE html>
+... more text, a total of 38430 bytes
+\end{Code}
+The response have the same form as the request. The first line has three fields:\\ \texttt{protocol-version status-code human-readable-status}.
+The protocol version is the latest the server supports, but never newer than what the client asked for in the request.
+
+Status codes form groups:
+\begin{itemize}
+\item1xx (Informational): The request was received, continuing process.
+\item2xx (Successful): The request was successfully received, understood, and accepted.
+\item3xx (Redirection): The client needs to do additional actions in order to complete the request.
+\item4xx (Client Error): The request contains bad syntax or cannot be fulfilled. The client must rephrase the request before any later attempts.
+\item5xx (Server Error): The server failed to fulfill an apparently valid request. For example, because a database is down for maintenance. The client may try the same request again later.
+\end{itemize}
+The normal response is 200 --- OK. You probably also have seen 404 --- page not found. A list of status codes can be found at \url{https://developer.mozilla.org/en-US/docs/Web/HTTP/Status}, or simply google for ``http status code''. 
+
+Http is text based, so any binary information, for example images, are always base64 encoded. Make sure you encode/decode any binary data before you send/reads it. Check the documentation of your http-library for the details. More information about base64 encoding can, for example be, found at wikipedia, \url{https://en.wikipedia.org/wiki/Base64}.
+
+The latest version of the http standard is 2.0. This version keeps the same basic structure: command-header-body. Version 2.0 mainly focus on improving efficiency. The headers can be compressed, so they are no longer human readable in the network stream. The server is also allowed to send more data than was requested, for example when a client asks for a web page, it probably will ask for the images in that page later. The server can bundle all content of the page in the first response.
+
+As a web application developer you do not need to bother about the inner details of the http protocol. All network accesses are made using libraries, both on the client and server side. They handle the formatting of the request, compression et.c. Base64 and url encoding may be handled different in different libraries, so check the documentation of your framework. To use the libraries you do need to know the basics: command, response status code, header and body as these are part of any http-api.
+
+%--- REST -------------------------------------
+\section{REST} \label{section:rest}
+
+%--- AJAX -------------------------------------
+\section{AJAX} \label{section:ajax}
+
+%--- JSON -------------------------------------
+\section{JSON} \label{section:json}
+
+
+%--- XML -------------------------------------
+\section{XML} \label{section:xml}
+
+
+
