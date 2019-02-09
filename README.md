@@ -11,7 +11,7 @@ This is on-going work, and the first instance of the course was given in 2019 at
 
 * Learn the basics about git, especially the "Getting Started" and "Git Basics" sections in this book: https://git-scm.com/book/en/v2
 
-* Get an account at github if you don't have one already. Recommended user name if in doubt: `firstnamefamilyname` with no capital letters and no hyphens.
+* Get an account at Github if you don't have one already. Recommended user name if in doubt: `firstnamefamilyname` with no capital letters and no hyphens.
 
 * Install git: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 
@@ -84,7 +84,7 @@ Creative Commons Attribution-ShareAlike 4.0 International License.
 You are free to:
 
 * Share — copy and redistribute the material in any medium or format
-* Adapt — remix, transform, and build upon the materia for any purpose, even commercially.
+* Adapt — remix, transform, and build upon the material for any purpose, even commercially.
 * The licensor cannot revoke these freedoms as long as you follow the license terms.
 
 Under the following terms:
