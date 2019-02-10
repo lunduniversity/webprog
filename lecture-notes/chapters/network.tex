@@ -116,9 +116,13 @@ The latest version of the http standard is 2.0. This version keeps the same basi
 
 As a web application developer you do not need to bother about the inner details of the http protocol. All network accesses are made using libraries, both on the client and server side. They handle the formatting of the request, compression et.c. Base64 and url encoding may be handled different in different libraries, so check the documentation of your framework. To use the libraries you do need to know the basics: command, response status code, header and body as these are part of any http-api.
 
+If you want to examen the inners of http-requests, you can use the \texttt{curl} command in a terminal.
+\begin{Code}
+curl -X GET http://cs.lth.se/edaf90
+\end{Code}
 %--- JSON -------------------------------------
 \section{JSON} \label{section:json}
-JSON is a popular text based file format commonly used in RESTfull APIs. JSON is a subset of JavaScript. JSON always use unicode character encoding. There are five values:
+JSON is a popular text based file format commonly used in RESTful APIs. JSON is a subset of JavaScript. JSON always use unicode character encoding. There are five values:
 \begin{itemize}
   \item a literal, one of \code{true, false} or \code{null}
   \item a number, for example \code{3.1415} or \code{42}
@@ -142,13 +146,80 @@ Objects and arrays can be nested. Example:
 More info about JSON can be found at \url{https://www.json.org}
 
 %--- XML -------------------------------------
-\section{XML} \label{section:xml}
+%\section{XML} \label{section:xml}
 
 %--- REST -------------------------------------
 \section{REST} \label{section:rest}
+Modern web applications are complex and have more in common with desktop applications than html forms from the early days of the web. The web browser comes with basic support for fetching pages and submitting forms. Using these mechanisms, the entire page needs to be fetched and rendered whenever the application need to interact with the server. This is not enough for modern web applications. The application needs to have direct communication with the server to exchange information without freezing the user interface. Web browsers have support for this, see \ref{section:ajax}. These communication APIs makes it possible for a web application to send http requests to any server. Http i just text, so every application needs to add its own protocol on top of http. There are many pitfalls and issues you need to be aware of when designing an api for a distributed system, which all web applications inherently are. REST is a set of principles and guidelines to help you develop an api on top of http. Terminology: when following these principles, you say that you have a RESTful api, providing a REST service running on a REST server.
+
+The core principles of Representational State Transfer (REST) are:
+\begin{itemize}
+\item Client–server architecture
+\item Statelessness
+\item Cacheability
+\item Layered system
+\item Uniform interface
+\end{itemize}
+
+\subsection{Client–server architecture}
+The principle behind the client–server constraints is the separation of concerns. Separating the user interface concerns from the data storage concerns improves the portability of the user interface across multiple platforms. It also improves scalability by simplifying the server components. Perhaps most significant to the Web, however, is that the separation allows the components to evolve independently, thus supporting the Internet-scale requirement of multiple organizational domains
+
+\subsection{Statelessness}
+Each request from any client contains all the information necessary to service the request, and session state is held in the client.
+
+This eliminates many potential buggs. Let's illustrate this with bugg caused by a stateful protocol. The api of a web shop have two operations \texttt{/view-item/} and \texttt{/order-last-viewed-item/}. The customer do this:
+\begin{Code}
+/view-item/13
+/view-item/42
+  Go to the previous page using the browser history.
+  The user sees item 13 on the screen
+/order-last-viewed-item
+\end{Code}
+Pages in the browser history are often rendered from the browser cache. The server can not know that the customer was viewing item 13 when placing the order, so an order of item 42 was made. The same problems occurs when a user opens the same application in different tabs. You will get a copy of the DOM in the new tab, and once the user starts to interact with the application, the DOMs in the tabs diverges. There is no way for a server to keep track of which tab is the origin of a request.
+
+\subsection{Cacheability}
+As on the World Wide Web, clients and intermediaries can cache responses. Responses must therefore, implicitly or explicitly, define themselves as cacheable or not to prevent clients from getting stale or inappropriate data. Use http headers to control the cacheability of each response.
+
+\subsection{Layered system}
+A client cannot ordinarily tell whether it is connected directly to the end server, or to an intermediary along the way. Intermediary servers can improve system scalability by enabling load balancing and by providing shared caches. They can also enforce security policies. Layered system comes for free when building ontop of http.
+
+\subsection{Uniform interface}
+This is all about making things simple, more on this in \ref{section:crud}. The four constraints for this uniform interface are:
+\begin{itemize}
+  \item Resource identification in requests
+  \item Resource manipulation through representations -- When a client holds a representation of a resource, including any metadata attached, it has enough information to modify or delete the resource.
+  \item Self-descriptive messages -- Each message includes enough information to describe how to process the message. For example, which parser to invoke can be specified by a media type.
+  \item Hypermedia as the engine of application state
+ \end{itemize}
+ 
+ Part of the text above comes from wikipedia,\\ \url{https://en.wikipedia.org/wiki/Representational_state_transfer}
+
+\subsection{REST in practice, CRUD} \label{section:crud}
+The text above is written from a theoretical point of view, and in general terms, talking about resources and interfaces. In practice things get relay simple. Resources are usually rows in databases and the operations we want to do are Create, Read, Update, and Delete (CRUD). REST leverage on http, so we use the http commands POST, GET, PUT, and DELETE. The status code of the respons indicate if the operation was successful, for example 200-ok or 404-not found.
+
+Where do we put the data? Well, this can be debated. There is no right and wrong to this question. Be consistent and adopt to the context of your system. A common approach is to follow the html way of doing things:
+\begin{itemize}
+  \item \emph{Resource identification} is part of the url:
+  \begin{Code}
+  /students/
+  /students/42/
+  \end{Code}
+  The first request selects all students, and the second a specific student.
+  \item \emph{Filtering} can be done using the query part:
+  \begin{Code}
+  /students/?name=Per
+  \end{Code}
+  \item \emph{Names:}  plural nouns are commonly used in URLs. Use lower case letters. If you have multi word names, replace space with minus sign, i.e. \texttt{piano-char}. Then things looks nice after url-encoding (you do not want \texttt{/piano\%20char/}). Avoid CamelCase since the path of the URLs are case insensitive. Avoid verbs in the path, the http command contains this information
+  \item \emph{Http headers:} use it for cache control and authentication.
+  \item \emph{Http body:} data returned from the server goes into the response body. Create and Update sends its data in the body, but Read and Delete only identifies a resource using the URL (empty body).
+  \item{JSON:} use json format in the http body.
+\end{itemize}
+%--- GraphQL -------------------------------------
+%\section{GraphQL} \label{section:graphql}
+
 
 %--- AJAX -------------------------------------
-\section{AJAX} \label{section:ajax}
+%\section{AJAX} \label{section:ajax}
 
 
 
