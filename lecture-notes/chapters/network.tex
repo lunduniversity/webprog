@@ -116,18 +116,40 @@ The latest version of the http standard is 2.0. This version keeps the same basi
 
 As a web application developer you do not need to bother about the inner details of the http protocol. All network accesses are made using libraries, both on the client and server side. They handle the formatting of the request, compression et.c. Base64 and url encoding may be handled different in different libraries, so check the documentation of your framework. To use the libraries you do need to know the basics: command, response status code, header and body as these are part of any http-api.
 
+%--- JSON -------------------------------------
+\section{JSON} \label{section:json}
+JSON is a popular text based file format commonly used in RESTfull APIs. JSON is a subset of JavaScript. JSON always use unicode character encoding. There are five values:
+\begin{itemize}
+  \item a literal, one of \code{true, false} or \code{null}
+  \item a number, for example \code{3.1415} or \code{42}
+  \item a string, a sequence of unicode code points wrapped with quotation marks ", (U+0022). Note, you may not use singel quotation marks \code{'}, which JavaScript allows.
+  \item an object, a unordered collection of comma separated name-value pairs wrapped with \texttt{\{ \}}. The name and the value are separated by :. The are no restrictions on the name. It may contain any character, but it must be a string (wrapped with quotation marks). In javaScript a name only needs quotation marks if it contains special characters, like space.
+ \item an array, an ordered list of comma separated values wrapped with \texttt{[ ]}. You can mix different types of values in the same array.
+\end{itemize}
+Objects and arrays can be nested. Example:
+\begin{Code}
+{
+  "Salad + Pasta": {price: 10, foundation: true, gluten: true},
+  "'Norsk fjordlax": {price: 30, protein: true},
+  "Cashewnötter": {price: 5, extra: true, vegan: true},
+  "Sojabönor": {price: 5, extra: true, vegan: true},
+  "Tomat": {price: 5, extra: true, vegan: true},
+  "Ägg": {price: 5, extra: true},
+  "Ceasardressing": {price: 5, dressing: true, lactose: true},
+  "info": ["open 8-17", {"delivery":true}, [null, true, false]]
+}
+\end{Code}
+More info about JSON can be found at \url{https://www.json.org}
+
+%--- XML -------------------------------------
+\section{XML} \label{section:xml}
+
 %--- REST -------------------------------------
 \section{REST} \label{section:rest}
 
 %--- AJAX -------------------------------------
 \section{AJAX} \label{section:ajax}
 
-%--- JSON -------------------------------------
-\section{JSON} \label{section:json}
-
-
-%--- XML -------------------------------------
-\section{XML} \label{section:xml}
 
 
 
