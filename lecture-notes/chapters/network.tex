@@ -16,9 +16,9 @@ Web applications are mainly interested in fetching and posting data, so this tex
 \begin{Code}
 https://cs.lth.se/edaf90/?firstname=per#url
 \end{Code}
-The by far most commonly used protocol is \texttt{https}, but \texttt{http} and \texttt{ftp} are also common but a url can contain any protocol your application and network stack can handle, for example Secure Shell (SSH) or Network Time Protocol (NTP). Note, a http-api, such as \code{window.fetch} can only handle http/https. 
+The by far most commonly used protocol is \texttt{https}, but \texttt{http} and \texttt{ftp} are also common.  A url can contain any protocol, for example Secure Shell (SSH) or Network Time Protocol (NTP). However you can of course only use protocols your network stack knows how to handle. For web applications in a web browser, this means https/http which is supported by, \code{window.fetch}. 
 
-The authority part of the example url is the DNS name of the server. An IP-number may also be used. If a port is not given, the default for the protocol is used, 443 for https and 80 for http. In the labs you use port 3000, which is used by the node.js development http server.
+The authority part of the example url is the DNS name of the server. An IP-number can also be used. If a port is not given, the default for the protocol is used, 443 for https and 80 for http. In the labs you use port 3000, which is used by the node.js development http server.
 
 The path part of a url commonly identifies a file. If the path is a directory on the servers file system, the server usually responds with a default file from that directory, i.e. \texttt{index.html} or \texttt{index.php}. This behaviour is part of the server configuration, so do not rely on it if you do not have control over the server. 
 
