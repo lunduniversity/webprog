@@ -1,0 +1,118 @@
+\documentclass[fleqn, article, a4paper]{memoir}
+\usepackage[english]{../latex/selthcsexercise}
+
+\usepackage[utf8]{inputenc}
+% Utilities.
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{soul}
+\usepackage{varioref}
+\usepackage{nameref}
+\usepackage{microtype}
+
+\newcommand{\scode}[1]{\texttt{\small#1}}
+\newcommand{\FIXBEFORECODE}{\vspace{-0.5\baselineskip}}
+\newcommand{\FIXAFTERCODE}{\vspace{-\baselineskip}}
+
+%---------------------------------------------------------------
+\newenvironment{Hemarbete}%
+{\begin{Assignments}[H]}{\end{Assignments}}
+
+\newenvironment{Kontrollfragor}%
+{\begin{Assignments}[K]\tightlist}{\end{Assignments}}
+
+\newenvironment{Datorarbete}%
+{\begin{Assignments}[D]}{\end{Assignments}}
+
+\newenvironment{DatorarbeteCont}%
+{\begin{Assignments}[D]\setcounter{Ucount}{\theSavecount}}{\end{Assignments}}
+
+\newenvironment{Deluppgifter}%
+{\begin{enumerate}[a)]\firmlist}{\end{enumerate}}
+
+
+\newcommand{\commandchar}[1]{\textsc{#1}}
+
+% Section styles.
+\setsecheadstyle{\huge\sffamily\bfseries\raggedright} 
+\setsubsecheadstyle{\Large\sffamily\bfseries\raggedright} 
+\setsubsubsecheadstyle{\normalsize\sffamily\bfseries\raggedright} 
+
+\setsecnumformat{} % numrera inte laborationerna
+\renewcommand{\thesection}{\arabic{section}} % för referenser till laborationerna
+\renewcommand{\thefigure}{\arabic{figure}}
+
+%*****************************************************************
+\begin{document}
+\courseinfo{Web Programming}{2019}
+\maketitle
+\thispagestyle{titlepage}
+\vspace{-4cm}
+
+\subsection*{Lab 3}
+
+\n This is the final laboratory in the web programming course, \emph{objectives}:
+
+\begin{enumerate}\firmlist
+\item Get experience using a REST api for fetching data.
+\item Get experience with chaining \code{Prototype}s
+\item Get experience using persistent storage in the web browser.
+\end{enumerate}
+
+%\clearpage
+\subsection*{Background}
+
+The assignments bellow assumes you have a working solution for lab 2, i.e. a working react app with three components: \code{App}, \code{ComposeSalad}, and \code{ViewOrder}.
+
+\subsection*{Assignments}
+
+\begin{Assignments}
+
+\item We are going to remove the inventory from our compiled code and instead fetch the data from a REST server. The server is already implemented, but you need to download it and run it on your own computer. It is based on the \texttt{restify} package, so you need to download that as well:
+\begin{Code}
+> cd my_working_lab_2
+> curl -o server.js http://fileadmin.cs.lth.se/cs/Education/EDAF90/labs/lab3/server.js
+> npm install restify
+> node server.js
+\end{Code}
+The code above downloads the backend into your frontend project. Normally you want separate projects, but it is only one file, which you will not change, so let's keep things simple. The server should be running and waiting for requests. Test it using \texttt{curl} in the terminal, or write the urls in a browser:
+\begin{Code}
+> curl -is http://localhost:8080/foundations/
+> curl -is http://localhost:8080/proteins/
+> curl -is http://localhost:8080/extras/
+> curl -is http://localhost:8080/dressings/
+> curl -is http://localhost:8080/dressings/Dillmayo
+\end{Code}
+
+\item Your next assignment is to fetch the inventory from the salad bar REST server. You could fetch the data when needed, but in this case i suggests you fetch all data when the app launches. You can recreate the same format for the inventory as in the \texttt{inventory.ES6.js} file. This leads to minimal change in the rest of your code. Open \texttt{App.js} and remove the import line:
+\begin{Code}
+import inventory from './inventory.ES6';
+\end{Code}
+You will get some compile errors since the name \code{inventory} is no longer defined. We are going to store the data for the entire lifetime of the app. The best place to store it is in the state of \code{App}, in the constructor:
+\begin{Code}
+this.state = {orders: [], inventory: {}};
+\end{Code}
+Update the rest of your code so it compiles (replace \code{inventory} with \code{this.state.inventory}.
+
+\item Normally a web browser will only allow a web app to send http requests to the server it was downloaded from, its origin. The reason is to protect the user from cross site scripting attacks, which will be covered in the last lecture. The origin is both the IP-address and the port. The salad bar REST server is running on a different port than the react development server, so the servers have different origins and, by default, the browser prevents your app from communicating with the salad bar REST server. Luckily there is a way to relax this constraint. A server can allow communication with scripts from other origins using the Access-Control-Allow-Origin header. If you look at the headers returned by the salad bar REST server, see the curl commands above, you see that the server allows access from *, meaning any server. The browser still do not trust this communication, and hides most http headers. Do not bother looking for the header information in your app. In the lab you may assume that the body contains json data, however do check the status code to make sure your request was successful.
+
+When should you fetch the inventory data? Check out the react lifecycles, \\see \url{https://reactjs.org/docs/state-and-lifecycle.html}. Remember, must of course create an initial state in the constructor. Hint, if you block in the constructor or render, your app will freeze. Check your code, does it block? It it does, can you rewrite your cod so it do not? Here is a blogpost about this topic: \url{https://www.robinwieruch.de/react-fetching-data/}
+
+Use the \code{fetch(url, [options])} function to send a request. It might be easiest to build the url using string concatenation, but you can also check out the \code{URL(url, [base])} class. Check out the documentation for \code{fetch()}. It returns a \code{Promise} that resolves to a \code{Response} object. To get the body you can use \code{Response.json()}, which returns yet another \code{Promise}. When you have the ingredient name, the next step is to fetch its properties, with one more call, like \code{fetch(‘http://localhosr:8080/extras/Tomato’)}. All of this is sequential by nature, so use \code{await} in \code{async} functions, or chains of \code{then}. Fetching several ingredients are independent and should be carried out in parallel. This is a perfect use case for \code{Promise.all()}. It takes an array of \code{Promise} objects, which will run in parallel. It returns a \code{Promise} that resolves when all inner promises are resolved. Use this to wait until all ingredients have been fetched befor updating \code{this.store}.
+
+\item Show how you can send data to the server using a \texttt{POST} request, for example the list of salads in an order. The REST api can be tested using:
+\\ \noindent \begin{verbatim}
+curl -isX POST -H "Content-Type: application/json"
+     --data '["salad1", "salad2"]' http://localhost:8080/orders/
+\end{verbatim}
+
+\item I have one more assignment for you. Store the order in local store, and load it when the app starts. This is done using the \code{window.localStorage} There are two functions, \code{setItem(key, value)} and \code{getItem(key)}. All values are text, so use \code{JSON.stringify()}, and \code{JSON.parse()}.Note, \code{parse} gives you a JavaScript object with the right structure, but it is not a \code{Salad}.The \code{price()} method et.c. are missing. This can be solved in two ways:
+\begin{itemize}
+\item Use \code{Object.setPrototypeOf()} so set up the right prototype chain for the objects returned from \code{JSON.parse()}
+\item Make a static function, \code{Salad.price(obj)}. This can not be achieved using ES6 classes, instead: \code{salad.price = function(obj)...}
+\end{itemize}
+\end{Assignments}
+
+\input{../prechapters/licence-contributors.tex}
+
+\end{document}11
