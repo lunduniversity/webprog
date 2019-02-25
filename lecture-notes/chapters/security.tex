@@ -1,0 +1,134 @@
+%!TEX encoding = UTF-8 Unicode
+%!TEX root = ../compendium1.tex
+
+%--- Cross Site Scripting -------------------------------------
+\chapter{Security} \label{chapter:security}
+This chapter gives a brief introduction to web security. It is not enough if you developing web applications. Please take a course on web security to complement the web programming course.
+
+\section{Same Origin Policy} \label{section:same:origin:policy}
+The web is based on trust. In the beginning of the internet, the trust came from that everyone knew everyone. As the internet grew, this have changed. Instead a number of mechanisms have been added to improve security. One is the \emph{same origin policy}. A web application is typically divided to several parts: html, css, and javascript files. On the internet, resources is considered to come from the same origin if they have the same:
+\begin{enumerate}
+\item URI scheme
+\item host name
+\item port number
+\end{enumerate}
+Resources from the same origin are considered as part of the same application and are trusted to share data, for example access to cookies,  \code{window.localStorage} and can make http requests to the same origin.
+
+\section{Cross Site Scripting} \label{chapter:xss}
+Cross-site scripting attacks use known vulnerabilities in web-based applications, their servers, or the plug-in systems on which they rely. Exploiting one of these, attackers fold malicious content into the content being delivered from the compromised site. When the resulting combined content arrives at the client-side web browser, it has all been delivered from the trusted source, and thus operates under the permissions granted to that system. By finding ways of injecting malicious scripts into web pages, an attacker can gain elevated access-privileges to sensitive page content, to session cookies, and to a variety of other information maintained by the browser on behalf of the user. Cross-site scripting attacks are a case of code injection. (text from wikipedia).
+
+\section{Code Injection} \label{chapter:code:injection}
+One common technique for cross site scripting attacks is code injection. If the application takes user input and places it in a context where it can be executed as code, it is open for attacks. Let me give you one example: When you search on google, you will get a page that starts with ``search results for: \emph{the text you wrote}''. If this part of the page is created by placing the user input directly into the html code, it will be parsed by the browser and any \code{<script>} tags will be executed. Other scenarios where this can happen is systems that allow html formated text, for example in messages, or profile presentations. This code will have the same privileges as the rest of the applications, potentially full access to a REST api as an authenticated user. To avoid this, any data from a user must always be escaped befor placed in a html file, the DOM, or sql query.
+
+In practice, how much of this work do I need to do and how much will the frameworks help me? Several common cases are covered by the framework, but check the documentation for the details. In angular:
+\begin{Code}
+<p class="e2e-inner-html-interpolated">{{htmlSnippet}}</p>
+\end{Code}
+Is safe. htmlSnippet is escaped, and any tags are displayed on screen. In other context html code is interpreted:
+\begin{Code}
+<p class="e2e-inner-html-bound" [innerHTML]="htmlSnippet"></p>
+\end{Code}
+Angular will sanitise htmlSnippet, removing any \code{<script>} tag, so this is also safe. The output is however different, now the html code is interpreted.
+
+
+%--- Authentication and JWT -------------------------------------
+\chapter{Authentication and JWT} \label{chapter:auth}
+In this section I will outline how you can use Json Web Tokens (JWT) for authentication. There are many ways to deal with authentication and I do not claim this is the best, but it is a popular technique and used by for example Auth0.
+
+Username and passwords are sensitive data and should never be stored, either in the client nor on the server. The server saves a hash(password) so it can validate users at login. The hash() function should be a one way function, it is easy to compute the hash value given a password, but given the hash value it is impossible to gess/compute the password. To login the user needs the password, the hash value is not enough. This makes the system less vulnerable to leaked password entries.
+
+How do we deal with the (user, password) data on the client side? We do not want to send the (user, password) data with every request. The old way to deal with this is to let the server remember who's loggen in as part of its session data. This involves setting a cooking with a session id. That cookie will be automatically injected into the header of any http-request by the browser, for example http form submissions. This makes you vulnerable to cross site scripting. Also, the session data does not work well with stateless REST apis. 
+
+The modern approach to authentication is to use authentication tokens. When the user loggs in the (user, password) is sent to the server for validation. If the data is correct an authentication token is returned to the client. This authentication token is later passed to the server as proof of a correct login, commonly in the http header:
+\begin{Code}
+auth: the-token-as-a-string
+\end{Code}
+Desired characteristics of the authentication token:
+\begin{itemize}
+\item only the server should be able to generate valid tokens
+\item the client should be able to verify that the token is genuine (and not produced by a man in the middle)
+\item the token should have a limited lifetime, limiting the damage of a leaked token.
+\item the token should stor metadata, such as user name and privileges.
+\end{itemize}
+Json Web Tokens have these properties and are commonly used as authentication tokens. JWT is an open standard, RFC 7519. A JWT have three parts:
+\begin{enumerate}
+\item header --- a json object contains information about the JWT, for example the algorithm used for the signature
+\begin{Code}
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+\end{Code}
+\item payload --- a json object contains any data. There are a few properties with predefined meaning, for example iss (issuer), exp (expiration time), sub (subject).
+\begin{Code}
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "admin": true
+}
+\end{Code}
+\item signature --- A digital signature of the JWT. Several different algorithms are supported, but HS256 is commonly used. It uses a public/private key encryption algorithm, ensures that only the server can generate tokens. Any client with the public key can validate that this is an authentic token generated by the server.
+\end{enumerate}
+All three parts of the JWT is BASE64 encoded and placed in a dot separated string, for example:
+\begin{Code}
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmF
+tZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwp
+MeJf36POk6yJV_adQssw5c
+\end{Code}
+
+%--- Web Push Notifications -------------------------------------
+\chapter{Server Send Data} \label{chapter:server:push}
+In many scenarios there is a need for the server to initiate  the communication, for example when a new message is received in a chat system. Using traditional web technology, any communication must be initiated by the client. Here are some techniques to deal with this.
+\section{polling}
+This is the simplest approach. The client periodically, for example every 5 minutes, send a request to the server. If no new data is available, the server simply responds with an empty reply. The drawback of this approach is of course that there is a lot of network traffic with no content. Also, the user might wait up to one period for new data to arrive.
+\section{long polling}
+This is a variant of polling. If the server do not have new data, it holds the connection open but do not send any data. When new data arrives, the server can directly send it to the client since it already have an open connection. There is a time limit on how long a connection can be open. When the http request is closed due to timeout, the client needs to deal with the error and open the connection again.
+\section{Server-Sent Events}
+This is an efficient technique for simple communication. The client sends a request to receive notifications, so the communication is still initiated from the client. The difference is that the server can respons to the request at any time. This is how you set up the communication:
+\begin{Code}
+if (!!window.EventSource) {
+  var source = new EventSource('server-resource-url');
+  source.addEventListener('message', function(e) {
+    console.log(e.data);
+  }, false);
+
+  source.addEventListener('open', function(e) {
+    // Connection was opened.
+  }, false);
+
+  source.addEventListener('error', function(e) {
+    if (e.readyState == EventSource.CLOSED) {
+      // Connection was closed.
+    }
+  }, false);
+
+} else {
+  // Result to polling :(
+}
+
+\end{Code}
+The server can send notifications in a plaintext response, served with a text/event-stream Content-Type:
+\begin{Code}
+data: {\n
+data: "msg": "hello world",\n
+data: "id": 12345\n
+data: }\n\n
+data: {\n
+data: "msg": "second message",\n
+data: "id": 12346\n
+data: }\n\n
+\end{Code}
+Notifications are separated with a blank line. One advantage with Server Send Events is that the browser will manage the connection. If it is closed, the browser will automatically reconnect.
+
+\section{WebSockets}
+Sockets is the traditional mechanism for communication between computers, commonly used by desktop applications for point to point communication. At the OS-level, all network communication is done using sockets. Sockets allow bi-directional, full-duplex communication and is probably the best choice if you need real time bi-directional communication, for example in games. Sockets only deals with streams of data, commonly using the TCP/IP protocol, so you need to add your own application protocol on to of it.
+
+%--- Service Workers -------------------------------------
+\chapter{Service Workers} \label{chapter:service:workers}
+Service workers makes it possible to run code in the background in the web browser. In principle, a service workers is intercepting the http request from an application. The service worker can forward the requests to the server, or decide to handle the request on it own. Service workers are primarily used for caching and server send notifications. In addition to the http requests (fetch api), the service worker have access to the indexedDB (offline data storage), however it can not access the DOM so it must communicate with the web application trough events.
+
+%--- Server Side Rendering -------------------------------------
+\chapter{Server Side Rendering} \label{chapter:server:side:rendering}
+React and angular can give the user a speedy interface since the whole web page do not need to be fetched and rendered when the user navigates inside the app. Loading the first page can however be slow since there is a lot of JavaScript and html-templates to load. To deal with this, modern web frameworks support server side rendered content. The principle is that at build time, a singe static web page is rendered. When the user loads the first page of the app, this static web page is sent to the browser. This is much faster than sending  JavaScript code that generate the DOM. This static web page do not only contain html code. It also contains JavaScript, which fetches the single web page application in the background. When the whole app have been fetched, the static web page hands over control to the singe page webb application. This works seamless, without the user seeing anything.
+ To make a server side rendered page, you basically only need to provide a configuration with the application state (router url et.c.) to the build tools. The tools will produce a bundle, containing the initial static web page.
+

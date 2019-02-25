@@ -1,0 +1,266 @@
+%!TEX encoding = UTF-8 Unicode
+%!TEX root = ../compendium1.tex
+
+%--- Angular -------------------------------------
+\chapter{Angular} \label{chapter:angular}
+
+Angular is a framework for singel page web applications. An angular application is a set of angular components, and each component have:
+\begin{itemize}
+\item a tag name, so it can be instantiated in html templates
+\item TypeScript code containing state and behaviour
+\item a html template, describing how to render the component
+\item a styling template describing how to style the component (commonly a css file)
+\end{itemize}
+Here is an example:
+\begin{Code}
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-my-component',
+  templateUrl: './my-component.html',
+  styleUrls: ['./my-component.scss']
+})
+export class MyComponent implements OnInit {
+  form = {todo: '', done: false};
+
+  constructor(public todoService: TodoService) { }
+
+  ngOnInit() {
+  }
+
+  handleSubmit($event) {
+    $event.preventDefault();
+    console.log('submitting ' + JSON.stringify(this.form));
+  }
+}
+\end{Code}
+Angular uses class decorations to add metadata to a component, for example the tag name and the names of the template files.
+
+\section{TypeScript}
+Angular is written in TyepScript. TypeScript is a superset of JavaScript, so you can always stick to JavaScript, however there are a few convenient things in TypeScript:
+\begin{itemize}
+\item Class attributes, in the example above, \code{form} is an attribute in the \code{MyComponent} class. You can add data to your prototypes. The JavaScript way to do the same thing is: 
+\begin{Code}
+MyComponent.prototype.form = someValue;
+\end{Code}
+The html template is not part of the class, so you probably want to avoid \code{private} attributes.
+\item Look at the code: 
+\begin{Code}
+constructor(public todoService) { }
+\end{Code}
+It does two things: 1, declares a \code{public todoService} attribute 2, initialises the attribute to the value passed to the constructor, that is, it is shorthand for:
+\begin{Code}
+export class MyComponent implements OnInit {
+  public todoService: TodoService;
+  constructor(todoService: TodoService) { 
+    this.todoService = todoService;
+  }
+}
+\end{Code}
+\item Types, TypeScript adds static typing to JavaScript. The type syntax looks like json, for example:
+\begin{Code}
+public form: {todo: string, done: boolean};
+\end{Code}
+\end{itemize}
+In the course, you should know enough TypeScript to use it in the labs. I will not ask you to write TypeScript code on the exam.
+
+\section{Template Language}
+Angular uses html as template language. There are a few additions to the html syntax. Read more about the angular template syntax here: \url{https://angular.io/guide/template-syntax}. Here is an example:
+\begin{Code}
+<form class="example-form" (ngSubmit)="handleSubmit($event)">
+  <mat-form-field class="example-full-width">
+    <input matInput name="todo" placeholder="What to do"
+               [(ngModel)]="form.todo">
+  </mat-form-field>
+  <mat-checkbox name="done" [(ngModel)]="form.done" class="example-full-width">
+    Check when item is done
+  </mat-checkbox>
+  <br><button type="submit" mat-raised-button>Submit</button>
+</form>
+{{form|json}}
+\end{Code}
+\begin{itemize}
+\item The \code{<mat-*>} tags are angular components from the angular material module, see \url{https://material.angular.io/components/form-field/overview}
+\item JavaScript expressions: you can embed JavaScript code in the html code. Note, the embedded code can not have side effects, so avoid assignments \code{+=, ++} et.c.
+\begin{Code}
+<h2>{{myJavaScriptFunction()}}</h2>
+\end{Code}
+A convenient operation that can be used in angular templates is \code{a?.b}, which is equivalent to \code{a ? a.b : a}. It might not look like a big difference, but consider rewriting \code{a?.b?.c?.d?.e} using the \code{ ? : } notation.
+
+The expression context is typically the component instance (name scope). You do not need to write \code{this} to access attributes from the component class.
+\item Angular pipes, you can modify the data from an embedded expressions by passing it trough pipes, similar to the pipe in a unix terminal. Pipes can be chained, see \url{https://angular.io/guide/pipes}
+\begin{Code}
+<h2>{{ birthday | date | uppercase}}</h2>
+\end{Code}
+There exists selection of predefined pipes which make your life easier. I commonly use \code{json}, which is equivalent to \code{JSON.stringify()}, and \code{async}, which transform an \code{Observable} to the last resolved value, for example:
+\begin{Code}
+<span>The configuration fetched from the server: 
+{{ http.get(configUrl) | async | json}}</span>
+\end{Code}
+Here is a complete list of the built in pipes: \url{https://angular.io/api?type=pipe}.
+\item Directives looks like html attributes. Behind each directive is a piece of code, which interacts with the underlaying DOM-elements, so basically directives can do anything. You can define your own directives using the \code{@Directive} class decoration, but that is beyond the scope of this course. Let's start by looking at some structural directives. By convention, all structural directives have names starting with *:
+\begin{Code}
+<div *ngIf="orders.length>0">Your Shopping Basket</div>
+
+<ul>
+  <li *ngFor="let salad of orders">{{salad.toString()}}</li>
+</ul>
+\end{Code}
+There are more details to the NgFor, you can get more info from the structure you iteration over: 
+\begin{Code}
+*ngFor="let salad of orders; let i=index; let odd=odd; trackBy: trackById"
+\end{Code}
+For a complete explanation, please visit \\ \url{https://angular.io/guide/structural-directives}.
+
+Other directives add functionality or style to a element, for example:
+\begin{Code}
+<input matInput name="food" placeholder="What to do">
+\end{Code}
+The \code{matInput} directive will tell angular material to style the \code{<input>} element. \code{name} and \code{placeholder} are standard html attributes associated with any \code{<input>} element. 
+
+\section{Data binding}
+The syntax to use for data binding depends on the direction the data flows.When data passes into a component, use the \code{[target]="expression"} syntax, for example:
+\begin{Code}
+<button [disabled]="isUnchanged">Save</button>
+\end{Code}
+In some cases, you can also use the traditional html syntax:
+\begin{Code}
+<div class="special">Mental Model</div>
+\end{Code}
+Note, \code{"special"} is a string, not an expression. 
+
+When data flows from a component, for example a DOM event, use the\\ \code{(event)="expression"} syntax:
+\begin{Code}
+<button (click)="onSave($event)">Save</button>
+\end{Code}
+The source event can be found under the name \code{$event} in the expression string.
+
+Angular support two way data binding, commonly used in forms:
+\begin{Code}
+<input name="todo" [(ngModel)]="form.todo">
+\end{Code}
+This works exactly as bound components in react, but you do not need to write the \code{onChange()} function. If you change the JavaScript object \code{form.todo}, angular will update the \code{<input>} value, and if the user writes in the form field, angular will update the \code{form.todo} object.
+
+More about bindings can be found here:\\ \url{https://angular.io/guide/template-syntax#binding-syntax-an-overview}.
+\section{@Input and @Output}
+Components can have input, use the \code{@Input} decoration to bind a class attribute to a input:
+\begin{Code}
+@Component({
+  selector: 'app-hello-world',
+  template: `
+    <h3>Hello World</h3>
+    <p> {{text}}
+  `
+})
+export class HeroChildComponent {
+  @Input() text: string;
+\end{Code}
+\begin{Code}
+<app-hello-world [text]="'Per was here!'"></app-hello-world>
+\end{Code}
+
+Output from a component is wrapped in an event emitted from the component, and follows the data binding pattern outlined above:
+\begin{Code}
+@Component({
+    selector: 'app-child',
+    template: `<button (click)="valueChanged()">Click me</button> `
+})
+export class AppChildComponent {
+    @Output() valueChange = new EventEmitter();
+    Counter = 0;
+    valueChanged() { // You can give any function name
+        this.counter = this.counter + 1;
+        this.valueChange.emit(this.counter);
+    }
+}
+\end{Code}
+\begin{Code}
+<app-child (valueChange)='displayCounter($event)'></app-child
+\end{Code}
+
+How data is passed in and out of components is described here: \url{https://angular.io/guide/component-interaction}.
+
+\section{Service}
+In angular components can interact trough services. Services enables bi-directional communication between any components in an angular app. A service is a JavaScript object which provides functionality to the components (functions they can call). Let's look an example, \code{SaladOrderService} which can mange orders of different salads:
+\begin{Code}
+import { Injectable } from '@angular/core';
+import { Subject }    from 'rxjs';
+ 
+@Injectable()
+export class SaladOrderService {
+  private orders = [];
+  private orderSource = new Subject<Salad[]>();
+  orders$ = this.orderSource.asObservable();
+ 
+  orderSalad(salad: Salad) {
+    this.orders.push(salad);
+    this.saladSource.next(this.orders);
+  }
+}
+\end{Code}
+There is one function, \code{orderSalad()}, adding a salad to the order, and one RxJS Observable \code{orders$}, which can be used to listen to changes in the orders.
+
+Any angular component can use a service simply by requesting a parameter of the service type in its constructor:
+\begin{Code}
+@Component({
+  selector: 'app-compose-salad',
+  template: `
+    <h2>Compose Salad</h2>
+    <form (ngSubmit)="submit()">...</form>
+  `
+})
+export class ComposeSaladComponent {
+  salad = {};  // will be filled by the html form
+  constructor(private orderService: SaladOrderService) {  }
+  submit() {
+    this.orderService.orderSalad(this.salad);
+  }
+}
+\end{Code}
+
+\begin{Code}
+@Component({
+  selector: 'app-view-order',
+  template: `
+    <h2>Orders</h2>
+    <ul>
+      <li *ngFor="let salad of orders">{{salad.toString()}}</li>
+    </ul>
+  `
+})
+export class ViewOrderComponent {
+  orders = [];
+  constructor(private orderService: SaladOrderService) {
+    orderService.orders$.subscribe(order => this.orders = orders);
+  }
+}
+\end{Code}
+
+\section{App.module.ts}
+Angular needs to know the tag names of all angular components, and the types of all services. This is normally managed in the module of the application, the \texttt{app.moudle.ts} file:
+\begin{Code}
+@NgModule({
+  declarations: [
+    AppComponent,
+    ViewOrderComponent,
+    ComposeSaladComponent
+  ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+
+    AppRoutingModule
+  ],
+  providers: [SaladOrderService],
+  bootstrap: [AppComponent]
+})
+\end{Code}
+\code{declarations} is a list of all components declared in this module. \code{providers} is a list of services declared in this module. \code{imports} is a list of other angular modules this module is depending in. After importing a module, you can use the components, pipes,  directives, and services declared in that module.
+\end{itemize}
+

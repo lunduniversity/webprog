@@ -56,7 +56,7 @@ https://my-shop.com/#view/2
 \end{Code}
 The part befor the fragment (\#) identifies the script. The script needs to interpret the ``view/2'' part. The router in react support the two last alternatives: \code{BrowserRouter} handles the \texttt{/view/2} structure, and \code{HashRouter} supports the \texttt{\#view/2} alternative.
 
-\subsection{URL encoding} \label{section:http}
+\subsection{URL encoding} \label{section:url:encoding}
 URLs are text strings, specifically a sequence of 7 bit ASCII characters. 7 bit ASCII can not represent many of the characters in latin, asian, or arabic alphabets, such as åäö. Also, some characters, for example \texttt{/\#?} have special meaning in a url. Clearly, there is a need to represent these characters in URLs, especially when a URL containing the submit of a html form. This is done by URL-encoding, also known as percent-encoding. The principle is to represent any non safe character with a three character sequence, \texttt{\%nn}, where \texttt{nn} is the hexadecimal value of the 8 bits of the character, for example  ``ett två'' is encoded as ``ett\%20tv\%C3\%A5'' (space is ASCII character 20, ``å'' is a two byte sequence in utf-8: 0xC3 and 0xA5). The safe characters, those that do not need percent-encoding, are the letters \texttt{a} to \texttt{z}, \texttt{A} to \texttt{Z}, numbers \texttt{0} to \texttt{9}, and \texttt{- \_ . \textasciitilde} (minus, underscore, dot and tilde). According to the latest standard, utf-8 encoding should be used for url-encoding. However, in the context of html form submission, web browsers will use the character encoding of the web page. In JavaScript, url-encodeing is handled by the function \code{encodeURIComponent()}.
 	
 %--- HTTP -------------------------------------
