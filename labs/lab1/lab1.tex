@@ -45,7 +45,7 @@
 
 %*****************************************************************
 \begin{document}
-\courseinfo{Web Programming}{2019}
+\courseinfo{Web Programming}{\the\year}
 \maketitle
 \thispagestyle{titlepage}
 \vspace{-4cm}
@@ -83,7 +83,7 @@ exports.inventory = {
   Sallad: {price: 10, foundation: true, vegan: true}, 
   'Norsk fjordlax': {price: 30, protein: true},
   Krutonger: {price: 5, extra: true},
-  Ceasardressing: {price: 5, dressing: true},
+  Caesardressing: {price: 5, dressing: true},
   /* more ingredients */
 };
 \end{Code}
@@ -96,17 +96,17 @@ In this lab you will use Node.js as execution environment. The tool is installed
   node lab1.js
 \end{Code}
  
-\noindent Node.js do not support EXMAScript modules, so we will use CommonJs modules instead. Try the following code (you need to download the ./ingredients.js file first):
+\noindent Node.js does not support ECMAScript modules, so we will use CommonJS modules instead. Try the following code (you need to download ./ingredients.js from the course website or github first):
 \begin{Code}
   const imported = require("./inventory.js");
   console.log(imported.inventory);
 \end{Code}
 
-\noindent Have your forgotten about the terminal? Check out the introduction to LTHs computers \url{http://www.ddg.lth.se/perf/unix/unix-x.pdf}.
+\noindent Have you forgotten about the terminal? Check out the introduction from LTH \url{http://www.ddg.lth.se/perf/unix/unix-x.pdf}.
 
 \subsubsection*{IDE}
 
-\noindent Do you want to use an IDE when writing code? I recommend visual studio code, see \url{https://code.visualstudio.com}. It has great support for JavaScript and TypeScript. We will use TypeScript later in the course and eclipse have poor support for that language. TypeScript is JavaScript extended with static typing.
+\noindent Do you want to use an IDE when writing code? I recommend Visual Studio Code, see \url{https://code.visualstudio.com}. It has great support for JavaScript and TypeScript. We will use TypeScript later in the course which Eclipse has poor support for. TypeScript is JavaScript extended with static typing.
 
 \subsection*{Assignments}
 
@@ -116,7 +116,9 @@ In this lab you will use Node.js as execution environment. The tool is installed
 
 \item If you are using the linux system at LTH, remember to run \code{initcs} to add \code{node} to the path.
 
-\item Create a directory and add a new file named \code{lab1.js} to it:
+\item To get started you can either set the project up yourself or use the starter code from GitHub. 
+\subsubsection{Set up the project yourself}
+Create a directory and add a new file named \code{lab1.js} containing the following code:
 \begin{Code}
 'use strict';
 const imported = require("./inventory.js");
@@ -128,20 +130,30 @@ curl -o inventory.js http://fileadmin.cs.lth.se/cs/Education/EDAF90/labs/lab1/in
 node lab1.js
 \end{Code}
 
+\subsubsection{Or use the starter code from GitHub}
+\noindent Clone the GitHub repository, navigate to the lab1 folder, inspect the code and then run it:
+
+\begin{Code}
+  git clone https://github.com/lunduniversity/webprog
+  cd webprog/labs/lab1
+  cat lab1.js
+  node lab1.js
+\end{Code}
+
 \item In the \code{inventory.js} file you can find all options for composing a salad. Its structure is good for looking up properties of the ingredients, i.e. \code{imported.inventory['Krutonger']}. However this structure is not ideal for presenting the options for the customers. Your first assignment is to address this. Print the choices for composing a salad. Use separate lines for foundations, proteins, extras, and dressings. The output should look like this:
 \begin{Code}
 Foundations: Sallad,Pasta,Salad + Pasta,Salad + Matvete,...
 Extras: Avocado,Fetaost,Gurka,Jalapeno,Krutonger,Lime,Majs,Oliver,...
 \end{Code}
-\emph{hint} check out \code{Object.keys()}, see \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys}. What happens if you use a \code{for\ldots in} loop instead?
+\emph{hint} check out \code{Object.keys()}, see \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys}. How does it compare to using a \code{for\ldots in} loop instead?
 
 \noindent \emph{Note,} only the properties that holds true are declared in the objects. Reading an object property that is not declared will evaluate to \code{false}, so there is no need to do something like \code{\{lactose: false\}}.
 
 \item We need a representation for a salad. Create a JavaScript constructor/class named \code{Salad} for that. You need four properties: \code{foundation}, \code{proteins}, \code{extras}, and \code{dressing}. Create a constructor and functions to add and remove selections.
 
-\item Create an object for a cesar salad, i.e. \code{let myCesarSalad = new Salad(); /* code to add the ingredients */}
+\item Create an object for a caesar salad, i.e. \code{let myCaesarSalad = new Salad(); /* code to add the ingredients */}
 
-\item Next task is to add additional functionality to the \code{Salad} class/prototype. Add a function, \code{price()} to calculate the price. The price is simply the sum of the prices of all ingredients. The computation should be done using functional style, i.e. no loops (\code{for}/\code{while}). \emph{hint}: check out \code{reduce()} and the other functions in \code{Array.prototype}, see \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array}. Test your price function with the cesar salad created above, i.e. run \code{myCesarSalad.price()}.
+\item Next task is to add additional functionality to the \code{Salad} class/prototype. Add a function, \code{price()} to calculate the price. The price is simply the sum of the prices of all ingredients. The computation should be done using functional style, i.e. no loops (\code{for}/\code{while}). \emph{hint}: check out \code{reduce()} and the other functions in \code{Array.prototype}, see \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array}. Test your price function with the caesar salad created above, i.e. run \code{myCaesarSalad.price()}.
 
 \item The restaurant wants to introduce a discount salad. The price is reduced by making the foundation 30\% larger, and all other parts 50\% smaller. The principle for calculating the price is still the same, but you need to adjust the numbers from the ingredient object to compensate for the changed size (extras are 50\% cheaper). Create a \code{ExtraGreenSalad} constructor/class for this. Most functionality can be inherited from \code{Salad} You should only change the \code{price()} function.
 

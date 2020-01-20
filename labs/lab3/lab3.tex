@@ -44,7 +44,7 @@
 
 %*****************************************************************
 \begin{document}
-\courseinfo{Web Programming}{2019}
+\courseinfo{Web Programming}{\the\year}
 \maketitle
 \thispagestyle{titlepage}
 \vspace{-4cm}
@@ -91,9 +91,9 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
   {/* more links */}
 </ul>
 \end{Code}
-Add the code above to the \code{App} component. Add a second link for the \code{ViewOrder} alternative. Go to your browser and klick on the links. The path in your browser changes, and you see the navigations in the browsers history. However, all pages looks the same.
+Add the code above to the \code{App} component. Add a second link for the \code{ViewOrder} alternative. Go to your browser and klick on the links. The path in your browser changes, and you see the navigations in the browsers history. However, all pages look the same.
 
-\item Let's change this. Based on the url in the address bar of the browser, we want to render either the \code{ComposeSalad}, or the \code{ViewOrder} component. \code{<Route path='/compose-salad' component=\{ComposeSalad\}>} is how you normally do this. However, it is not enough to just replace \code{<ComposeSalad ...>} with \code{<Route ...>}. \code{<Route ...>} do not interact directly with the browser. Instead, this is done by another component: \code{<BrowserRouter>}. \code{<BrowserRouter>} must be an ancestor to \code{<Route>}. It is probably easiest to place it in the root (note, \code{<BrowserRouter>} was renamed to \code{<Router>} during the import):
+\item Let's change this. Based on the url in the address bar of the browser, we want to render either the \code{ComposeSalad}, or the \code{ViewOrder} component. \code{<Route path='/compose-salad' component=\{ComposeSalad\}>} is how you normally do this. However, it is not enough to just replace \code{<ComposeSalad ...>} with \code{<Route ...>}. \code{<Route ...>} does not interact directly with the browser. Instead, this is done by another component: \code{<BrowserRouter>}. \code{<BrowserRouter>} must be an ancestor to \code{<Route>}. It is probably easiest to place it in the root (note, \code{<BrowserRouter>} was renamed to \code{<Router>} during the import):
 \begin{Code}
 class App extends Component {
   render() {
@@ -146,7 +146,7 @@ Note, automatically changing the page can be confusing for the user and should n
 \end{itemize}
 Note the \code{:name} part of the path. The router will take the matching text from the url and pass it to your component in its \code{match.params} object, i.e. \code{this.props.match.params.name} in your \code{render()} function.
 
-\item Now your app is split to different pages, where each page have a clear functionality. This is good, do not confuse the user by putting too many unrelated things on one page. Let's move on to another important part of the user experience, form validation and feed back. When a user orders a salad we want to make sure that:
+\item Now your app is split to different pages, where each page have a clear functionality. This is good, do not confuse the user by putting too many unrelated things on one page. Let's move on to another important part of the user experience, form validation and feedback. When a user orders a salad we want to make sure that:
 \begin{itemize}
   \item one foundation is selected
   \item one dressing is selected
@@ -175,7 +175,7 @@ If you only want to show error messages when the form is submitted, you skip the
 \begin{Code}
 <div className="form-group">
   <label htmlFor="foundationSelect">Select foundation</label>
-  <select required className="form-control" id="foundationSelect" ...}>
+  <select required className="form-control" id="foundationSelect" ...>
     <option value=''></option>
     {/* more options */}
   </select>
@@ -184,9 +184,9 @@ If you only want to show error messages when the form is submitted, you skip the
 \end{Code}
 There is one more thing you need to do:
 \begin{Code}
-<form onSubmit={ this.handleSubmit } noValidate >
+<form onSubmit={this.handleSubmit} noValidate>
 \end{Code}
-The attribute noValidate tells the browser not to show its own error message, and makes bootstrap show the content styled with \code{valid-feedback/invalid-feedback}. The browser still do html 5 constraint validation and updates the pseudo classes \code{:valid/:invalid}. You can check if a form is valid by calling \code{formElement.checkValidity()} on the form element, in \code{handleSubmit}:
+The attribute noValidate tells the browser not to show its own error message, and makes bootstrap show the content styled with \code{valid-feedback/invalid-feedback}. The browser still does html 5 constraint validation and updates the pseudo classes \code{:valid/:invalid}. You can check if a form is valid by calling \code{formElement.checkValidity()} on the form element, in \code{handleSubmit}:
 \begin{Code}
 if(event.target.checkValidity() === false){ ... }
 \end{Code}
@@ -200,9 +200,14 @@ This error is not related to a single input, but rather a group of checkboxes. I
 \begin{Code}
 constructor(props) {
   super(props);
-  this.state = { formErrors: { ignoreInvalid: false,
-                    extras: false, 
-                    proteins: false} } }
+  this.state = {
+    formErrors: {
+      ignoreInvalid: false,
+      extras: false,
+      proteins: false,
+    }
+  };
+}
 \end{Code}
 Use this part of the component state to show and hide your alert boxes. Do not bother the user with an error when the first extra is selected. Wait until the form is submitted. After a failed submission, you want to clear the error as soon as the problem is fixed. The attribute \code{ignoreInvalid} can be used for this, or you might prefer to call it \code{submissionFailed}.
 
