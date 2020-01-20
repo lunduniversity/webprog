@@ -8,16 +8,21 @@
 #emacs
 *~
 
-# latex
-*.aux
-*.fdb_latexmk
-*.fls
-*.out
-*.synctex.gz
-*.toc
-*.nav
-*.snm
-*.vrb
+# Latex
+**/*.aux
+**/*.log
+**/*.nav
+**/*.out
+**/*.snm
+**/*.vrb
+**/*.synctex.gz
+**/*.synctex.gz(busy)
+**/*.toc
+**/*.bbl
+**/*.blg
+**/*.pdf
+**/*.fdb_latexmk
+**/*.fls
 
 # Compiled class file
 *.class
