@@ -72,7 +72,7 @@ On the course home page you find the instructions for creating a new react proje
 
 If you do not intend to use bootstrap modals, skip the \code{npm install jquery popper.js} step. If you change your mind, you can always add them later.
 
-In this lab we use Ecmascript modules, so download the ES6 variant of the inventory file:
+In this lab we use ECMAscript modules, so download the ES6 variant of the inventory file:
 \begin{Code}
 > cd lab2
 > curl -o src/inventory.ES6.js 
@@ -100,6 +100,7 @@ class ComposeSalad extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
 
   render() {
     const inventory = this.props.inventory;
@@ -117,29 +118,29 @@ class ComposeSalad extends Component {
 export default ComposeSalad;
 \end{Code}
 
-A few observations: 1, remember to export the name, else you can not instantiate your component outside the file. 2, note how you can mix JavaScript and JSX in the \code{render()} function. 3, \code{key=\{name\}} helps react track witch part of the DOM to render when data changes, read about it in the react documentation. 4, \code{className="container"} is a bootstrap class that adds some styling so tings looks nice. Style other html elements you add with bootstrap css classes. 4, JSX do not have comments, but you can use embedded JavaScript for that:
+A few observations: 1, remember to export the name, else you can not instantiate your component outside the file. 2, note how you can mix JavaScript and JSX in the \code{render()} function. 3, \code{key=\{name\}} helps react track witch part of the DOM to render when data changes, read about it in the react documentation. 4, \code{className="container"} is a bootstrap class that adds some styling the page looks better. Style other html elements you add with bootstrap css classes. 4, JSX does not have comments, but you can use embedded JavaScript for that:
 \begin{Code}
 <span>
-  {/* this part do not do anything right now */}
+  {/* this part won't do anything right now */}
 </span>
 \end{Code}
 
-\item Lets use the component, instansiate it in \code{App.js}:
+\item Lets use the component, instantiate it in \code{App.js}:
 \begin{Code}
 import ComposeSalad from './ComposeSalad';
 
-// in your render() function, add to existing JSX:
+// add this line to the existing JSX in your render() function:
 <ComposeSalad inventory={inventory} />
 \end{Code}
 
 \item In your \code{ComposeSalad} react component, add a html form for composing a salad, see \url{https://reactjs.org/docs/forms.html}. Some hints:
 \begin{itemize}
   \item The \code{ComposeSalad} should only render the html form. If you want to use modals, place that code in a separate component, \code{ComposeSaladModal}, or in \code{App}. \code{ComposeSaladModal} is recommended since it makes your code more reusable. We will use a router later and then there is no use for a modal.
-  \item React is based on the \emph{model-view} design pattern. \code{ComposeSalad} is the view and \code{Salad} is the model. \code{ComposeSalad} contains all functionality for viewing the model. \code{Salad} are not aware of how it is visualised. Do not put any view details, such as html/react elements, in this class. This makes your code portable. You can reuse the \code{Salad} class in an Angular or  JavaFX application without modification.
-  \item Remember to bind your callback functions:\\ \code{this.handleChange = this.handleChange.bind(this);}
+  \item React is based on the \emph{model-view} design pattern. \code{ComposeSalad} is the view and \code{Salad} is the model. \code{ComposeSalad} contains all functionality for viewing the model. \code{Salad} are not aware of how it is visualised. Do not put any view details, such as html/react elements, in this class. This makes your code portable. You can reuse the \code{Salad} class in an Angular or JavaFX application without modification.
+  \item Remember to bind your callback functions:\\ \code{this.handleChange = this.handleChange.bind(this);} Read why you sometimes need to bind your callbacks here \url{https://reactjs.org/docs/handling-events.html}.
   \item Use checkboxes, see the bootstrap documentation on how to style them. The html elements to use are \code{<input type='checkbox'>} and \code{<label>}.
-  \item For checkboxes, the state of the DOM-element is stored in the property named \code{checked} (for other \code{<input>} types \code{value} is used). Do not assign \code{undefined} ti it. To avoid this, you can use the JavaScript short cut behaviour of \code{||} \\ \code{<input checked=(this.state['Tomat']||false)>}.
-  \item \code{<select>} and \code{<option>} might be a good alternative for selecting the foundation and dressing.
+  \item For checkboxes, the state of the DOM-element is stored in the property named \code{checked} (for other \code{<input>} types \code{value} is used). Do not assign \code{undefined} to it. To avoid this, you can use the JavaScript short cut behaviour of \code{||} \\ \code{<input checked=(this.state['Tomat'] || false)>}.
+  \item \code{<select>} and \code{<option>} might be good alternatives for selecting the foundation and dressing.
   \item Use iterations in JavaScript (\code{Array.map} is recommended), avoid hard coding each ingredient (your may not assume which ingredients are present in inventory, so the 'Tomato' part of the example above is not ok)
   \item It is a good idea to create additional react components, for example SaladCheckbox, and/or SaladSection (two instances, one for extras and one for proteins). You can pass bound functions to subcomponents if you prefer to keep the callback functions in \code{ComposeSalad}.
   \item \code{<imput>} elements have a \code{name} attribute. Use it to store which ingredient it represents. In your callback function it is available in \code{event.target.name}.
