@@ -1,0 +1,193 @@
+\documentclass[aspectratio=1610]{beamer}
+\usepackage{iftex}
+\usepackage{pdfpages}
+\ifLuaTeX\else
+	\usepackage[utf8]{inputenc}
+	\usepackage[T1]{fontenc}
+\fi
+\usetheme[
+% titleimagecolor=red,       % [gray], darkgray, red, blue, green
+% titleimagemargin=2mm,      % Distance [2mm]    Frame around title page image
+% navigationsymbols=false,   % true   / [false]  Navigation symbols in the foot
+% mathseriffont=false,       % true   / [false]  Serif / non-serif math fonts
+% foot=true,                 % [true] / false    Footline or not
+% nofootslidenum=false       % true   / [false]  Keep slide num even when foot=false
+% footlogo=true,             % [true] / false    Put LU logo to the left of footer
+% english=true,              % [true] / false    English / Swedish logo
+% LTHlogo=false,             % true   / [false]  Use LTH logo instead of LU on title and end pages.
+% blackenumeratenumber=true, % [true] / false    Black enumerate numbers, o.w. Lund bronze
+% blackitemmark=false,       % true   / [false]  Black item marks, o.w. Lund bronze
+% defaultfont=palatino,      % [palatino], beamer, lu
+% sectionframe=true,
+]{ulund}
+%%%%%%%%%%%%%%%%%%%%% Layout commands 
+%%%% Foot
+% \ulundfootleft{\insertshortauthor}
+% \ulundfootmid{\insertshorttitle}
+% \ulundfootright{\insertframenumber}% {\insertframenumber:\inserttotalframenumber}
+%%%% Titleimage
+% \titleimage{Pictures/ULUNDcolor} % Replaces the LU image. Voids option titleimagecolor
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\code}[1]{\lstinline{#1}}
+
+\title[JavaScript]{JavaScript}
+\author[EDAF90]{%
+  EDAF90 Web Programming\newline
+  Per Andersson}
+%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{verbatim}
+%%%%%%%%%%%%% Verbatim code box
+\usepackage[skins,listings]{tcolorbox}
+\ifLuaTeX\else
+	\tcbuselibrary{listingsutf8}
+\fi
+\newtcblisting{CodeBox}[2][]{% Only code
+  colframe=black,
+  colback=white,
+  arc=1pt,
+  boxrule=0.5pt,
+  top=0mm,bottom=0pt,left=0pt,
+  colbacktitle=gray!40,
+  coltitle=black,
+  fonttitle=\sffamily,
+  listing only,
+  hbox,
+  listing options={
+    basicstyle=\small\ttfamily,
+    breaklines=true,
+    columns=fullflexible,
+    language=Java,
+    basicstyle = \ttfamily,
+    showstringspaces=false,
+    morekeywords= {undefined, NaN, function, export, var, let}
+  },
+  title=#2,#1
+}
+
+\lstset{
+    basicstyle=\small\ttfamily,
+    breaklines=true,
+    columns=fullflexible,
+    language=Java,
+    basicstyle = \ttfamily,
+    showstringspaces=false,
+    morekeywords= {undefined, NaN, function, export, var, let}
+}
+
+%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\begin{frame}[plain]% Use plain to suppress footline box
+  \titlepage
+\end{frame}
+
+%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{JavaScript}
+
+\begin{itemize}
+\item ``the world's most misunderstood programming language''
+\item working name at Netscape 1995: \emph{LiveScript}
+\item syntax and name in common with Java
+\item object function oriented language
+\item interpreted
+\item dynamically typed 
+\item run in web browser and nodejs
+\end{itemize}
+
+\end{frame}
+
+%---Types ---------------------------------------------------
+\include{parts/types}
+
+%---Truthy/Falsy ---------------------------------------------------
+\include{parts/truthy_equality}
+
+%---Functions ---------------------------------------------------
+\include{parts/functions}
+
+%---scope ---------------------------------------------------
+\include{parts/scope}
+
+%---JavaScript modules ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{JavaScript modules}
+  Introduced in ES6
+\begin{columns}[onlytextwidth]
+  \begin{column}{1\textwidth}
+\begin{CodeBox}{my-module.js}
+function cube(x) {
+  return x * x * x;
+}
+export { cube, foo };
+const foo = Math.PI + Math.SQRT2;
+\end{CodeBox}
+\begin{CodeBox}{some-code.js}
+import { cube, foo } from './my-module.js';
+
+console.log(cube(3));
+console.log(foo);
+\end{CodeBox}
+  \end{column}
+\end{columns}%
+\end{frame}
+
+%--- CommonJS modules---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{CommonJS modules}
+  Common in environments not supporting JavaScript Modules, for example node.
+\begin{columns}[onlytextwidth]
+  \begin{column}{1\textwidth}
+\begin{CodeBox}{my-module.js}
+function cube(x) {
+  return x * x * x;
+}
+const foo = Math.PI + Math.SQRT2;
+\end{CodeBox}
+\begin{CodeBox}{some-code.js}
+const stuff = require('./my-module.js');
+
+console.log(stuff.cube(3));
+console.log(stuff.foo);
+\end{CodeBox}
+  \end{column}
+\end{columns}%
+\end{frame}
+
+%--- Automatic Semicolon Insertion ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Automatic Semicolon Insertion}
+  If needed, a semicolon is added at the end of a line.
+\begin{CodeBox}{the function will return undefined}
+  function() { return
+  1; }
+\end{CodeBox}
+
+\vspace{4mm}
+Common to use minify to minimise script download size. All white spaces are removed.
+\begin{columns}[onlytextwidth]
+  \begin{column}{0.35\textwidth}
+\begin{CodeBox}{works}
+  let myVar = 9
+  if (myVar === 9) {
+  }
+\end{CodeBox}
+  \end{column}
+  \begin{column}{0.65\textwidth}
+\begin{CodeBox}{syntax error after minify}
+  var myVar = 9 if (myVar === 9) {}
+\end{CodeBox}
+  \end{column}
+  \begin{column}{0.3\textwidth}  \end{column}
+\end{columns}%
+
+\vspace{4mm}
+Use jslint to detect these problems.
+\end{frame}
+
+
+%%%%%%%%%%%
+\end{document}

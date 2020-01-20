@@ -1,0 +1,108 @@
+%---Types ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Types}
+Seven data types that are primitives (immutable):
+\begin{itemize}
+  \item  \verb|boolean|
+  \item  \verb|null| - \verb|typeof null| $\rightarrow$ \verb|object|
+  \item  \verb|undefined|
+  \item  \verb|number|
+  \item  \verb|bigint| - literal syntax: \verb|42n|
+  \item  \verb|string|
+  \item  \verb|symbol| - unique and immutable
+\end{itemize}
+All other values have the type:
+\begin{itemize}
+  \item  \verb|object|
+\end{itemize}
+\end{frame}
+
+%---Dynamically Typed Language ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Dynamically Typed Language}
+  JavaScript is dynamically typed.\\
+  A variable have a value and a type. Both can change.\\
+  This includes objects. You can add and remove properties.\\
+  \vspace{5mm}
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.4\textwidth}
+      \begin{CodeBox}{ valid JavaScript}
+let a = 'Per';  
+a = 0;
+a = null;
+a = undefined;
+      \end{CodeBox}
+    \end{column}
+  \begin{column}{0.55\textwidth}
+    \begin{CodeBox}{typeof}
+typeof 'Per' === 'string';
+typeof 0 === 'number';
+typeof null === 'object';
+typeof undefined = 'undefined';
+      \end{CodeBox}
+    \end{column}
+    \begin{column}{0.3\textwidth}  \end{column}
+  \end{columns}%
+  \vspace{5mm}
+\verb|typeof| returns a string. The value is one of the 8 types.
+\end{frame}
+
+%---Type Conversion ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Type Conversion}
+  Enforce type conversion with expressions.\\
+  \begin{CodeBox}{ type converting expressions}
+typeof (+'42') // 'number'
+typeof (!!null) // 'boolean'
+  \end{CodeBox}
+  \vspace{5mm}
+  Use type converting functions: \verb|Number()|, \verb|String()|, and \verb|Boolean()|.
+  \begin{CodeBox}{ type converting expressions}
+typeof Number('42') // 'number'
+typeof Number('Per') // 'number'
+typeof Boolean('false') // 'boolean'
+typeof String(42) // 'string'
+  \end{CodeBox}
+\end{frame}
+
+%---Automatic Type Conversion ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Automatic Type Conversion}
+  JavaScript will automatically convert values when needed.\\
+  There is a strong preference to convert to \verb|string|.\\
+  The type conversion algorithm have some non intuitive side effect. This is the root of some of the \emph{bad parts}
+   of JavaScript.
+\vspace{5mm}
+  \begin{CodeBox}{ automatic type conversion}
+3 + '42';      // '342'
+null + 'Per'; //  'nullPer'
+3 == '3'       // true
+  \end{CodeBox}
+\end{frame}
+
+%---Strings ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Strings}
+String literals and templates
+\begin{itemize}
+  \item \verb|'single quotation mark'|
+  \item \verb|"double quotation mark"|
+  \item \verb|`string templates| \\
+           \verb|can span multiple lines| \\
+           \verb|and contain embedded expressions: 1+2=${1+2}`|
+\end{itemize}
+Operations
+\begin{itemize}
+  \item \verb|'Per'+ ' ' + 'Andersson'|
+  \item \verb|'Per'.lenght|
+  \item \verb|'Per'.toUpperCase()|
+  \item \verb|'Per'[0]|
+\end{itemize}
+\begin{columns}[onlytextwidth]
+  \begin{column}{0.3\textwidth}  \end{column}
+  \begin{column}{0.4\textwidth}
+    \begin{alertblock}{Note}strings are immutable \end{alertblock}
+  \end{column}
+  \begin{column}{0.3\textwidth}  \end{column}
+\end{columns}%
+ \end{frame}

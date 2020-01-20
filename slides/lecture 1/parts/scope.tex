@@ -1,0 +1,139 @@
+%---Scope ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Scope}
+Two different kind of scopes:
+\begin{itemize}
+  \item  function scope
+  \begin{itemize}
+    \item \code{var}
+  \end{itemize}
+  \item block scope (ES2015)
+  \begin{itemize}
+    \item \code{let}
+    \item \code{const}
+    \item works like scope in Java
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%---Function Scope ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function Scope}
+\begin{itemize}
+  \item declare variables using \code{var}
+  \item the scope is the current execution context
+  \begin{itemize}
+    \item the function
+    \item else the global context
+  \end{itemize}
+  \item  redeclaration of names are allowed
+  \item assigning a value to an undeclared variable implicitly creates it as a global variable
+  \item considered bad practice today
+\end{itemize}
+\end{frame}
+
+%---Function Scope 2 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function Scope, example 1}
+
+\begin{CodeBox}{}
+function foo() {
+  y = 1; // Throws a ReferenceError in strict mode.
+  var x = 3;
+  if (true) {
+    var x = 2;
+  }
+  return x;
+}
+console.log(y); // undefined
+console.log(foo()); // 2
+console.log(y); // 1
+\end{CodeBox}
+\end{frame}
+
+%---Function Scope 3 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function Scope, example 2}
+
+\begin{CodeBox}{}
+function foo() {
+  for (var i=0; i<2; i++) {
+    for (var i=0; i<2; i++) {
+      console.log(i);
+    }
+  }
+  return x;
+}
+foo()  // 0, 1
+\end{CodeBox}
+\end{frame}
+
+%---Function Scope 4 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function Scope, example 3}
+
+\begin{CodeBox}{}
+function foo() {
+  for (var i=0; i<2; i++) {
+    setTimeout(function(){ console.log(i); }, 0);
+  }
+}
+foo()  // 2, 2
+\end{CodeBox}
+\end{frame}
+
+%---Name Hoisting ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Name Hoisting}
+In function scope
+\begin{itemize}
+  \item all declared variables are created before any code is executed
+  \item name declarations are lifted to top of function
+  \item initialisation remain in place
+  \item function expressions are not hoisted
+\end{itemize}
+
+\begin{CodeBox}{}
+function foo() {
+  console.log(x);  // undefined
+  var x = 3;
+  console.log(x);  // 3
+}
+\end{CodeBox}
+\end{frame}
+
+%---Immediately Invoked Function Expressions ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Immediately Invoked Function Expressions}
+\begin{itemize}
+  \item creates a closure when declared
+  \item if inside a loop
+  \begin{itemize}
+    \item one closure for each loop iteration
+    \item variables are initialised in each loop iteration
+    \item clone and freeze outer statte (loop variable)
+  \end{itemize}
+\end{itemize}
+
+\begin{CodeBox}{}
+// outer scope
+var x = 2;
+(function() {
+  // inner hidden scope
+  var x = 3;
+})();
+
+console.log(x);
+// more outer scope
+\end{CodeBox}
+\end{frame}
+
+%---Immediately Invoked Function Expressions 2 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{IIFE, example 2}
+
+\begin{CodeBox}{}
+var domElements = [...];
+for (var i=0; i<10; i++) {
+  (function () {
+    let id = i;
+    domElement[i].onClick(
+      _ => { alert('clicked ' + id); }
+    );
+  })();  
+}
+\end{CodeBox}
+\end{frame}
+

@@ -1,0 +1,169 @@
+\documentclass[aspectratio=1610]{beamer}
+\usepackage{iftex}
+\usepackage{pdfpages}
+\ifLuaTeX\else
+	\usepackage[utf8]{inputenc}
+	\usepackage[T1]{fontenc}
+\fi
+%%%%%%%
+% \usepackage{layout}
+% \usepackage{lipsum}
+%%%%%%%
+\usetheme[% Complete settings. Default value in []
+% titleimagecolor=red,       % [gray], darkgray, red, blue, green
+% titleimagemargin=2mm,      % Distance [2mm]    Frame around title page image
+% navigationsymbols=false,   % true   / [false]  Navigation symbols in the foot
+% mathseriffont=false,       % true   / [false]  Serif / non-serif math fonts
+% foot=true,                 % [true] / false    Footline or not
+% nofootslidenum=false       % true   / [false]  Keep slide num even when foot=false
+% footlogo=true,             % [true] / false    Put LU logo to the left of footer
+% english=true,              % [true] / false    English / Swedish logo
+% LTHlogo=false,             % true   / [false]  Use LTH logo instead of LU on title and end pages.
+% blackenumeratenumber=true, % [true] / false    Black enumerate numbers, o.w. Lund bronze
+% blackitemmark=false,       % true   / [false]  Black item marks, o.w. Lund bronze
+% defaultfont=palatino,      % [palatino], beamer, lu
+% sectionframe=true,
+]{ulund}
+%%%%%%%%%%%%%%%%%%%%% Layout commands 
+%%%% Foot
+% \ulundfootleft{\insertshortauthor}
+% \ulundfootmid{\insertshorttitle}
+% \ulundfootright{\insertframenumber}% {\insertframenumber:\inserttotalframenumber}
+%%%% Titleimage
+% \titleimage{Pictures/ULUNDcolor} % Replaces the LU image. Voids option titleimagecolor
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[EDAF90 Web Programming]{EDAF90 Web Programming}
+\author[Per Andersson]{%
+  Per Andersson\newline
+  Dept.\@ of CS, Lund University}
+%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{verbatim}
+%%%%%%%%%%%%% Verbatim code box
+\usepackage[skins,listings]{tcolorbox}
+\ifLuaTeX\else
+	\tcbuselibrary{listingsutf8}
+\fi
+\lstdefinestyle{CodeStyle}{basicstyle = \ttfamily}
+\newtcblisting{CodeBox}[2][]{% Only code
+  colframe=black,
+  colback=white,
+  arc=1pt,
+  boxrule=0.5pt,
+  top=0mm,bottom=0pt,left=0pt,
+  colbacktitle=gray!40,
+  coltitle=black,
+  fonttitle=\sffamily,
+  listing only,
+  title=#2,#1}
+%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\begin{frame}[plain]% Use plain to suppress footline box
+  \titlepage
+\end{frame}
+
+%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Course Content}
+
+This course is about programming apps running in a web browser.
+
+\vspace{5mm}
+
+During the course you will:
+\begin{itemize}
+\item learn web terminology and consepts
+\item build applications for web browsers
+\item understand some internet protokolls
+\item learn basic asynchronous programming and streams
+\item be introduced to concurrency, race conditions, and deadlocks
+\end{itemize}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Not Covered in the Course}
+You will not learn:
+\begin{itemize}
+\item HTML
+\item CSS
+\item GUI design/interaction design
+\item security
+\item backend
+\item software architectures and design patterns for the web
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Additional knowledge:}
+Complements to this course:
+\begin{itemize}
+\item EITF05 - Web Security
+\item EITN41 - Advanced Web Security
+\item MAMN25 - Interaction Design
+\item EDAP10  - Concurrent Programming
+\item EDAF75 - Database Technology
+\item EDAN40 - Functional Programming
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Outline}
+Course content:
+\begin{itemize}
+\item 10 lectures 
+\item 4 labs
+\item project
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Resources}
+Resources:
+\begin{itemize}
+\item \href{http://cs.lth.se/edaf90}{http://cs.lth.se/edaf90} - course information and material 
+\item \href{https://piazza.com/lu.se/winter2020/edaf90/home}{piazza} - Q\&A forum
+\item \href{https://moodle.cs.lth.se/course/view.php?id=82}{moodle} - interactive exercises
+\end{itemize}
+
+Per Andersson
+per.andersson@cs.lth.se
+E229
+046 22 24 673
+\end{frame}
+
+%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Study materials}
+
+Books
+\begin{itemize}
+\item \href{https://github.com/getify/You-Dont-Know-JS}{You Dont Know JS by Kyle Simpson} 
+\item \href{https://eloquentjavascript.net/}{Eloquent JavaScript by Marijn Haverbeke}
+\item \href{http://shop.oreilly.com/product/9780596517748.do}{JavaScript: The Good Parts by Douglas Crockford}
+\end{itemize}
+
+Other sources
+\begin{itemize}
+\item \href{http://fileadmin.cs.lth.se/cs/Education/EDAF90/lectures/lecture-notes.pdf}{Lecture notes for EDAF90}
+\item links to online material on the home page
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%% End frame
+\begin{frame}[plain]
+  \endpage
+\end{frame}
+
+%%%%%%%%%%%
+\end{document}

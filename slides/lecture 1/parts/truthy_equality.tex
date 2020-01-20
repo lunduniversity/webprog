@@ -1,0 +1,90 @@
+%---Truthy/Falsy ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Truthy/Falsy}
+  Falsy:
+  \begin{itemize}
+    \item \verb|false|
+    \item \verb|0|
+    \item \verb|0n|
+    \item \verb|""|, \verb|''|, \verb|``|
+    \item \verb|null|
+    \item \verb|undefined|
+    \item \verb|NaN|
+  \end{itemize}
+\begin{CodeBox}{no need for}
+if (name == null || name.length == 0){
+  name = 'anonymous';
+}
+\end{CodeBox}
+\end{frame}
+
+%---Short Circuit ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Short Circuit}
+  Logic operations return the value of one operand.
+\begin{columns}[onlytextwidth]
+  \begin{column}{0.6\textwidth}
+\begin{CodeBox}{ some expressions}
+  a = 'Per' || 'default value';
+  b = '' || 'default value';
+  c = 'Per' || null;
+  d = NaN || undefined;
+  
+  e = 'Per' && 'Andersson';
+  f = undefined && 'Andersson';
+  g = 'Per' && NaN;
+  h = null && 0;
+  i = ref && ref.value;
+\end{CodeBox}
+  \end{column}
+  \begin{column}{0.4\textwidth}
+\begin{CodeBox}{evaluates to}
+  a = 'Per';
+  b = 'default value';
+  c = 'Per';
+  d = undefined;
+  
+  e = 'Andersson';
+  f = undefined;
+  g = NaN;
+  h = null;
+  i = ref?ref.value:ref;
+\end{CodeBox}
+  \end{column}
+  \begin{column}{0.3\textwidth}  \end{column}
+\end{columns}%
+\end{frame}
+
+%---Equality and sameness ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Equality and sameness}
+  There are four equality algorithms in ES2015:
+  \begin{itemize}
+    \item Abstract Equality Comparison: \verb|==|, \verb|!=|
+    \item Strict Equality Comparison: \verb|===|, \verb|!==|
+    \item SameValueZero: used by \verb|%TypedArray%| and \verb|ArrayBuffer|
+    \item SameValue: used in all other places (\verb|Object.is|)
+  \end{itemize}
+\begin{columns}[onlytextwidth]
+  \begin{column}{0.45\textwidth}
+\begin{CodeBox}{evaluates to true}
+  NaN != NaN;
+  1 == '1';
+  [1, 2] == '1,2';
+  [1, 2] != '1, 2';
+  'true' != true;
+\end{CodeBox}
+  \end{column}
+  \begin{column}{0.45\textwidth}
+\begin{CodeBox}{evaluates to true}
+  -0 == +0;
+  0 == false
+  1 !== '1';
+  null == undefined;
+  null !== undefined;
+\end{CodeBox}
+  \end{column}
+  \begin{column}{0.3\textwidth}  \end{column}
+\end{columns}%
+Check out the \href{https://dorey.github.io/JavaScript-Equality-Table/}{JavaScript Equality Table} 
+\end{frame}

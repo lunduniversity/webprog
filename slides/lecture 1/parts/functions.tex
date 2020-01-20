@@ -1,0 +1,220 @@
+%---Functions ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Functions}
+
+\begin{itemize}
+  \item functions are values - \code{Function} objects
+  \begin{itemize}
+    \item assign functions to variables
+    \item use functions as arguments to other functions
+  \end{itemize}
+  \item call by value - like in Java (objects are references)
+  \item default return value:
+  \begin{itemize}
+    \item \code{undefined}
+    \item \code{this} in constructors
+  \end{itemize}
+  \item three ways to create functions:
+  \begin{itemize}
+    \item function declaration
+    \item function expression
+    \item \code{Function} constructor (not recommended)
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+%---Function Declaration ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function Declaration}
+
+\begin{itemize}
+  \item is a statement
+  \item no need to use semicolon after a function declaration
+  \item creates a \code{Function} object
+  \item creates a variable with the function name
+\end{itemize}
+\begin{CodeBox}{function declaration}
+function calcRectArea(width, height) {
+  return width * height;
+}
+
+console.log(calcRectArea(5, 6));
+\end{CodeBox}
+\end{frame}
+
+%---Function Expression ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function Expression}
+
+\begin{itemize}
+  \item is an expression
+  \item creates a \code{Function} object
+  \item the function name is optional, omitting it creates an anonymous function
+  \item the name is stored in the \code{Function} object, can only be used inside the function
+  \item you must store the value to use the function
+\end{itemize}
+\begin{CodeBox}{function expression}
+let calcRectArea = function foo(width, height) {
+  return width * height;
+}
+
+console.log(calcRectArea(5, 6));
+\end{CodeBox}
+\end{frame}
+
+%---Default Parameters ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Default Parameters}
+\begin{itemize}
+  \item function parameters default to \code{undefined}
+  \item parameters can have other default values (ES2015)
+  \item parameters are available to later default parameters
+  \item default parameters are evaluated at call time
+\end{itemize}
+
+\begin{CodeBox}{rest parameters}
+function multiply(a, b = 1) {
+  return a * b;
+}
+
+function greet(name, 
+                    greeting,
+                    message = greeting + ' ' + name) {
+    return [name, greeting, message];
+}
+\end{CodeBox}
+\end{frame}
+
+%---Rest Parameters ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rest Parameters}
+\begin{itemize}
+  \item must be the last named parameter
+  \item all remaining arguments are wrapped into an \code{Array}
+\end{itemize}
+\vspace{5mm}
+
+\begin{CodeBox}{rest parameters}
+function sloppySum(first, ...theRest) {
+  return theRest.reduce((previous, current) => {
+    return previous + current;
+  });
+}
+\end{CodeBox}
+\end{frame}
+
+%---Arguments Object ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Arguments Object}
+\begin{itemize}
+  \item \code{arguments} is an \code{Array}-like object
+  \item contains all arguments
+  \item doesn't have \code{Array}'s built-in methods like \code{forEach()} and \code{map()}
+  \item properties
+  \begin{itemize}
+    \item \code{arguments.callee}
+    \item \code{arguments.caller}
+    \item \code{arguments.length}
+    \item \code{arguments[@@iterator]}
+  \end{itemize}
+\end{itemize}
+
+\begin{CodeBox}{arguments}
+function foo(a, b, c) {
+  console.log(arguments[1]);
+}
+foo(1, 2, 3);
+\end{CodeBox}
+\end{frame}
+
+%--- Arrow Function ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Arrow Function}
+
+\begin{itemize}
+  \item convenient syntax
+  \item is an expression
+  \item creates an anonymous function
+\end{itemize}
+\begin{CodeBox}{syntax}
+([param[, param]]) => {
+   statements
+}
+
+param => expression
+\end{CodeBox}
+\end{frame}
+
+
+%--- Arrow Function 2 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Arrow Function, examples}
+
+\begin{CodeBox}{example of arrow functions}
+let sqr = x => x*x;
+
+let calcRectArea = (width, height) => width * height;
+
+let pi = _ => Math.PI;
+
+let myLogger = (msg) => {
+  console.log(new Date() + ': ' + msg); 
+};
+
+let foo = (width, height) => { width * height };
+\end{CodeBox}
+\end{frame}
+
+%--- Function Oriented Programming ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function Oriented Programming}
+
+JavaScript have all features of a function oriented language.
+\vspace{8mm}
+
+\begin{CodeBox}{function oriented programming}
+let list = [1, 2, 3, 4, 5];
+
+let a = list.map(x => x + 2);
+leb b = list.reduce((sum, x) => sum + x);
+leb b = list.filter((x) => x % 2 === 0);
+\end{CodeBox}
+\end{frame}
+
+%--- Closure ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Closure}
+
+\begin{itemize}
+  \item lexical scope
+  \item a closure gives you access to an outer function’s scope from an inner function
+  \item closures are created every time a function is created, at function creation time
+\end{itemize}
+\vspace{5mm}
+
+\begin{CodeBox}{closure}
+let name = 'Per Andersson';
+let foo = function() {
+  name = 'anonymous';
+}
+console.log(name);
+foo();
+console.log(name);
+\end{CodeBox}
+\end{frame}
+
+%--- Closure 2 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Closure}
+
+\begin{itemize}
+  \item remember, functions are values.
+  \item inner functions can be returned from a function.
+\end{itemize}
+
+\vspace{4mm}
+
+\begin{CodeBox}{closure}
+let foo = function() {
+  let cnt = 0;
+  return _ => cnt++;
+}
+
+let idGenerator = foo();
+
+console.log(idGenerator());
+some_async_function(idGenerator);
+another_async_function(idGenerator);
+\end{CodeBox}
+\end{frame}
+
