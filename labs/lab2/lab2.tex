@@ -44,7 +44,7 @@
 
 %*****************************************************************
 \begin{document}
-\courseinfo{Web Programming}{2019}
+\courseinfo{Web Programming}{\the\year}
 \maketitle
 \thispagestyle{titlepage}
 \vspace{-4cm}
@@ -92,7 +92,7 @@ In this lab we use ECMAscript modules, so download the ES6 variant of the invent
 import inventory from './inventory.ES6';
 \end{Code}
 
-\item Create a component for composing salads. Pass \code{inventory} to it using \code{props}. I sugest you name it ComposeSalad:
+\item Create a component for composing salads. Pass \code{inventory} to it using \code{props}. I suggest you name it ComposeSalad:
 \begin{Code}
 import React, { Component } from 'react';
 
@@ -118,7 +118,7 @@ class ComposeSalad extends Component {
 export default ComposeSalad;
 \end{Code}
 
-A few observations: 1, remember to export the name, else you can not instantiate your component outside the file. 2, note how you can mix JavaScript and JSX in the \code{render()} function. 3, \code{key=\{name\}} helps react track witch part of the DOM to render when data changes, read about it in the react documentation. 4, \code{className="container"} is a bootstrap class that adds some styling the page looks better. Style other html elements you add with bootstrap css classes. 4, JSX does not have comments, but you can use embedded JavaScript for that:
+A few observations: 1, remember to export the component name, otherwise you can't instantiate it outside the file. 2, note how you can mix JavaScript and JSX in the \code{render()} function. 3, \code{key=\{name\}} helps react track witch part of the DOM to render when data changes, read about it in the react documentation. 4, \code{className="container"} is a bootstrap class that adds some styling the page looks better. Style other html elements you add with bootstrap css classes. 4, JSX does not have comments, but you can use embedded JavaScript for that:
 \begin{Code}
 <span>
   {/* this part won't do anything right now */}
@@ -150,12 +150,13 @@ import ComposeSalad from './ComposeSalad';
   \item The default behaviour of form submission is to send a http GET request to the server. We do not want this since we handle the action internally in the app. Stop the default action by calling \code{event.preventDefault()}.
 \end{itemize}
 
-\item Store the orders salads in the state of \code{App}
+\item Store the orders salads in the state of \code{App}.
 
 \item Create a react component to view the salad order. The order should be an input to the component, as \code{inventory} is in \code{ComposeSalad}.
 
 \item Add the \code{ViewOrder} component to \code{App}, i.e. \code{<ViewOrder order='{this.state.order'}>}. This demonstrates the declarative power of react. When the state changes all affected subcomponents will automatically be re-renderd. Remember to use \code{this.setState(newValues)} to update the state.
-
+\newline
+\newline
 An order can contain several salads. Remember to set the \code{key} attribute in the repeated html/JSX element. Avoid using array index as kay. This can break your application when a salad is removed from the list. This is explained in many blog posts, for example see \url{https://medium.com/@robinpokorny/index-as-a-key-is-an-anti-pattern-e0349aece318}.
 
 \item This ends part one of the lab. In the next part we will introduce a router and move the \code{ComposeSalad} and \code{ViewOrder} to separate pages.

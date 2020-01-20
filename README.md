@@ -73,7 +73,7 @@ This is on-going work, and the first instance of the course was given in 2019 at
 
 # License
 
-Copyright &copy; 2015-2019. Dept. of Computer Science at Lund University, Lund, Sweden.
+Copyright &copy; 2015-2020. Dept. of Computer Science at Lund University, Lund, Sweden.
 
 Contributors: https://github.com/lunduniversity/webprog/TBA
 
