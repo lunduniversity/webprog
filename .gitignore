@@ -15,7 +15,9 @@
 *.out
 *.synctex.gz
 *.toc
-
+*.nav
+*.snm
+*.vrb
 
 # Compiled class file
 *.class
