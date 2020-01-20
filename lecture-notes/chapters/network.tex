@@ -173,7 +173,7 @@ The principle behind the client–server constraints is the separation of concer
 \subsection{Statelessness}
 Each request from any client contains all the information necessary to service the request, and session state is held in the client.
 
-This eliminates many potential bugs. Let's illustrate this with bug caused by a stateful protocol. The api of a web shop have two operations \texttt{/view-item/} and \texttt{/order-last-viewed-item/}. The customer do this:
+This eliminates many potential bugs. Let's illustrate this with bug caused by a stateful protocol. The api of a web shop have two operations \texttt{/view-item/} and \texttt{/order-last-viewed-item/}. The customer does this:
 \begin{Code}
 /view-item/13
 /view-item/42
