@@ -1,7 +1,7 @@
 # webprog
 Code in the course in web programming at Faculty of Engineering, LTH, Lund University.
 
-Course homepage: http://cs.lth.se/edaf90/
+[Course homepage.](http://cs.lth.se/edaf90/)
 
 This is on-going work, and the first instance of the course was given in 2019 at Lund University. A new instance of the course is given each spring semester.
 
@@ -9,21 +9,21 @@ This is on-going work, and the first instance of the course was given in 2019 at
 
 ### Fork and clone
 
-* Learn the basics about git, especially the "Getting Started" and "Git Basics" sections in this book: https://git-scm.com/book/en/v2
+* Learn the basics about git, especially the "Getting Started" and "Git Basics" sections in this [book.](https://git-scm.com/book/en/v2)
 
 * Get an account at Github if you don't have one already. Recommended user name if in doubt: `firstnamefamilyname` with no capital letters and no hyphens.
 
-* Install git: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+* [Install git.](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
-* Make a **fork** of lunduniversity/introprog in GitHub to your own GitHub account: https://help.github.com/articles/fork-a-repo/
+* Make a [**fork**](https://help.github.com/articles/fork-a-repo/) of lunduniversity/introprog in GitHub to your own GitHub account. 
 
-* **Clone** your fork to your local computer: https://help.github.com/articles/cloning-a-repository/
+* [**Clone**](https://help.github.com/articles/cloning-a-repository/) your fork to your local computer.
 
 ### Keeping your fork in synch
 
-* If you install the GitHub client (avaliable for Win and Mac but not Linux) called "GitHub desktop" https://desktop.github.com/ you can keep your fork in synch with the upstream repo by a single click in the GUI.
+* If you install the GitHub client (avaliable for Win and Mac but not Linux) called ["GitHub desktop"](https://desktop.github.com/)) you can keep your fork in synch with the upstream repo by a single click in the GUI.
 
-* Otherwise, this is how to pull changes from upstream to your fork with git commands: https://help.github.com/articles/syncing-a-fork/
+* Otherwise, [this](https://help.github.com/articles/syncing-a-fork/) is how to pull changes from upstream to your fork with git commands.
 
 ### Making contributions
 
@@ -35,7 +35,7 @@ This is on-going work, and the first instance of the course was given in 2019 at
 
 * Whenever you are ready with an incremental change, do `git commit -m "msg"` and then `git push`, or commit in the GUI and press the synch button. Think carefully about your commit message, as discussed in the next section.
 
-* When you are ready with a contribution that is good enough to be incorporated in upstream, then create a pull request: https://help.github.com/articles/creating-a-pull-request/
+* When you are ready with a contribution that is good enough to be incorporated in upstream, then create a [pull request.](https://help.github.com/articles/creating-a-pull-request/)
 
 * Keep your pull requests minimal and coherent to create a small change sets that will be easy to merge as a single unit. Don't pack a lot of unrelated changes in the same pull request. Take a look [here](https://github.com/lunduniversity/webprog/pulls?q=is%3Apr+is%3Aclosed) for examples of previously accepted pull requests.
 
@@ -75,7 +75,7 @@ This is on-going work, and the first instance of the course was given in 2019 at
 
 Copyright &copy; 2015-2019. Dept. of Computer Science at Lund University, Lund, Sweden.
 
-Contributors: https://github.com/lunduniversity/webprog/TBA
+[Contributors.](https://github.com/lunduniversity/webprog/TBA)
 
 This work is licensed under a
 Creative Commons Attribution-ShareAlike 4.0 International License.
