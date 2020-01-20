@@ -1,0 +1,55 @@
+%!TEX encoding = UTF-8 Unicode
+%!TEX root = ../compendium.tex
+
+\chapter{Course Scope} \label{chapter:course}
+This chapter explains the scope of the course. ``For the interested reader'' on the home page means it is out of the scope and is only intended to give ambiguous students additional reading material.
+
+\subsection*{Web technology}
+You should be able to explain the following terms: server-client (backend-frontend), static web page, dynamic web page, Content Management Systems (CMS), singel page web application, Web Application Frameworks, responsive design, universal design.
+
+You should know who standardise different parts of the web: Internet Engineering Task Force (IETF), World Wide Web Consortium (W3C), European Computer Manufacturers Association (ECMA) and ECMAScript. You should know what a request for comment (RFC) is.
+
+\subsection*{Character encoding}
+You should know what Unicode is and the principles of utf8 encoding. You should be aware of other character encoding standars, for example latin1.
+
+\subsection*{JavaScript}
+All concepts mentioned in the reading instructions on the home page is part of the course. The most important parts are: objekt literals, the spread operator, truthy/falsy, equality and sameness, name hoisting, function/block scope, \code{this} and how it gets a value, the prototype chain (inheritance/\code{class}), closure, \code{Promise} and \code{await/async}.
+
+\subsection*{HTML and CSS}
+This is mainly examined trough the labs and project. During the exam you are expected to know the parts you have used during the course, i.e. the parts covered by the lab instructions, including form validation (\code{required, novalidate}).
+
+\subsection*{Event Handling and concurrency}
+You should know how events are created, i.e. user clicks on a button, how they travers the DOM (``Bubbling and capturing''), howto stop event propagation \\(\code{event.stopPropagation() and Event.preventDefault()}), and how to listen for events (\code{onclick="alert('The handler!')"}).
+
+You should be able to briefly explain the terms blocking, synchronous, asynchronous, polling, busy wait, and race condition. You should be able to use different techniques to deal with asynchronous events (write asynchronous code, for example use \code{fetch()} to get data from a backend). These are the techniques you should know:
+\begin{itemize}
+\item callback methods
+\item Promise
+\item await and async
+\item RxJX Observables (basic usage, i.e. \code{subscribe()}). Modifying the stream is out of scope (\code{pipe, map})
+\end{itemize}
+You should be able to explain how the JavaScript runtime deals with asynchronous calls, i.e. ``the event loop''. You should know of the \code{setTimeout()} function.
+
+\subsection*{React}
+This is mainly examined trough the labs and project. During the exam you are expected to know the parts you have used during the course i.e. the parts covered by the lab instructions, including \code{render()}, JSX, parent/child communication (\code{this.props}) and component state (\code{this.state, this.setState()}).
+
+\subsection*{Angular}
+This is mainly examined trough the project. During the exam you are expected to know the parts you have used during the project, including how to use and create services (dependency injection). The scope is limited to what is covered in chapter \ref{chapter:angular}.
+
+\subsection*{Routing}
+You should know that there exist an API for interacting with the browser history (you do not need to know the details, just that it exists). You should know the role of a router in an webb application and the principle of how to use it (what you did in the labs and project).
+
+\subsection*{URL, HTTP and REST}
+All that is covered in chapter \ref{chapter:network}.
+
+\subsection*{Storing and managing data}
+You should be able to explain the basics of cookies, session, localStrore, sessionStore, and indexDB. You should be able to use localStrore and sessionStore.
+
+You should be able to explain the architecture of redux (store, action and reduce).
+
+\subsection*{Security, Authentication, Server Send Data, Service Workers, and Server Side Rendering}
+All that is covered in chapters \ref{chapter:security}, \ref{chapter:auth}, \ref{chapter:server:push}, \ref{chapter:service:workers}, and \ref{chapter:server:side:rendering}.
+
+\subsection*{Exam}
+The exam will cover s sample of the topics above. The following will not be part of the written exam:
+TypeScript, modifying the stream of an Observable (\code{pipe, map}), higher order Observables.
