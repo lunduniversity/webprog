@@ -33,9 +33,9 @@ When the user submits the form, the browser send a request for (this can be inte
 \begin{Code}
 https://cs.lth.se/view?item=42
 \end{Code}
-If you set the metod to POST, the form data is submitted in the body of a http POST request. POST is the only alternative if you want to upload files directly from a html form.
+If you set the method to POST, the form data is submitted in the body of a http POST request. POST is the only alternative if you want to upload files directly from a html form.
 
-The last part of a url, the framgent, makes it possible to refer to a specific element in a html file. The fragment is the id of the referred element, for example:
+The last part of a url, the fragment, makes it possible to refer to a specific element in a html file. The fragment is the id of the referred element, for example:
 \begin{Code}
 <h2 id="url">URI and URL</h2>
 ...
@@ -57,7 +57,7 @@ https://my-shop.com/#view/2
 The part befor the fragment (\#) identifies the script. The script needs to interpret the ``view/2'' part. The router in react support the two last alternatives: \code{BrowserRouter} handles the \texttt{/view/2} structure, and \code{HashRouter} supports the \texttt{\#view/2} alternative.
 
 \subsection{URL encoding} \label{section:url:encoding}
-URLs are text strings, specifically a sequence of 7 bit ASCII characters. 7 bit ASCII can not represent many of the characters in latin, asian, or arabic alphabets, such as åäö. Also, some characters, for example \texttt{/\#?} have special meaning in a url. Clearly, there is a need to represent these characters in URLs, especially when a URL containing the submit of a html form. This is done by URL-encoding, also known as percent-encoding. The principle is to represent any non safe character with a three character sequence, \texttt{\%nn}, where \texttt{nn} is the hexadecimal value of the 8 bits of the character, for example  ``ett två'' is encoded as ``ett\%20tv\%C3\%A5'' (space is ASCII character 20, ``å'' is a two byte sequence in utf-8: 0xC3 and 0xA5). The safe characters, those that do not need percent-encoding, are the letters \texttt{a} to \texttt{z}, \texttt{A} to \texttt{Z}, numbers \texttt{0} to \texttt{9}, and \texttt{- \_ . \textasciitilde} (minus, underscore, dot and tilde). According to the latest standard, utf-8 encoding should be used for url-encoding. However, in the context of html form submission, web browsers will use the character encoding of the web page. In JavaScript, url-encodeing is handled by the function \code{encodeURIComponent()}.
+URLs are text strings, specifically a sequence of 7 bit ASCII characters. 7 bit ASCII can not represent many of the characters in latin, asian, or arabic alphabets, such as åäö. Also, some characters, for example \texttt{/\#?} have special meaning in a url. Clearly, there is a need to represent these characters in URLs, especially when a URL containing the submit of a html form. This is done by URL-encoding, also known as percent-encoding. The principle is to represent any non safe character with a three character sequence, \texttt{\%nn}, where \texttt{nn} is the hexadecimal value of the 8 bits of the character, for example  ``ett två'' is encoded as ``ett\%20tv\%C3\%A5'' (space is ASCII character 20, ``å'' is a two byte sequence in utf-8: 0xC3 and 0xA5). The safe characters, those that do not need percent-encoding, are the letters \texttt{a} to \texttt{z}, \texttt{A} to \texttt{Z}, numbers \texttt{0} to \texttt{9}, and \texttt{- \_ . \textasciitilde} (minus, underscore, dot and tilde). According to the latest standard, utf-8 encoding should be used for url-encoding. However, in the context of html form submission, web browsers will use the character encoding of the web page. In JavaScript, url-encoding is handled by the function \code{encodeURIComponent()}.
 	
 %--- HTTP -------------------------------------
 \section{HTTP} \label{section:http}
@@ -126,7 +126,7 @@ JSON is a popular text based file format commonly used in RESTful APIs. JSON is 
 \begin{itemize}
   \item a literal, one of \code{true, false} or \code{null}
   \item a number, for example \code{3.1415} or \code{42}
-  \item a string, a sequence of unicode code points wrapped with quotation marks ", (U+0022). Note, you may not use singel quotation marks \code{'}, which JavaScript allows.
+  \item a string, a sequence of unicode code points wrapped with quotation marks ", (U+0022). Note, you may not use single quotation marks \code{'}, which JavaScript allows.
   \item an object, a unordered collection of comma separated name-value pairs wrapped with \texttt{\{ \}}. The name and the value are separated by :. The are no restrictions on the name. It may contain any character, but it must be a string (wrapped with quotation marks). In javaScript a name only needs quotation marks if it contains special characters, like space.
  \item an array, an ordered list of comma separated values wrapped with \texttt{[ ]}. You can mix different types of values in the same array.
 \end{itemize}
@@ -168,12 +168,12 @@ The core principles of Representational State Transfer (REST) are:
 \end{itemize}
 
 \subsection{Client–server architecture}
-The principle behind the client–server constraints is the separation of concerns. Separating the user interface concerns from the data storage concerns improves the portability of the user interface across multiple platforms. It also improves scalability by simplifying the server components. Perhaps most significant to the Web, however, is that the separation allows the components to evolve independently, thus supporting the Internet-scale requirement of multiple organizational domains
+The principle behind the client–server constraints is the separation of concerns. Separating the user interface concerns from the data storage concerns improves the portability of the user interface across multiple platforms. It also improves scalability by simplifying the server components. Perhaps most significant to the Web, however, is that the separation allows the components to evolve independently, thus supporting the Internet-scale requirement of multiple organizational domains.
 
 \subsection{Statelessness}
 Each request from any client contains all the information necessary to service the request, and session state is held in the client.
 
-This eliminates many potential buggs. Let's illustrate this with bugg caused by a stateful protocol. The api of a web shop have two operations \texttt{/view-item/} and \texttt{/order-last-viewed-item/}. The customer do this:
+This eliminates many potential bugs. Let's illustrate this with bug caused by a stateful protocol. The api of a web shop have two operations \texttt{/view-item/} and \texttt{/order-last-viewed-item/}. The customer do this:
 \begin{Code}
 /view-item/13
 /view-item/42
@@ -187,7 +187,7 @@ Pages in the browser history are often rendered from the browser cache. The serv
 As on the World Wide Web, clients and intermediaries can cache responses. Responses must therefore, implicitly or explicitly, define themselves as cacheable or not to prevent clients from getting stale or inappropriate data. Use http headers to control the cacheability of each response.
 
 \subsection{Layered system}
-A client cannot ordinarily tell whether it is connected directly to the end server, or to an intermediary along the way. Intermediary servers can improve system scalability by enabling load balancing and by providing shared caches. They can also enforce security policies. Layered system comes for free when building ontop of http.
+A client cannot ordinarily tell whether it is connected directly to the end server, or to an intermediary along the way. Intermediary servers can improve system scalability by enabling load balancing and by providing shared caches. They can also enforce security policies. Layered system comes for free when building on top of http.
 
 \subsection{Uniform interface}
 This is all about making things simple, more on this in \ref{section:crud}. The four constraints for this uniform interface are:
@@ -201,7 +201,7 @@ This is all about making things simple, more on this in \ref{section:crud}. The 
  Part of the text above comes from wikipedia,\\ \url{https://en.wikipedia.org/wiki/Representational_state_transfer}
 
 \subsection{REST in practice, CRUD} \label{section:crud}
-The text above is written from a theoretical point of view, and in general terms, talking about resources and interfaces. In practice things get relay simple. Resources are usually rows in databases and the operations we want to do are Create, Read, Update, and Delete (CRUD). REST leverage on http, so we use the http commands POST, GET, PUT, and DELETE. The status code of the respons indicate if the operation was successful, for example 200-ok or 404-not found.
+The text above is written from a theoretical point of view, and in general terms, talking about resources and interfaces. In practice things get relay simple. Resources are usually rows in databases and the operations we want to do are Create, Read, Update, and Delete (CRUD). REST leverage on http, so we use the http commands POST, GET, PUT, and DELETE. The status code of the response indicate if the operation was successful, for example 200-ok or 404-not found.
 
 Where do we put the data? Well, this can be debated. There is no right and wrong to this question. Be consistent and adopt to the context of your system. A common approach is to follow the html way of doing things:
 \begin{itemize}
@@ -215,7 +215,7 @@ Where do we put the data? Well, this can be debated. There is no right and wrong
   \begin{Code}
   /students/?name=Per
   \end{Code}
-  \item \emph{Names:}  plural nouns are commonly used in URLs. Use lower case letters. If you have multi word names, replace space with minus sign, i.e. \texttt{piano-char}. Then things looks nice after url-encoding (you do not want \texttt{/piano\%20char/}). Avoid CamelCase since the path of the URLs are case insensitive. Avoid verbs in the path, the http command contains this information
+  \item \emph{Names:}  plural nouns are commonly used in URLs. Use lower case letters. If you have multi word names, replace space with minus sign, i.e. \texttt{piano-char}. Then things looks nice after url-encoding (you do not want \texttt{/piano\%20char/}). Avoid CamelCase since the path of the URLs are case insensitive. Avoid verbs in the path, the http command contains this information.
   \item \emph{Http headers:} use it for cache control and authentication.
   \item \emph{Http body:} data returned from the server goes into the response body. Create and Update sends its data in the body, but Read and Delete only identifies a resource using the URL (empty body).
   \item{JSON:} use json format in the http body.
