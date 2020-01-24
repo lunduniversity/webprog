@@ -1,0 +1,331 @@
+%---Objects ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Objects}
+\begin{itemize}
+  \item an object is a map: string $\rightarrow$ any value
+  \item objects have properties - the keys of the map (attributes + methods in Java)
+  \item properties can have any name, including reserved words and operations
+  \item access properties using:
+  \begin{itemize}
+    \item dot notation: \code{myObj.prop}
+    \item array index notation: \code{myObj['prop']}
+  \end{itemize}
+  \item add properties by writing to them \code{myObj.newProp = 'adding stuff';}
+  \item remove properties by: \code{delete myObj.newProp}
+\end{itemize}
+\end{frame}
+
+%---Objects, example 1 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Objects, example 1}
+ \begin{CodeBox}{basic object}
+let myObject = {
+  givenName: 'Per',
+  familyName: 'Andersson',
+  selector: 'givenName',
+  getValue: function () {
+    return this[this.selector];
+  }
+}
+ 
+console.log(myObject.getValue());
+myObject.selector = 'familyName';
+console.log(myObject.getValue());
+ \end{CodeBox}
+\end{frame}
+
+%---Object Literals ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Object Literals}
+\begin{itemize}
+  \item superset of JSON
+  \item comma separated list of properties inside \code{\{ \}}
+  \item a property is defined by: \code{property-name : value}
+  \item name in plain text, quotes if needed 
+  \item value is any JavaScript expression
+  \item \code{\{a:a\}} is the same as \code{\{a\}}
+\end{itemize}
+\begin{CodeBox}{object literal}
+let myObject = {
+  five: 2 + 3,
+  '5': 'five',
+  '+' : 'plus',
+  'null': 'not a good idea name'
+ }
+\end{CodeBox}
+\end{frame}
+
+%---Object Literals 2 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Object Literals}
+\begin{itemize}
+  \item object literals are cheap
+  \item use them frequently
+  \item they bring structure and readability to programs
+\end{itemize}
+\begin{CodeBox}{object literals}
+let myPoints = [{a: 0, y: 0}, {x:10, y:15}];
+
+function foo(a, b, c, d, e, f) {
+ console.log('d = '+ d);
+}
+function bar(arg) {
+ console.log('d = '+ arg.d);
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Named Parameters ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Named Parameters}
+Remember, \code{foo} and \code{bar} prints parameter \code{d}.
+\vspace{5mm}
+\begin{CodeBox}{What is printed?}
+foo(0, 0, 0, 0, 1, 1, 1);
+bar({a: 0, b: 0, c: 0, d: 1, e: 1, f:1});
+\end{CodeBox}
+\vspace{10mm}
+Did you notice thet foo have one extra parameter compared to the arguments list?
+\\ Too few, or extra parameters do not raise errors in JavaScript. 
+\end{frame}
+
+%--- Constructor Functions ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Constructor Functions}
+
+\begin{itemize}
+  \item like classes in Java: forms objects when they are created
+  \item normal functions
+  \item the intended usage differs
+  \item by convention: use leading capital letter in name (similar to class names in Java)
+  \item only call constructor functions using \code{new}:
+  \begin{itemize}
+    \item new creates an empty object and binds it to \code{this}
+    \item the constructor function is called, adds properties to the object
+    \item the return value of the constructor function will be the result of \code{new}
+    \item remember: the default return value of functions called by \code{new} is \code{this}
+  \end{itemize}
+  \item combine with closure and you have the power
+\end{itemize}
+\end{frame}
+
+%--- Constructor Functions  Example ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Constructor Function Example}
+
+\begin{columns}[onlytextwidth]
+  \begin{column}{0.5\textwidth}
+\begin{CodeBox}{class definition}
+function Point(x, y) {
+  this.x = x || 0;
+  this.y = y || 0;
+  this.getX = function() {
+    return this.x;
+  }
+}
+\end{CodeBox}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+\begin{CodeBox}{create instances}
+let point1 = new Point(3, 6);
+let point2 = new Point();
+let point2 = new Point(5);
+let point3 = 
+  new Point(null, 5);
+\end{CodeBox}
+  \end{column}
+\end{columns}%
+\end{frame}
+
+%---Undefined Names ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Access to Undefined Names}
+Variables:
+\begin{itemize}
+  \item read: throws ReferenceError
+  \item write: creates the variable in the current scope
+\end{itemize}
+\vspace{5mm}
+Properties:
+\begin{itemize}
+  \item read: evaluates to \code{undefined}
+  \item write: adds the property to the object
+\end{itemize}
+\end{frame}
+
+%--- Prototype based Inheritance ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Prototype Based Inheritance}
+
+\begin{itemize}
+  \item all object inherit from another object
+  \item objects forms a \emph{prototype chain}
+  \item property name lookup follows the prototype chain
+  \item you can access the prototype chain (but don't):
+  \begin{itemize}
+    \item \code{Object.getPrototypeOf(object)}
+    \item \code{Object.setPrototypeOf(object, chain)}
+  \end{itemize}
+  \item the chain ends with \code{null}
+\end{itemize}
+\end{frame}
+
+%--- Set up Prototype Chain ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Set up Prototype Chain}
+Setting up the prototype chain when a new object is created:
+\begin{itemize}
+  \item you can do it manually (but don't)
+  \item \code{new} do the work for you
+  \item all \code{Function} objects have a property \code{prototype}
+  \item remember, constructor functions are instance of \code{Function}
+  \item \code{new}:
+  \begin{itemize}
+    \item creates an empty object
+    \item {\bf and} set its parent in the prototype chain to the \code{prototype} of the constructor function
+  \end{itemize}
+  \item all names in the \code{prototype} of the constructor function are now in the prototype chain of the new object
+\end{itemize}
+\end{frame}
+
+%--- Set up Prototype Chain, example ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{example}
+\begin{CodeBox}{prototype chain}
+function Family(name) {
+  this.givenName = name || 'Per';
+}
+Family.prototype.familyName = 'Andersson';
+Family.prototype.toString = function() {
+  return this.givenName + ' ' + this.familyName;
+}
+
+let me = new Family();
+let sister = new Family('Anette');
+console.log(me + ' and my sister ' + sister);
+me.familyName = 'Andersson Nilsson';
+console.log(me + ' and my sister ' + sister);
+\end{CodeBox}
+\end{frame}
+
+%--- Property Name Lookup ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Property Name Lookup}
+Property read:
+\begin{itemize}
+  \item follows the prototype chain
+  \item return the first value found
+  \item return \code{undefined} if the end of the prototype chain is reached
+\end{itemize}
+\vspace{8mm}
+Property write:
+\begin{itemize}
+  \item do not follows the prototype chain
+  \item writes to the referenced object (left hand side of the dot)
+  \item update if the name existed
+  \item adds the property if the name did not exist
+\end{itemize}
+\end{frame}
+
+%--- Inheritance ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Inheritance}
+\begin{itemize}
+  \item the \code{prototype}s of the constructor functions form the prototype chain
+  \item \code{Object.create()} creates an object with a given prototype chain
+  \item use it to create the \code{prototype} of the constructor function
+  \item explicit call the constructor of the superclass
+\end{itemize}
+\vspace{2mm}
+\begin{CodeBox}{JuniorFamily extends Family}
+function JuniorFamily(name) {
+  Family.call(this);
+}
+JuniorFamily.prototype = Object.create(Family.prototype);
+JuniorFamily.prototype.toString = function() {
+  return this.givenName + ' ' + 
+             this.familyName + '  jr.';
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Class ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Class}
+\begin{itemize}
+  \item \code{Class} was introduced in ECMAScript 2015
+  \item syntactical sugar, set up the prototype chin as outlined above
+  \item \code{static} will add the property to the constructor function object
+\end{itemize}
+\end{frame}
+%--- Class Example ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Class Example}
+\begin{CodeBox}{}
+class Family {
+  constructor(name) {
+    super();
+    this.givenName = name || 'Per';
+    Family.count = Family.count + 1;
+  }
+  toString() {
+    return this.givenName + ' ' + this.familyName;
+  }
+  familyName = 'Andersson';
+  static count = 0;
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Class Extends---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Class Extends}
+\begin{itemize}
+  \item the constructor in a derived class must call \code{super()} before you can use \code{this}
+  \item you can: \code{extend null}
+\end{itemize}
+\begin{CodeBox}{}
+class JuniorFamily extends Family {
+  constructor(name) {
+    super(name);
+  }
+ toString() {
+   return this.givenName + ' ' + 
+              this.familyName + '  jr.';
+  }
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Standard Classes---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Standard Classes}
+In JavaScript there are many standard classes. Some important: 
+\begin{itemize}
+  \item \code{Object} - default base class for all objects
+  \item \code{Function extends Object} - base class for all functions
+  \item \code{Array} - base class for array litterals
+\end{itemize}
+\end{frame}
+
+%--- More to learn---------------------------------------------------
+\begin{frame}[fragile] \frametitle{More to learn}
+
+This is the basics of objects in JavaScript, but there are more under the surface\ldots
+\vspace{8mm}
+\begin{CodeBox}{}
+Object.defineProperty(obj, "prop", {
+    value: "test",
+    writable: false
+});
+\end{CodeBox}
+\vspace{8mm}
+This is however out of scope for this course.
+\end{frame}
+
+%--- this---------------------------------------------------
+\begin{frame}[fragile] \frametitle{this}
+\begin{itemize}
+  \item \code{this} is defined in all functions
+  \item arrow functions, \code{this} from the enclosing scope is used
+  \item its value depends on how the function is called:
+  \begin{itemize}
+    \item function call: \code{foo()} - the global object
+    \item dot notation: \code{obj.foo()} - the object left of the dot
+    \item explicit: \code{Function.prototype.call()}
+    \item explicit: \code{Function.prototype.bind()} - creates a new function with a predefiend value for \code{this}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Arrays---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Arrays}
+\begin{itemize}
+  \item variable size and type
+  \item index must be number
+  \item \code{myArray['per'] = 3;} - add a property to the array object
+\end{itemize}
+\end{frame}
