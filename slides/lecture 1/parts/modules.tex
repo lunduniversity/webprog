@@ -1,0 +1,42 @@
+%---JavaScript modules ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{JavaScript modules}
+  Introduced in ES6
+\begin{columns}[onlytextwidth]
+  \begin{column}{1\textwidth}
+\begin{CodeBox}{my-module.js}
+function cube(x) {
+  return x * x * x;
+}
+export { cube, foo };
+const foo = Math.PI + Math.SQRT2;
+\end{CodeBox}
+\begin{CodeBox}{some-code.js}
+import { cube, foo } from './my-module.js';
+
+console.log(cube(3));
+console.log(foo);
+\end{CodeBox}
+  \end{column}
+\end{columns}%
+\end{frame}
+
+%--- CommonJS modules---------------------------------------------------
+\begin{frame}[fragile] \frametitle{CommonJS modules}
+  Common in environments not supporting JavaScript Modules, for example node.
+\begin{columns}[onlytextwidth]
+  \begin{column}{1\textwidth}
+\begin{CodeBox}{my-module.js}
+function cube(x) {
+  return x * x * x;
+}
+const foo = Math.PI + Math.SQRT2;
+\end{CodeBox}
+\begin{CodeBox}{some-code.js}
+const stuff = require('./my-module.js');
+
+console.log(stuff.cube(3));
+console.log(stuff.foo);
+\end{CodeBox}
+  \end{column}
+\end{columns}%
+\end{frame}
