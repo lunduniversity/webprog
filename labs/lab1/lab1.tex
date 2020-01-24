@@ -142,17 +142,20 @@ node lab1.js
 
 \item In the \code{inventory.js} file you can find all options for composing a salad. Its structure is good for looking up properties of the ingredients, i.e. \code{imported.inventory['Krutonger']}. However this structure is not ideal for presenting the options for the customers. Your first assignment is to address this. Print the choices for composing a salad. Use separate lines for foundations, proteins, extras, and dressings. The output should look like this:
 \begin{Code}
-Foundations: Sallad,Pasta,Salad + Pasta,Salad + Matvete,...
+Foundations: Sallad,Pasta,Sallad + Pasta,Sallad + Matvete,...
 Extras: Avocado,Fetaost,Gurka,Jalapeno,Krutonger,Lime,Majs,Oliver,...
 \end{Code}
 \emph{hint} check out \code{Object.keys()}, see \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys}. How does it compare to using a \code{for\ldots in} loop instead?
 
-\noindent \emph{Note,} only the properties that holds true are declared in the objects. Reading an object property that is not declared will evaluate to \code{false}, so there is no need to do something like \code{\{lactose: false\}}.
+\noindent \emph{Note,} only the properties that holds true are declared in the objects. Reading an object property that is not declared will evaluate to \code{undefined}, which is falsy, so there is no need to do explicitly store negative facts, for example \code{\{lactose: false\}}.
 
-\item We need a representation for a salad. Create a JavaScript constructor/class named \code{Salad} for that. You need four properties: \code{foundation}, \code{proteins}, \code{extras}, and \code{dressing}. Create a constructor and functions to add and remove selections.
+\item We need a representation for a salad. Create a JavaScript constructor/class named \code{Salad} for that. You need four properties: \code{foundation}, \code{proteins}, \code{extras}, and \code{dressing}. Create a constructor and functions to add and remove selections. You may use the ECMAScript 2015 \code{class} syntax, or the backwards compatible constructor function for this and the remaining assignments.
 
-\item Create an object for a caesar salad, i.e. \code{let myCaesarSalad = new Salad(); /* code to add the ingredients */}
-
+\item Create an object for a caesar salad:
+\begin{Code}
+let myCaesarSalad = new Salad();
+/* code to add the ingredients */
+\end{Code}
 \item Next task is to add additional functionality to the \code{Salad} class/prototype. Add a function, \code{price()} to calculate the price. The price is simply the sum of the prices of all ingredients. The computation should be done using functional style, i.e. no loops (\code{for}/\code{while}). \emph{hint}: check out \code{reduce()} and the other functions in \code{Array.prototype}, see \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array}. Test your price function with the caesar salad created above, i.e. run \code{myCaesarSalad.price()}.
 
 \item The restaurant wants to introduce a discount salad. The price is reduced by making the foundation 30\% larger, and all other parts 50\% smaller. The principle for calculating the price is still the same, but you need to adjust the numbers from the ingredient object to compensate for the changed size (extras are 50\% cheaper). Create a \code{ExtraGreenSalad} constructor/class for this. Most functionality can be inherited from \code{Salad} You should only change the \code{price()} function.

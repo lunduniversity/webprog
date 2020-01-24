@@ -1,10 +1,10 @@
 exports.inventory = {
   Sallad: {price: 10, foundation: true, vegan: true},
   Pasta: {price: 10, foundation: true, gluten: true},
-  'Salad + Pasta': {price: 10, foundation: true, gluten: true},
-  'Salad + Matvete': {price: 10, foundation: true, vegan: true, gluten: true},
-  'Salad + Glasnudlar': {price: 10, foundation: true, gluten: true},
-  'Salad + Quinoa': {price: 10, foundation: true, vegan: true},
+  'Sallad + Pasta': {price: 10, foundation: true, gluten: true},
+  'Sallad + Matvete': {price: 10, foundation: true, vegan: true, gluten: true},
+  'Sallad + Glasnudlar': {price: 10, foundation: true, gluten: true},
+  'Sallad + Quinoa': {price: 10, foundation: true, vegan: true},
 
   'Kycklingfilé': {price: 10, protein: true},
   'Rökt kalkonfilé': {price: 10, protein: true},
