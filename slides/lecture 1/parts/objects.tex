@@ -316,16 +316,29 @@ This is however out of scope for this course.
     \item function call: \code{foo()} - the global object
     \item dot notation: \code{obj.foo()} - the object left of the dot
     \item explicit: \code{Function.prototype.call()}
-    \item explicit: \code{Function.prototype.bind()} - creates a new function with a predefiend value for \code{this}
+    \item explicit: \code{Function.prototype.bind()} - creates a new function with a predefined value for \code{this}
+    \item as an DOM event handler - the element the event fired from (not all cases for all browsers)
+    \item as an inline DOM event handler - the DOM element on which the listener is placed
   \end{itemize}
 \end{itemize}
 \end{frame}
 
-%--- Arrays---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Arrays}
+%--- self---------------------------------------------------
+\begin{frame}[fragile] \frametitle{self}
+When a function is a ``class method''
 \begin{itemize}
-  \item variable size and type
-  \item index must be number
-  \item \code{myArray['per'] = 3;} - add a property to the array object
+  \item you do not know if \code{this} refers to the right object
+  \item use closure to fix this
+  \item or use arrow functions
 \end{itemize}
+\begin{CodeBox}{}
+function Person() {
+  var self = this; // Some choose `that` instead of `self`. 
+                   // Choose one and be consistent.
+  self.age = 0;
+
+  setInterval(function growUp() { self.age++; }, 1000);
+  setInterval(() => { this.age++;  }, 1000);
+}
+\end{CodeBox}
 \end{frame}

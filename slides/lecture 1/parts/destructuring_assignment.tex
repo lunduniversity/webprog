@@ -1,0 +1,85 @@
+%--- Destructuring assignment---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Destructuring assignment}
+\begin{itemize}
+  \item unpack arrays and objects
+  \item use:
+  \begin{itemize}
+    \item left hand side of assignment
+    \item function parameters
+  \end{itemize}
+  \item can have default values
+  \item can be nested
+  \item the tail of an array can be stored in a variable: \code{...remainingValues}
+\end{itemize}
+\begin{CodeBox}{}
+const foo = ['one', 'two'];
+const [red, yellow, green = 'default three'] = foo;
+const [one, ...rest] = foo;
+console.log(red); // "one"
+console.log(green); // "default three"
+\end{CodeBox}
+\end{frame}
+
+%--- Destructuring assignment, Objects---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Destructuring assignment}
+\begin{CodeBox}{}
+const user = {
+  id: 42,
+  displayName: 'jdoe',
+  fullName: {
+    firstName: 'John',
+    lastName: 'Doe'
+  }
+};
+
+const userId = ({id}) => id;
+
+function whois({displayName, fullName: {firstName: name}}) {
+  return `${displayName} is ${name}`;
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Spread Syntax---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Spread Syntax}
+The spread syntax \code{...} can be used on \\
+An iIterable, such as an array expression or string, can be expanded instead of:
+\begin{itemize}
+  \item zero or more arguments (for function calls)
+  \item elements (for array literals)
+\end{itemize}
+
+An object expression to be expanded instead of
+\begin{itemize}
+  \item  zero or more key-value pairs (for object literals)
+\end{itemize}
+
+\begin{CodeBox}{}
+function sum(x, y, z) {
+  return x + y + z;
+}
+
+const numbers = [1, 2, 3];
+
+console.log(sum(...numbers));
+\end{CodeBox}
+\end{frame}
+
+%--- Spread Syntax 2 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Spread Syntax}
+\begin{CodeBox}{}
+const parts = ['shoulders', 'knees']; 
+const lyrics = ['head', ...parts, 'and', 'toes']; 
+
+const obj1 = { foo: 'bar', x: 42 };
+const obj2 = { foo: 'baz', y: 13 };
+
+const clonedObj = { ...obj1 };
+
+const augmentedObj = { ...obj1, name: 'Per' };
+
+const mergedObj = { ...obj1, ...obj2 };
+
+\end{CodeBox}
+\end{frame}
+

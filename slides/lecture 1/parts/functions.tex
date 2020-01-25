@@ -129,6 +129,9 @@ foo(1, 2, 3);
   \item convenient syntax
   \item is an expression
   \item creates an anonymous function
+  \item without own bindings to the \code{this}, \code{arguments}, \code{super}, or \code{new.target}
+  \item these values are retained from enclosing lexical context
+  \item ill suited as methods, and they cannot be used as constructors
 \end{itemize}
 \begin{CodeBox}{syntax}
 ([param[, param]]) => {

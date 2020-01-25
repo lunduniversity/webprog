@@ -116,9 +116,9 @@ In this lab you will use Node.js as execution environment. The tool is installed
 
 \item If you are using the linux system at LTH, remember to run \code{initcs} to add \code{node} to the path.
 
-\item To get started you can either set the project up yourself or use the starter code from GitHub. 
-\subsubsection{Set up the project yourself}
-Create a directory and add a new file named \code{lab1.js} containing the following code:
+\item %To get started you can either set the project up yourself or use the starter code from GitHub. 
+%\subsubsection{Set up the project yourself}
+Set up the project: Create a directory and add a new file named \code{lab1.js} containing the following code:
 \begin{Code}
 'use strict';
 const imported = require("./inventory.js");
@@ -130,15 +130,15 @@ curl -o inventory.js http://fileadmin.cs.lth.se/cs/Education/EDAF90/labs/lab1/in
 node lab1.js
 \end{Code}
 
-\subsubsection{Or use the starter code from GitHub}
-\noindent Clone the GitHub repository, navigate to the lab1 folder, inspect the code and then run it:
+%\subsubsection{Or use the starter code from GitHub}
+%\noindent Clone the GitHub repository, navigate to the lab1 folder, inspect the code and then run it:
 
-\begin{Code}
-  git clone https://github.com/lunduniversity/webprog
-  cd webprog/labs/lab1
-  cat lab1.js
-  node lab1.js
-\end{Code}
+%\begin{Code}
+%  git clone https://github.com/lunduniversity/webprog
+%  cd webprog/labs/lab1
+%  cat lab1.js
+%  node lab1.js
+%\end{Code}
 
 \item In the \code{inventory.js} file you can find all options for composing a salad. Its structure is good for looking up properties of the ingredients, i.e. \code{imported.inventory['Krutonger']}. However this structure is not ideal for presenting the options for the customers. Your first assignment is to address this. Print the choices for composing a salad. Use separate lines for foundations, proteins, extras, and dressings. The output should look like this:
 \begin{Code}
