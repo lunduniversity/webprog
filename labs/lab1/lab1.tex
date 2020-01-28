@@ -160,7 +160,7 @@ let myCaesarSalad = new Salad();
 
 \item The restaurant wants to introduce a discount salad. The price is reduced by making the foundation 30\% larger, and all other parts 50\% smaller. The principle for calculating the price is still the same, but you need to adjust the numbers from the ingredient object to compensate for the changed size (extras are 50\% cheaper). Create a \code{ExtraGreenSalad} constructor/class for this. Most functionality can be inherited from \code{Salad} You should only change the \code{price()} function.
 
-\item \code{let mySalad = ExtraGreenSalad()} creates an extra green salad object. Describe the prototype chain involving these objects. The explanation should include both the \code{mySalad} and \code{ExtraGreenSalad} objects.
+\item \code{let mySalad = new ExtraGreenSalad()} creates an extra green salad object. Describe the prototype chain involving these objects. The explanation should include both the \code{mySalad} and \code{ExtraGreenSalad} objects.
 
 \item The \code{ExtraGreenSalad} was not a success. Instead the customers asked for salads with less lettuce and larger portions of the extras. Create a new class, \code{GourmetSalad}, for this. In a \code{GourmetSalad} the customer can specify the size of each ingredient when adding it to the salad. With a size of 1.0 for each ingredients, you get a normal salad. Using size of 1.3 for the foundation and extras with size 0.5 give you an extra green salad. Note, the ingredient objects imported are immutable. \emph{Hint}: if you need to copy an object and add extra properties, use the spread operator in combination with object literals.
 
