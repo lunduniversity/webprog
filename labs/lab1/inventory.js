@@ -41,7 +41,7 @@ exports.inventory = {
   'Valnötter': {price: 5, extra: true, vegan: true},
   'Ägg': {price: 5, extra: true},
 
-  Caesardressing: {price: 5, dressing: true, lactose: true},
+  Ceasardressing: {price: 5, dressing: true, lactose: true},
   Dillmayo: {price: 5, dressing: true},
   Honungsdijon: {price: 5, dressing: true, vegan: true},
   Kimchimayo: {price: 5, dressing: true},
