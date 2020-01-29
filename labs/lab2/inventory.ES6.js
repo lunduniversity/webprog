@@ -1,10 +1,10 @@
 let inventory = {
-  Sallad: {price: 10, foundation: true, vegan: true}, 
+  Sallad: {price: 10, foundation: true, vegan: true},
   Pasta: {price: 10, foundation: true, gluten: true},
-  'Salad + Pasta': {price: 10, foundation: true, gluten: true},
-  'Salad + Matvete': {price: 10, foundation: true, vegan: true, gluten: true},
-  'Salad + Glasnudlar': {price: 10, foundation: true, gluten: true},
-  'Salad + Quinoa': {price: 10, foundation: true, vegan: true},
+  'Sallad + Pasta': {price: 10, foundation: true, gluten: true},
+  'Sallad + Matvete': {price: 10, foundation: true, vegan: true, gluten: true},
+  'Sallad + Glasnudlar': {price: 10, foundation: true, gluten: true},
+  'Sallad + Quinoa': {price: 10, foundation: true, vegan: true},
 
   'Kycklingfilé': {price: 10, protein: true},
   'Rökt kalkonfilé': {price: 10, protein: true},
@@ -41,7 +41,7 @@ let inventory = {
   'Valnötter': {price: 5, extra: true, vegan: true},
   'Ägg': {price: 5, extra: true},
 
-  Caesardressing: {price: 5, dressing: true, lactose: true},
+  Ceasardressing: {price: 5, dressing: true, lactose: true},
   Dillmayo: {price: 5, dressing: true},
   Honungsdijon: {price: 5, dressing: true, vegan: true},
   Kimchimayo: {price: 5, dressing: true},
@@ -52,13 +52,13 @@ let inventory = {
   'Örtvinägrett': {price: 5, dressing: true, vegan: true},
 };
 
-// recursivly freeze the datastructure.
-(function () {
+// recursively freeze the data structure.
+(function() {
+  deepFreeze(exports.inventory);
   function deepFreeze(obj) {
       Object.keys(obj).map(prop => deepFreeze(obj[prop]));
       Object.freeze(obj);
   }
-  deepFreeze(inventory);
 })();
 
 export default inventory;
