@@ -49,12 +49,12 @@
 \thispagestyle{titlepage}
 \vspace{-4cm}
 
-\subsection*{Lab 2 -- part 2}
+\subsection*{Lab 3}
 
-\n The second part of the lab is about routing and form validation, \emph{objectives}:
+\n The third lab is about routing and form validation, \emph{objectives}:
 
 \begin{enumerate}\firmlist
-\item Understanding how a web application can be slit into different pages using the react router.
+\item Understanding how a web application can be split into different pages using the react router.
 \item Get experience with passing props between components and combining them with parameters from the url.
 \item Get some experience with form validation and the html 5 form validation api.
 \end{enumerate}
@@ -62,7 +62,7 @@
 %\clearpage
 \subsection*{Background}
 
-The assignments here assumes you have a working solution for lab 2 part 1, i.e. a working react app with three components: \code{App}, \code{ComposeSalad}, and \code{ViewOrder}.
+The assignments here assumes you have a working solution for lab 2, i.e. a working react app with three components: \code{App}, \code{ComposeSalad}, and \code{ViewOrder}.
 
 \subsection*{Assignments}
 
@@ -71,7 +71,7 @@ The assignments here assumes you have a working solution for lab 2 part 1, i.e. 
 \item We are going to move the \code{ComposeSalad} and \code{ViewOrder} to separate pages in the application. First, make sure you know what a router is and the basics of the react router, for example by reading this blog post: 
 \\ \url{https://codeburst.io/getting-started-with-react-router-5c978f70df91}
 
-\item We will use the react router. Download it from npm, and add it to your project. The start the development web server, in the terminal type (\code{ctrl-c} first, if you are running the development web server from part 1 of the lab):
+\item We will use the react router. Download it from npm, and add it to your project. The start the development web server, in the terminal type (\code{ctrl-c} first, if you are running the development web server from lab 2):
 \begin{Code}
 > npm install react-router-dom
 > npm start
@@ -82,11 +82,13 @@ The assignments here assumes you have a working solution for lab 2 part 1, i.e. 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 \end{Code}
 
-\item Next, create a navigation bar for your app. When using the react router, use the \code{<Link to='my-path'>} for links, instead of the native html element \code{<a href="my-path">}. Use bootstrap classes to style it, see \url{https://getbootstrap.com/docs/4.1/components/navs/}. Here is the example code adapted for the react router:
+\item Next, create a navigation bar for your app. When using the react router, use the \code{<Link to='my-path'>} for links, instead of the native html element \code{<a href="my-path">}. Use bootstrap classes to style it, see \url{https://getbootstrap.com/docs/4.4/components/navs/}. Here is the example code adapted for the react router:
 \begin{Code}
 <ul className="nav nav-pills">
   <li className="nav-item">
-    <Link className="nav-link" to='compose-salad'>Komponera din egen sallad</Link>
+    <Link className="nav-link" to='compose-salad'>
+      Komponera din egen sallad
+    </Link>
   </li>
   {/* more links */}
 </ul>
@@ -196,7 +198,7 @@ if(event.target.checkValidity() === false){ ... }
   \item one or two proteins are selected
   \item at least four, but not more than fifteen extras are selected
 \end{itemize}
-This error is not related to a single input, but rather a group of checkboxes. It is not a good idea to write an error message on each checkbox, rater add an alert box below the group headline, see \url{https://getbootstrap.com/docs/4.1/components/alerts/}. You can check the constraint in your \code{handleChange} and \code{handleSubmit} functions and store the result in the state:
+This error is not related to a single input, but rather a group of checkboxes. It is not a good idea to write an error message on each checkbox, rater add an alert box below the group headline, see \url{https://getbootstrap.com/docs/4.4/components/alerts/}. You can check the constraint in your \code{handleChange} and \code{handleSubmit} functions and store the result in the state:
 \begin{Code}
 constructor(props) {
   super(props);
