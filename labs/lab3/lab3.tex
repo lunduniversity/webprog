@@ -135,9 +135,9 @@ this.props.history.push('/view-order');
 \end{Code}
 Add the code above to a proper place in the code to your app and test it.
 
-Note, automatically changing the page can be confusing for the user and should normally be avoided. However, in some cases it can improve the user experience, for example if you add a ``order and checkout'' botton to the compose salad page. I strongly encourage you to take a course in interaction design if you want to work with user interfaces, or partner up with a designer if you focus on the technical part.
+Note, automatically changing the page can be confusing for the user and should normally be avoided. However, in some cases it can improve the user experience, for example if you add a ``order and checkout'' botton to the compose salad page. I strongly encourage you to take a course in interaction design if you want to work with user interfaces, or make sure there is a designer if your team if you prefer to focus on the technical aspects.
 
-\item \emph{Optional assignment 1}: View a ``404 - Page not found'' component if the user enters an invalid url like \url{http://localhost:3000/typing-error}. \emph{Hint}: use the \code{<Switch>} component and a \code{<Route>} with no path.
+\item \emph{Optional assignment 1}: View a ``Page not found'' component if the user enters an invalid url like \url{http://localhost:3000/typing-error}. \emph{Hint}: use the \code{<Switch>} component and a \code{<Route>} with no path.
 
 \item \emph{Optional assignment 2}: create a component, \code{ViewIngredient}, that shows the information from the \code{inventory} object about an ingredient, i.e vegan, lactose et.c. You should be able to navigate to the \code{ViewIngredient} component by clicking on an ingredient in the \code{ComposeSalad} component. To solv this, you should:
 
@@ -154,7 +154,7 @@ Note the \code{:name} part of the path. The router will take the matching text f
   \item one dressing is selected
 \end{itemize}
 If these conditions are not met, an error message should be displayed and the form submission should stop.
-First, let's look at \code{<select>}. We will use html 5 form validation, which have a set of predefined constraints. One of them is \code{required}, which ensures that a value is provided for the form field. Html is text, and the default action is to send a http request, which is also text based, so in this context ``a value'' means anything but the empty string. If you do not already done this, make sure that there is not a valid default selection in the \code{<select>} filed. This is done by adding an invalid \code{<option>} at the top of the list:
+First, let's look at \code{<select>}. We will use html 5 form validation, which have a set of predefined constraints. One of them is \code{required}, which ensures that a value is provided for the form field. Html is text, and the default action is to send a http request, which is also text based, so in this context ``a value'' means anything but the empty string. If you do not already done this, make sure that there is an invalid default selection for the \code{<select>} fileds. This is done by adding an invalid \code{<option>} at the top of the list:
 \begin{Code}
 <select required ...>
   <option value=''>make a choice...</option>
