@@ -1,3 +1,26 @@
+%---Variables ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Variables}
+JavaScript separate variable names and property names.
+\begin{itemize}
+ \item to find a property, you must first find the object in a variable
+ \item \code{this.someProperty}
+\end{itemize}
+\vspace{3mm}
+Global name space
+\begin{itemize}
+  \item shared by all functions and modules
+  \item high risk of name conflict
+  \item do not use
+\end{itemize}
+\vspace{3mm}
+Shared name space for:
+\begin{itemize}
+  \item  global variables
+  \item parameters
+  \item local variables
+\end{itemize}
+\end{frame}
+
 %---Scope ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Scope}
 Two different kind of scopes:
@@ -13,6 +36,12 @@ Two different kind of scopes:
     \item works like scope in Java
   \end{itemize}
 \end{itemize}
+\vspace{4mm}
+\begin{itemize}
+  \item reading an undeclared name throws a \code{ReferenceError}
+  \item assigning to an undeclared name creates it as a global variable
+\end{itemize}
+
 \end{frame}
 
 %---Function Scope ---------------------------------------------------
@@ -22,10 +51,9 @@ Two different kind of scopes:
   \item the scope is the current execution context
   \begin{itemize}
     \item the function
-    \item else the global context
+    \item the global context
   \end{itemize}
-  \item  redeclaration of names are allowed
-  \item assigning a value to an undeclared variable implicitly creates it as a global variable
+  \item redeclaration of names are allowed
   \item considered bad practice today
 \end{itemize}
 \end{frame}

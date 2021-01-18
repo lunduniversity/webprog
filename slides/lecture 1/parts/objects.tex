@@ -2,13 +2,14 @@
 \begin{frame}[fragile] \frametitle{Objects}
 \begin{itemize}
   \item an object is a map: string $\rightarrow$ any value
-  \item objects have properties - the keys of the map (attributes + methods in Java)
+  \item objects have properties - a (string, value) par in the map (attributes, methods)
   \item properties can have any name, including reserved words and operations
   \item access properties using:
   \begin{itemize}
     \item dot notation: \code{myObj.prop}
     \item array index notation: \code{myObj['prop']}
   \end{itemize}
+  \item \code{typeof objRef === 'object'}
   \item add properties by writing to them \code{myObj.newProp = 'adding stuff';}
   \item remove properties by: \code{delete myObj.newProp}
 \end{itemize}
@@ -130,12 +131,50 @@ let point3 =
 \end{columns}%
 \end{frame}
 
+%--- this---------------------------------------------------
+\begin{frame}[fragile] \frametitle{this}
+\begin{itemize}
+  \item \code{this} is defined in all functions
+  \item arrow functions, \code{this} from the enclosing scope is used
+  \item its value depends on how the function is called:
+  \begin{itemize}
+    \item function call: \code{foo()} - the global object
+    \item dot notation: \code{obj.foo()} - the object left of the dot
+    \item explicit: \code{Function.prototype.call()}
+    \item explicit: \code{Function.prototype.bind()} - creates a new function with a predefined value for \code{this}
+    \item as an DOM event handler - the element the event fired from (not all cases for all browsers)
+    \item as an inline DOM event handler - the DOM element on which the listener is placed
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- self---------------------------------------------------
+\begin{frame}[fragile] \frametitle{self}
+When a function is a ``class method''
+\begin{itemize}
+  \item you do not know if \code{this} refers to the right object
+  \item use closure to fix this
+  \item or use arrow functions
+\end{itemize}
+\begin{CodeBox}{}
+function Person() {
+  var self = this; // Some choose `that` instead of `self`. 
+                   // Choose one and be consistent.
+  self.age = 0;
+
+  setInterval(function growUp() { self.age++; }, 1000);
+  setInterval(() => { this.age++;  }, 1000);
+}
+\end{CodeBox}
+\end{frame}
 %---Undefined Names ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Access to Undefined Names}
+Variables and properties have distinct name spaces.
+\\ \vspace{4mm}
 Variables:
 \begin{itemize}
   \item read: throws ReferenceError
-  \item write: creates the variable in the current scope
+  \item write: creates a variable in the global scope
 \end{itemize}
 \vspace{5mm}
 Properties:
@@ -238,8 +277,23 @@ JuniorFamily.prototype.toString = function() {
 
 %--- Class ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Class}
+a "Java class" corrsponds to two objects in JavaScript
 \begin{itemize}
-  \item \code{Class} was introduced in ECMAScript 2015
+  \item a constructor function:
+  \begin{itemize}
+    \item its name is part of the variable name space
+    \item place static stuff here
+  \end{itemize}
+  \item a prototype object
+  \begin{itemize}
+    \item the object to add to the prototype chain
+    \item place any stuff to be inherited by the instances here
+  \end{itemize}
+\end{itemize}
+\vspace{5mm}
+
+\code{Class} was introduced in ECMAScript 2015
+\begin{itemize}
   \item syntactical sugar, set up the prototype chin as outlined above
   \item \code{static} will add the property to the constructor function object
 \end{itemize}
@@ -306,39 +360,3 @@ Object.defineProperty(obj, "prop", {
 This is however out of scope for this course.
 \end{frame}
 
-%--- this---------------------------------------------------
-\begin{frame}[fragile] \frametitle{this}
-\begin{itemize}
-  \item \code{this} is defined in all functions
-  \item arrow functions, \code{this} from the enclosing scope is used
-  \item its value depends on how the function is called:
-  \begin{itemize}
-    \item function call: \code{foo()} - the global object
-    \item dot notation: \code{obj.foo()} - the object left of the dot
-    \item explicit: \code{Function.prototype.call()}
-    \item explicit: \code{Function.prototype.bind()} - creates a new function with a predefined value for \code{this}
-    \item as an DOM event handler - the element the event fired from (not all cases for all browsers)
-    \item as an inline DOM event handler - the DOM element on which the listener is placed
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-%--- self---------------------------------------------------
-\begin{frame}[fragile] \frametitle{self}
-When a function is a ``class method''
-\begin{itemize}
-  \item you do not know if \code{this} refers to the right object
-  \item use closure to fix this
-  \item or use arrow functions
-\end{itemize}
-\begin{CodeBox}{}
-function Person() {
-  var self = this; // Some choose `that` instead of `self`. 
-                   // Choose one and be consistent.
-  self.age = 0;
-
-  setInterval(function growUp() { self.age++; }, 1000);
-  setInterval(() => { this.age++;  }, 1000);
-}
-\end{CodeBox}
-\end{frame}

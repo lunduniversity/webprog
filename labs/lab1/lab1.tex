@@ -54,9 +54,9 @@
 
 \begin{itemize}\firmlist
 \item The course has four compulsory laboratory exercises. 
-\item You are to work in groups of two people. Sign up for the labs at \url{http://sam.cs.lth.se/Labs}
+\item You are to work in groups of two people. Sign up for the labs at\\ \url{http://sam.cs.lth.se/Labs}
 \item The labs are mostly homework. Before each lab session, you must have done all the assign\-ments in the lab, written and tested the programs, and so on. Contact a teacher if you have problems solving the assignments. 
-\item Smaller problems with the assignments, e.g., details that do not function correctly, can be solved with the help of the lab assistant during the lab session. 
+%\item Smaller problems with the assignments, e.g., details that do not function correctly, can be solved with the help of the lab assistant during the lab session. 
 \item Extra labs are organized only for students who cannot attend a lab because of illness. Notify Per Andersson (\url{Per.Andersson@cs.lth.se}) if you fall ill, \emph{before} the lab.
 \end{itemize}
 
@@ -106,7 +106,7 @@ In this lab you will use Node.js as execution environment. The tool is installed
 
 \subsubsection*{IDE}
 
-\noindent Do you want to use an IDE when writing code? I recommend Visual Studio Code, see \url{https://code.visualstudio.com}. It has great support for JavaScript and TypeScript. We will use TypeScript later in the course which Eclipse has poor support for. TypeScript is JavaScript extended with static typing.
+\noindent Do you want to use an IDE when writing code? I recommend Visual Studio Code, see \url{https://code.visualstudio.com}. Check out their tutorial on running and debugging javascript programs using node.js (skip the "An Express application" part), see \url{https://code.visualstudio.com/docs/nodejs/nodejs-tutorial}. There is also a video showing how to debug JavaScript code here \url{https://www.youtube.com/watch?v=2oFKNL7vYV8}. It has great support for JavaScript and TypeScript. We will use TypeScript later in the course which Eclipse has poor support for. TypeScript is JavaScript extended with static typing.
 
 \subsection*{Assignments}
 
@@ -145,7 +145,11 @@ node lab1.js
 Foundations: Sallad,Pasta,Sallad + Pasta,Sallad + Matvete,...
 Extras: Avocado,Fetaost,Gurka,Jalapeno,Krutonger,Lime,Majs,Oliver,...
 \end{Code}
-\emph{hint} check out \code{Object.keys()}, see \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys}. How does it compare to using a \code{for\ldots in} loop instead?
+\emph{hint 1, } you will need these selections later, so store them in an array before printing.
+\\ \noindent
+\emph{hint 2, } check out \code{Object.keys()}, see \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys}. \\ \noindent
+\emph{hint 3, } \code{Array.prototype.filter()} is a convenient way to select elements from an array with desired properties, for example being a foundation, see \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter}. 
+How does it compare to using a \code{for\ldots in} loop instead?
 
 \noindent \emph{Note,} only the properties that holds true are declared in the objects. Reading an object property that is not declared will evaluate to \code{undefined}, which is falsy, so there is no need to do explicitly store negative facts, for example \code{\{lactose: false\}}.
 

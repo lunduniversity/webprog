@@ -1,20 +1,41 @@
 %---Types ---------------------------------------------------
 \begin{frame}[fragile]
   \frametitle{Types}
-Seven data types that are primitives (immutable):
+Six data types that are primitives (immutable):
 \begin{itemize}
-  \item  \verb|boolean|
-  \item  \verb|null| - \verb|typeof null| $\rightarrow$ \verb|object|
   \item  \verb|undefined|
+  \item  \verb|boolean|
   \item  \verb|number|
   \item  \verb|bigint| - literal syntax: \verb|42n|
   \item  \verb|string|
   \item  \verb|symbol| - unique and immutable
 \end{itemize}
-All other values have the type:
+Structural types:
 \begin{itemize}
   \item  \verb|object|
+  \item  \verb|function|
 \end{itemize}
+Structural root:
+\begin{itemize}
+  \item  \verb|null|
+\end{itemize}
+\end{frame}
+
+%---Typeof ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Types}
+The \verb|typeof| operator returns a string indicating the type of the unevaluated operand.
+\\ \vspace{5 mm}
+\code{typeof null === "object"}
+\\ \vspace{5 mm}
+Wrapper objects:
+\begin{itemize}
+  \item  \verb|Boolean|, \verb|Number|, \verb|Bigint|, \verb|String|, \verb|Symbol|
+  \item  \verb|Object|, \verb|Function|
+\end{itemize}
+\vspace{5 mm}
+\code{typeof "EDAF90" === "string"}
+\code{typeof new String("EDAF90") === "object"}
 \end{frame}
 
 %---Dynamically Typed Language ---------------------------------------------------
@@ -44,25 +65,7 @@ typeof undefined = 'undefined';
     \begin{column}{0.3\textwidth}  \end{column}
   \end{columns}%
   \vspace{5mm}
-\verb|typeof| returns a string. The value is one of the 8 types.
-\end{frame}
-
-%---Type Conversion ---------------------------------------------------
-\begin{frame}[fragile]
-  \frametitle{Type Conversion}
-  Enforce type conversion with expressions.\\
-  \begin{CodeBox}{ type converting expressions}
-typeof (+'42') // 'number'
-typeof (!!null) // 'boolean'
-  \end{CodeBox}
-  \vspace{5mm}
-  Use type converting functions: \verb|Number()|, \verb|String()|, and \verb|Boolean()|.
-  \begin{CodeBox}{ type converting expressions}
-typeof Number('42') // 'number'
-typeof Number('Per') // 'number'
-typeof Boolean('false') // 'boolean'
-typeof String(42) // 'string'
-  \end{CodeBox}
+\verb|typeof| returns a string. 8 possible values, all types except \code{null}.
 \end{frame}
 
 %---Automatic Type Conversion ---------------------------------------------------
@@ -77,6 +80,25 @@ typeof String(42) // 'string'
 3 + '42';      // '342'
 null + 'Per'; //  'nullPer'
 3 == '3'       // true
+  \end{CodeBox}
+\end{frame}
+
+%---Type Conversion ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Type Conversion}
+  Enforce type conversion with expressions.\\
+  \begin{CodeBox}{ type converting expressions}
+typeof (+'42') // 'number'
+typeof (!!null) // 'boolean'
+  \end{CodeBox}
+  \vspace{5mm}
+  Use type converting functions: \verb|Number()|, \verb|String()|, and \verb|Boolean()|.
+  \begin{CodeBox}{ type converting expressions}
+typeof Number('42') // 'number'
+typeof new Number('42') // 'object'
+typeof Number('Per') // 'number (NaN)'
+typeof Boolean('false') // 'boolean'
+typeof String(42) // 'string'
   \end{CodeBox}
 \end{frame}
 

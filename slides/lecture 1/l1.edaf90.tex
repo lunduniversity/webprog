@@ -95,7 +95,7 @@
 \item object function oriented language
 \item interpreted
 \item dynamically typed 
-\item run in web browser and nodejs
+\item run in any web browser and nodejs
 \end{itemize}
 
 \end{frame}
@@ -153,6 +153,28 @@ Common to use minify to minimise script download size. All white spaces are remo
 
 \vspace{4mm}
 Use jslint to detect these problems.
+\end{frame}
+
+%---Strict mode ---------------------------------------------------
+\begin{frame}[fragile]
+  \frametitle{Strict mode}
+Transforms some silent warnings to errors.
+
+\begin{CodeBox}{Whole-script strict mode syntax}
+'use strict';
+var v = "Hi! I'm a strict mode script!";
+\end{CodeBox}
+
+\begin{CodeBox}{Function-level strict mode syntax}
+function strict() {
+  'use strict';
+  function nested() { return 'And so am I!'; }
+  return "Hi!  I'm a strict mode function!  " + nested();
+}
+function notStrict() { return "I'm not strict."; }
+\end{CodeBox}
+
+
 \end{frame}
 
 

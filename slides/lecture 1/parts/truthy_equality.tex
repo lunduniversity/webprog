@@ -23,7 +23,7 @@ if (name == null || name.length == 0){
   \frametitle{Short Circuit}
   Logic operations return the value of one operand.
 \begin{columns}[onlytextwidth]
-  \begin{column}{0.6\textwidth}
+  \begin{column}{0.51\textwidth}
 \begin{CodeBox}{ some expressions}
   a = 'Per' || 'default value';
   b = '' || 'default value';
@@ -37,7 +37,8 @@ if (name == null || name.length == 0){
   i = ref && ref.value;
 \end{CodeBox}
   \end{column}
-  \begin{column}{0.4\textwidth}
+  \begin{column}{0.05\textwidth}  \end{column}
+  \begin{column}{0.48\textwidth}
 \begin{CodeBox}{evaluates to}
   a = 'Per';
   b = 'default value';
@@ -48,10 +49,9 @@ if (name == null || name.length == 0){
   f = undefined;
   g = NaN;
   h = null;
-  i = ref?ref.value:ref;
+  i = ref ? ref.value : ref;
 \end{CodeBox}
   \end{column}
-  \begin{column}{0.3\textwidth}  \end{column}
 \end{columns}%
 \end{frame}
 
