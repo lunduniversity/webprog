@@ -1,9 +1,8 @@
-%---Variables ---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Variables}
-JavaScript separate variable names and property names.
+%---Scope ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Name Spaces}
 \begin{itemize}
- \item to find a property, you must first find the object in a variable
- \item \code{this.someProperty}
+ \item one name space for variables and parameters
+ \item each object have their own name space for parameters
 \end{itemize}
 \vspace{3mm}
 Global name space
@@ -13,16 +12,14 @@ Global name space
   \item do not use
 \end{itemize}
 \vspace{3mm}
-Shared name space for:
 \begin{itemize}
-  \item  global variables
-  \item parameters
-  \item local variables
+  \item reading an undeclared name throws a \code{ReferenceError}
+  \item assigning to an undeclared name creates it as a global variable
 \end{itemize}
 \end{frame}
 
-%---Scope ---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Scope}
+%---Scope Rupes ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Scope Rules}
 Two different kind of scopes:
 \begin{itemize}
   \item  function scope
@@ -37,10 +34,6 @@ Two different kind of scopes:
   \end{itemize}
 \end{itemize}
 \vspace{4mm}
-\begin{itemize}
-  \item reading an undeclared name throws a \code{ReferenceError}
-  \item assigning to an undeclared name creates it as a global variable
-\end{itemize}
 
 \end{frame}
 
@@ -56,53 +49,6 @@ Two different kind of scopes:
   \item redeclaration of names are allowed
   \item considered bad practice today
 \end{itemize}
-\end{frame}
-
-%---Function Scope 2 ---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Function Scope, example 1}
-
-\begin{CodeBox}{}
-function foo() {
-  y = 1; // Throws a ReferenceError in strict mode.
-  var x = 3;
-  if (true) {
-    var x = 2;
-  }
-  return x;
-}
-console.log(y); // undefined
-console.log(foo()); // 2
-console.log(y); // 1
-\end{CodeBox}
-\end{frame}
-
-%---Function Scope 3 ---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Function Scope, example 2}
-
-\begin{CodeBox}{}
-function foo() {
-  for (var i=0; i<2; i++) {
-    for (var i=0; i<2; i++) {
-      console.log(i);
-    }
-  }
-  return x;
-}
-foo()  // 0, 1
-\end{CodeBox}
-\end{frame}
-
-%---Function Scope 4 ---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Function Scope, example 3}
-
-\begin{CodeBox}{}
-function foo() {
-  for (var i=0; i<2; i++) {
-    setTimeout(function(){ console.log(i); }, 0);
-  }
-}
-foo()  // 2, 2
-\end{CodeBox}
 \end{frame}
 
 %---Name Hoisting ---------------------------------------------------
@@ -121,6 +67,60 @@ function foo() {
   var x = 3;
   console.log(x);  // 3
 }
+\end{CodeBox}
+\end{frame}
+
+%---Function Scope, example  1 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function Scope, example 1}
+
+\begin{CodeBox}{}
+function foo() {
+  y = 1; // Throws a ReferenceError in strict mode.
+  var x = 3;
+  if (true) {
+    var x = 2;
+  }
+  return x;
+}
+
+try {
+  console.log(y);
+} catch (e) {  console.log('Oops');  }
+foo();
+console.log(y); // 1
+\end{CodeBox}
+\end{frame}
+
+%---Function Scope, example  2 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function Scope, example 2}
+
+\begin{CodeBox}{}
+function foo() {
+  for (var i=0; i<2; i++) {
+    for (var i=0; i<2; i++) {
+      console.log(i);
+    }
+  }
+  return x;
+}
+foo()  // 0, 1
+\end{CodeBox}
+\end{frame}
+
+%---Function Scope, example  3 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function Scope, example 3}
+
+\begin{CodeBox}{}
+var a = [];
+function foo() {
+  for (var i=0; i<3; i++) {
+    a[i] = function() { console.log(i); };
+  }
+}
+foo();
+a[0]();
+a[1]();
+a[2]();
 \end{CodeBox}
 \end{frame}
 

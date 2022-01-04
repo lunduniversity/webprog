@@ -1,0 +1,71 @@
+\section{HTML}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{HTML}
+\begin{lstlisting}[style=htmlcssjs]
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hello World</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="my-awsome-code.js"></script>
+    <base  href="https://www.cs.lth.se/eda095/">
+  </head>
+
+  <body>
+    <h1>Hello World</h1>
+    <p id="my-blue-box">My awsome page.
+  </body>
+</html>
+\end{lstlisting}
+\end{frame}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{HTML - element}
+
+Semantic tags\\
+\html{<h1>, <h2>, <p>,  <abbr>, <code>, <samp>, <kbd>, <var>, <footer>, <header>, <details>, <nav>}\ldots
+\bigskip
+
+Structure\\
+\html{<table>, <ul>, <ol>, <div>, <span>}\ldots
+\bigskip
+
+Functionality included\\
+\html{<form>, <input>, <select>, <button>, <a>}\ldots
+\bigskip
+\color{structure}
+
+För att lära dig mer om HTML-taggar se \url{https://www.w3schools.com/tags/default.asp}
+\end{frame}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{HTML - elements}
+\color{structure}
+Data:
+\begin{itemize}\color{structure}
+\item between the tags: \html{<h1>My Headline</h1>}
+  \begin{itemize}\color{structure}
+  \item is rendered
+  \item text 
+  \item may include other html-elements 
+  \end{itemize}
+\end{itemize}
+
+\begin{itemize}\color{structure}
+\item attributes: \html{<a href="http://cs.lth.se">my link</a>} 
+  \begin{itemize}\color{structure}
+    \item text is not shown on screen
+    \item only text
+  \end{itemize}
+  \item \html{id} - optional attribute, unique for each element\\ can be used to find/refer to an element
+  \item \html{class} - used for styling (do not relate to JavaScript classes)
+\end{itemize}
+\bigskip
+tag + content $\approx$ element
+
+\end{frame}

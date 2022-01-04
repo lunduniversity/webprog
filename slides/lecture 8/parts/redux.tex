@@ -1,0 +1,122 @@
+%--- Redux ------------------------------------------------------------------------------
+\section{Redux}
+%--- Redux ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Reux}
+Managing state in a web application is hard
+\begin{itemize}\color{structure}
+  \item view needs to be updated on:
+  \begin{itemize}
+    \item user interactions in different components
+    \item network events
+  \end{itemize}
+  \item components form a web of dependencies
+  \item hard to keep track of all dependencies when
+  \begin{itemize}
+    \item new components are added
+    \item features move between components
+    \item server communication changes
+  \end{itemize}
+  \item can not update all view on every action
+  \begin{itemize}
+    \item async event, new arrive while old are processed
+    \item poor performance
+    \item cyclic dependencies
+  \end{itemize}
+  \item facebook had major problems with the new message count
+\end{itemize}
+\end{frame}
+
+%--- Redux ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Reux}
+Solution: Redux
+\begin{itemize}\color{structure}
+  \item unidirectional data flow
+  \begin{itemize}
+    \item application state in a single store
+    \item actions updates the store
+    \item all actions are place in one shared queue
+    \item actions are processed by reducers, one at a time
+    \item reducer, a pure function (oldState, action) $\rightarrow$ newState
+    \item components get data from the store
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Actions ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Actions}
+\begin{CodeBox}{}
+export const SET_DELTA = 'SET_DELTA'
+export const DO_IT = 'DO_IT';
+
+export const setDeltaAction = function(newDelta) {
+  return { type: SET_DELTA, delta: newDelta };
+}
+export const doItAction = function() {
+  return { type: DO_IT };
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Reducer ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Reducer}
+\begin{CodeBox}{}
+const initialState = {
+  delta: 1,
+  counter: 0,
+}
+export function reducer(state = initialState, action) {
+  switch (action.type) {
+    case SET_DELTA:
+      return {...state, delta: +action.delta };
+    case DO_IT:
+      return {...state, counter: state.counter + state.delta};
+    default:
+      return state
+  }
+}
+\end{CodeBox}
+\end{frame}
+
+%--- React ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{React}
+\begin{CodeBox}{}
+const mapStoreToProps = 
+  store => ({ counter: store.counter, delta: store.delta });
+const mapDispatchToProps = dispatch => ({
+  setDelta: value => {
+    dispatch(setDeltaAction(value));
+  },
+  doIt: value => {
+    dispatch(doItAction())
+  }
+});
+const VisibleCounterView = connect(
+  mapStoreToProps,
+  mapDispatchToProps
+)(CounterView)
+\end{CodeBox}
+\end{frame}
+
+
+%--- React ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{React}
+\begin{CodeBox}{}
+class CounterView extends Component {
+
+  handleChange(event) {
+    this.props.setDelta(event.target.value);
+  }
+  doIt() {
+    this.props.doIt();
+  }
+  render() {
+    return (
+      <div>
+        counter: {this.props.counter}
+      </div>
+    );
+  }
+}
+\end{CodeBox}
+\end{frame}
+

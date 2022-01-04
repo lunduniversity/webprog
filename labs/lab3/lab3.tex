@@ -95,7 +95,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 \end{Code}
 Add the code above to the \code{App} component. Add a second link for the \code{ViewOrder} alternative. Go to your browser and klick on the links. The path in your browser changes, and you see the navigations in the browsers history. However, all pages look the same.
 
-\item Let's change this. Based on the url in the address bar of the browser, we want to render either the \code{ComposeSalad}, or the \code{ViewOrder} component. \code{<Route path='/compose-salad' component=\{ComposeSalad\}>} is how you normally do this. However, it is not enough to just replace \code{<ComposeSalad ...>} with \code{<Route ...>}. \code{<Route ...>} does not interact directly with the browser. Instead, this is done by another component: \code{<BrowserRouter>}. \code{<BrowserRouter>} must be an ancestor to \code{<Route>}. It is probably easiest to place it in the root (note, \code{<BrowserRouter>} was renamed to \code{<Router>} during the import):
+\item Let's change this. Based on the url in the address bar of the browser, we want to render either the \code{ComposeSalad}, or the \code{ViewOrder} component. Note, do not use a modal here. When you navigate to the page you want to see the compose salad form, not a button to open the form. To show a component based on the path, you can use the following JSX-code: \code{<Route path='/compose-salad' component=\{ComposeSalad\}>}. However, it is not enough to just replace \code{<ComposeSalad ...>} with \code{<Route ...>}. \code{<Route ...>} does not interact directly with the browser. Instead, this is done by another component: \code{<BrowserRouter>}. \code{<BrowserRouter>} must be an ancestor to \code{<Route>}. It is probably easiest to place it in the root (note, \code{<BrowserRouter>} was renamed to \code{<Router>} during the import):
 \begin{Code}
 class App extends Component {
   render() {
@@ -153,15 +153,14 @@ Note the \code{:name} part of the path. The router will take the matching text f
   \item one foundation is selected
   \item one dressing is selected
 \end{itemize}
-If these conditions are not met, an error message should be displayed and the form submission should stop.
-First, let's look at \code{<select>}. We will use html 5 form validation, which have a set of predefined constraints. One of them is \code{required}, which ensures that a value is provided for the form field. Html is text, and the default action is to send a http request, which is also text based, so in this context ``a value'' means anything but the empty string. If you do not already done this, make sure that there is an invalid default selection for the \code{<select>} fileds. This is done by adding an invalid \code{<option>} at the top of the list:
+If these conditions are not met, an error message should be displayed and the form submission should stop. We will use html 5 form validation, which have a set of predefined constraints. One of them is \code{required}, which ensures that a value is provided for the form field. Html is text, and the default action is to send a http request, which is also text based, so in this context ``a value'' means anything but the empty string. First, let's look at \code{<select>}. If you do not already done this, make sure that there is an invalid default selection for the \code{<select>} fileds. This is done by adding an invalid \code{<option>} at the top of the list:
 \begin{Code}
 <select required ...>
   <option value=''>make a choice...</option>
   ... more options
 </select>
 \end{Code}
-Now press the submit button. You should get an error message from your browser. Let's add your own error message and style it with bootstrap. There are two css classes in bootstrap for this: \code{valid-feedback}, and \code{invalid-feedback}. They should be used inside a bootstrap \code{form-group}. The css will hide the styled html element until the pseudo class \code{:valid/:invalid} is set for the input in the \code{form-group} and the css class \code{was-validated} is set on any parent element. We do not want to show error messages for fields the user have not interacted with, so set the \code{was-validated} in your \code{handleChange} and \code{handleSubmit} functions:
+Now press the submit button. You should get an error message from your browser. Let's add your own error message and style it with bootstrap. There are two css classes in bootstrap for this: \code{valid-feedback}, and \code{invalid-feedback}. They should be used inside a bootstrap \code{form-group}. The css will hide the styled html element until any of the pseudo class \code{:valid} or \code{:invalid} is set for the input in the \code{form-group} and the css class \code{was-validated} is set on any parent element. We do not want to show error messages for fields the user have not interacted with, so set the \code{was-validated} in your \code{handleChange} and \code{handleSubmit} functions:
 \begin{Code}
 handleChange(event) {
   event.target.parentElement.classList.add("was-validated");

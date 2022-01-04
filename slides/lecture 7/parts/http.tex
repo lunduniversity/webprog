@@ -1,0 +1,329 @@
+%--- OSI model ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{OSI model}
+The protocols of internet are layered
+\begin{itemize}
+  \item Physical Layer
+  \item Data Link Layer
+  \item Network Layer
+  \item Transport Layer
+  \item Session Layer
+  \item Presentation Layer
+  \item Application Layer
+\end{itemize}
+\end{frame}
+
+%--- MAC Address ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{MAC Address}
+MAC address (simplified)
+\begin{itemize}
+  \item unique for each network interface
+  \item static, set when manufactured
+  \item manufaturer prefix
+  \item 6 bytes, 48 bits
+  \item used by the Data Link Layer
+  \item example: 01-23-45-67-89-AB
+\end{itemize}
+\end{frame}
+
+%--- IP Address ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{IP Address}
+IP address
+\begin{itemize}
+  \item unique for each internet node
+  \item dynamic, set when the node is added to internet
+  \item version 4 and 6 are used
+  \item 32 bit, or 128 bits
+  \item used by the Transport Layer
+  \item example: IPv4: 172.16.254.1, IPv6: 2001:db8:0:1234:0:567:8:1
+\end{itemize}
+Domain Name System (DNS)
+\end{frame}
+
+%--- Domain Name System (DNS)  ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Domain Name System (DNS)}
+Domain Name System (DNS)
+\begin{itemize}
+  \item distributed database
+  \item mapps host name to IP-number
+  \item uses the DNS protocol
+\end{itemize}
+\end{frame}
+
+
+%--- URL and URI ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{URI and URL}
+\color{structure}
+\begin{itemize}\color{structure}
+  \item URI --- identifies a resource
+  \item URL --- identifies a location
+  \item URL is a subset of URI
+  \item URI = scheme:[//authority]path[?query][\#fragment]
+  \item authority = [userinfo@]host[:port]
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+<h2 id="url">URI and URL</h2>
+...
+<a href="https://cs.lth.se/edaf90/#url">
+\end{CodeBox}
+\end{frame}
+
+%--- URL encoding ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{URL encoding}
+URL is based on 7 bit ASCII
+\begin{itemize}
+  \item safe characters: a-z, A-Z, 0-9, \texttt{- \_ . \textasciitilde}
+  \item all others must be percent-encoding
+  \item \texttt{\%nn}, nn is 8 bit hexadecimal value
+  \item percent-encoding uses utf-8
+  \item \texttt{https://cs.lth.se/edaf90/lecture\%20notes}
+\end{itemize}
+\end{frame}
+
+%--- HTTP ------------------------------------------------------------------------------
+\section{HTTP}
+%--- HTTP ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{HTTP}
+\color{structure}
+HTTP Request
+\begin{itemize}\color{structure}
+  \item text based - human readable
+  \item request line
+  \item header lines
+  \item body
+\end{itemize}
+\texttt{
+\noindent GET /edaf90/ HTTP/1.1\\
+HOST: cs.lth.se
+}
+\end{frame}
+
+%--- HTTP Commands------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{HTTP Commands}
+\color{structure}
+Commands
+\begin{itemize}\color{structure}
+\item GET
+\item HEAD
+\item POST
+\item PUT
+\item DELETE
+\item CONNECT
+\item OPTIONS
+\item TRACE
+\item PATCH
+\end{itemize}
+\end{frame}
+
+%--- Response ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Response}
+\color{structure}
+HTTP Response
+\begin{itemize}\color{structure}
+\item  Status line
+\item  header lines
+\item  body
+\end{itemize}
+
+\texttt{
+\noindent 
+HTTP/1.1 200 OK
+\\Date: Sat, 09 Feb 2019 15:51:26 GMT
+\\Server: Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips PHP/7.0.27
+\\Content-Type: text/html; charset=utf-8
+\\X-Cache: cached
+\\Content-Length: 38430
+\\~ 
+\\<!DOCTYPE html>
+\\... more text, a total of 38430 bytes
+}
+\end{frame}
+
+%--- Status Code------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{HTTP Status Code}
+\color{structure}
+Status codes
+\begin{itemize}
+  \item  1xx (Informational)
+  \item  2xx (Successful)
+  \item  3xx (Redirection)
+  \item  4xx (Client Error)
+  \item  5xx (Server Error)
+\end{itemize}
+\end{frame}
+
+%--- REST ------------------------------------------------------------------------------
+\section{REST}
+%--- REST ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{REST}
+RESTful APIs are commonly for accessing {\bf data} stored on a server/database.
+\vspace{3mm}
+\\Principles:
+\begin{itemize}
+  \item client–server architecture
+  \item statelessness
+  \item cacheability
+  \item layered system
+  \item uniform interface
+\end{itemize}
+\end{frame}
+
+%--- Uniform Interface ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Uniform Interface}
+\begin{itemize}
+ \item resource identification in requests
+ \item resource manipulation through representations
+ \item self-descriptive messages
+ \item hypermedia as the engine of application state
+\end{itemize}
+\end{frame}
+
+%--- REST ------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{REST}
+Not a standard, variant exist.
+\vspace{3mm}
+\\Common assumptions about a RESTful api:
+\begin{itemize}
+  \item uses HTTP for communication
+  \item \emph{Http command} defines the action
+  \item \emph{Http response code} indicates success/failure of the action
+  \item \emph{Resource identification} is part of the url
+  \item \emph{Filtering} can be done using the query part
+  \item \emph{Http headers} provide additional information, e.g. authentication tokens
+  \item \emph{Http body} contains the data
+  \item {json format} is common, but XML is also used
+\end{itemize}
+\end{frame}
+
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{CRUD}
+Commonly supported commands
+\begin{itemize}
+  \item Create --- POST (new data in request body)
+  \item Read --- GET
+  \item Update --- PUT (new data in request body)
+  \item Delete --- DELETE
+\end{itemize}
+\vspace{5mm}
+Data manipulation operations returns the updated object in the response body.
+\end{frame}
+
+%--- Naming Convents ------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Naming Convents}
+\color{structure}
+\noindent Names:
+\begin{itemize}\color{structure}
+  \item the api should be self explained
+  \item only nouns
+  \item plural names for collections
+  \item avoid verbs, the http command contains this information
+  \item use lower case letters.
+  \item avoid CamelCase since the path of the URLs are case insensitive.
+  \item separates words using the minus sign,\\  \texttt{/piano-chair/} vs \texttt{/piano\%20chair/})
+\end{itemize}
+\end{frame}
+
+%--- JSON ------------------------------------------------------------------------------
+\section{JSON}
+%--- JSON ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{JSON}
+Property names:
+\begin{itemize}
+  \item  are strings, must use \code{"quotation marks"}
+\end{itemize}
+Values:
+\begin{itemize}
+  \item  a literal, one of \code{true, false} or \code{null}
+  \item  a number, for example 3.1415 or 42
+  \item  a string must be \code{"must use quotation marks"}
+  \item  an object \code{\{\}}, comma separated \emph{name : value} - pairs
+  \item  an array \code{[]}, comma separated values
+\end{itemize}
+\begin{CodeBox}{}
+{"name": "Per", "teacher": true }
+\end{CodeBox}
+\end{frame}
+
+
+%--- REST ------------------------------------------------------------------------------
+\section{Ajax}
+%--- REST ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Ajax}
+Asynchronous JavaScript And XML
+\begin{itemize}
+  \item dynamic webpages using XMLHttpRequest
+  \begin{itemize}
+    \item event based (call back functions)
+  \end{itemize}
+  \item avoid whole page refresh
+  \item update parts of the DOM
+\end{itemize}
+Single page web application
+\begin{itemize}
+  \item JavaScript frameworks such as REACT and Angular
+  \item no page refresh, for the entire application
+  \item uses the fetch API
+  \begin{itemize}
+    \item Prototype based
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- fetch ------------------------------------------------------------------------------
+\section{fetch}
+%--- fetch ------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{fetch}
+\begin{CodeBox}{}
+fetch('http://example.com/movies.json')
+  .then((response) => {
+    return response.json();
+  })
+  .then((myJson) => {
+    console.log(myJson);
+  });
+\end{CodeBox}
+\end{frame}
+
+%--- fetch ------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{fetch}
+\begin{CodeBox}{}
+fetch(url, {
+  method: 'POST',
+  mode: 'cors',
+  cache: 'no-cache',
+  credentials: 'same-origin',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  redirect: 'follow',
+  referrerPolicy: 'no-referrer',
+  body: JSON.stringify( { answer: 42 } )
+});
+\end{CodeBox}
+\end{frame}
+
+%--- Response ------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Response}
+\begin{CodeBox}{}
+fetch('flowers.jpg')
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.blob();
+  })
+  .then((myBlob) => {
+    myImage.src = URL.createObjectURL(myBlob);
+  })
+  .catch((error) => {
+    console.error('There has been a problem with your fetch operation:', error);
+  });
+  \end{CodeBox}
+\end{frame}

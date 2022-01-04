@@ -61,29 +61,39 @@
 
 \subsubsection*{Bootstrap}
 Open the bootstrap documentation to get an overview of the different bootstrap components to choose from. The pages contains examples, so it is easy to copy the template code.
-\\ \url{https://getbootstrap.com/docs/4.4/components/jumbotron/}
+\\ \url{https://getbootstrap.com/docs/4.6/components/jumbotron/}
 
 %\clearpage
-\subsection*{Background}
+\subsection*{Set up}
 
 In the first lab you created JavaScript code to manage custom made salads. In this lab you will create a web page where a user can compose and order salads.
 
-On the course home page you find the instructions for creating a new react project, see \url{http://cs.lth.se/edaf90/labs/}.
+On the course home page you find the instructions for creating a new react project, see \url{https://cs.lth.se/edaf90/labs/react-bootstrap-project/}. Later you will store a list of salads in the App component. Classes must be used for components with state. Make sure App is a class:
+\begin{Code}
+class App extends Component {
+  render() {
+    return (
+      <H1>Compose a Salad</h1>
+    );
+  }
+}
 
-If you do not intend to use bootstrap modals, skip the \code{npm install jquery popper.js} step. If you change your mind, you can always add them later.
+\end{Code}
 
-In this lab we use ECMAscript modules, so download the ES6 variant of the inventory file:
+\noindent If you do not intend to use bootstrap modals, skip the \code{npm install jquery popper.js} step. If you change your mind, you can always add them later.
+
+In this lab we use ECMAscript modules, so download the ES6 variant of the inventory file (or download from the url using a web browser):
 \begin{Code}
 > cd lab2
 > curl -o src/inventory.ES6.js 
-          http://fileadmin.cs.lth.se/cs/Education/EDAF90/labs/lab2/inventory.ES6.js
+          https://fileadmin.cs.lth.se/cs/Education/EDAF90/labs/lab2/inventory.ES6.js
 \end{Code}
 
 \subsection*{Assignments}
 
 \begin{Assignments}
 
-\item Study the relevant material for lecture 3, see \url{http://cs.lth.se/edaf90/reding-instructions/lecture-3/}. 
+\item Study the relevant material for lecture 3 and 4, see \url{https://cs.lth.se/edaf90/reding-instructions/lecture-3/}. Pay special attention to the "main concepts" part of the react documentation: \url{https://reactjs.org/docs/hello-world.html}.
 
 \item If you are using the linux system at LTH, remember to run \code{initcs} to add \code{node} to the path.
 
@@ -94,7 +104,7 @@ import inventory from './inventory.ES6';
 
 \item Create a component for composing salads. Pass \code{inventory} to it using \code{props}. I suggest you name it ComposeSalad:
 \begin{Code}
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 class ComposeSalad extends Component {
   constructor(props) {
@@ -172,7 +182,11 @@ An order can contain several salads. Remember to set the \code{key} attribute in
 
 \item \emph{Optional assignment 1} Add a remove button to the list of salads in the \code{ViewOrder} component. Remember, \code{props} are read only. The original list is in the \code{App} component.
 
-\item \emph{Optional assignment 2}  add functionality so the user can edit a previously created salad. Add an edit button to each row in the list of salads in the \code{ViewOrder} component. You modify the \code{ComposeSalad} component so it can be used for editing. This is a good use case for a modal wrapper around the \code{ComposeSalad} component. Note, do all editing on a copy of the salad object, else you can not cancel an edit. \emph{Hint 1: } pass the the salad to edit as a \code{prop} to \code{ComposeSalad}. To create a new salad, pass an empty object. The \code{Salad.id} property is a good indicator to distinguish between create and update. If it has a id, you edit, and if it is \code{undefined}, you create a new salad. \emph{Hint 2: } Do this assignment in two steps, first add the functionality to view the salad, then continue with changes needed to save the updated salad.
+\item \emph{Optional assignment 2}  add functionality so the user can edit a previously created salad. Add an edit button to each row in the list of salads in the \code{ViewOrder} component. You also need modify the \code{ComposeSalad} component so it can be used for editing. Use \code{props} to pass the salad to be edited. Add a property to the component state to indicate if it is in create or edit mode. Use this to give the the submit button a proper text.
+
+Th edit scenario is a good use case for a modal wrapper around the \code{ComposeSalad} component. For edit, a pop-up window will appear, and when done the user is back in the list of the salads. Note, do all editing on a copy of the salad object, else you can not cancel an edit.
+\\ \emph{Hint 1: } pass the the salad to edit as a \code{prop} to \code{ComposeSalad}. To create a new salad, pass an empty object. The \code{Salad.id} property is a good indicator to distinguish between create and update. If it has a id, you edit, and if it is \code{undefined}, you create a new salad. 
+\\ \emph{Hint 2: } Do this assignment in two steps, first add the functionality to view the salad, then continue with changes needed to save the updated salad.
 
 \item This is all for now. In the next lab we will introduce a router and move the \code{ComposeSalad} and \code{ViewOrder} to separate pages.
 

@@ -1,0 +1,68 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemeLund}[2008/05/05 beamer style for the Lund Centre of Mathematical Sciences provided by Olivier Verdier] 
+
+% colours as defined on <http://www3.lu.se/LUinternt/grafiskprofil/hjalp/vanligafragor.html>
+\DefineNamedColor{named}{LUblue}{cmyk}{1.0,0.6,0,0.1}
+\DefineNamedColor{named}{LUbronze}{cmyk}{0,0.4,1,0.3}
+
+\colorlet{darkblue}{LUblue!60!black}
+
+\DefineNamedColor{named}{gentledark}{gray}{.15}
+
+\usetheme{Warsaw}
+
+\setbeamercolor*{palette primary}{fg=white,bg=LUblue}
+\setbeamercolor*{palette secondary}{fg=white,bg=LUbronze}
+\setbeamercolor*{palette tertiary}{fg=white,bg=gentledark}
+\setbeamercolor*{palette quaternary}{fg=white,bg=gentledark}
+
+% without this the title colours bg gets horribly blue
+\setbeamercolor{frametitle}{bg=darkblue}
+
+%\setbeamercolor{frametitle right}{bg=black}
+% to get the title in white on black:
+%\setbeamercolor{frametitle}{bg=black}
+
+% this turns out to be ugly with the shadow:
+%\setbeamercolor{structure}{fg=LUblue}
+
+
+% footpage inspired by the `infolines` outer theme
+\defbeamertemplate*{footline}{mc theme}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.50\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% more space on the left and right
+\setbeamersize{text margin left=1em,text margin right=1em}
+
+% the various university logos come from <http://www3.lu.se/LUinternt/grafiskprofil/nedladdning/logotyper/logolu.html>
+
+% LU logo in the bottom right corner
+\pgfdeclareimage[width=3cm]{logolund}{logoonly}
+\logo{
+\begin{colormixin}{25!white}
+\pgftext[at=\pgfpoint{-.75cm}{.5cm}]{\pgfuseimage{logolund}}
+\end{colormixin}
+}
+
+% to get softer colours:
+%\usecolortheme{rose}
+
+%\setbeamercolor*{titlelike}{parent=structure}
+
+% to get the usual math fonts:
+%\usefonttheme[onlymath]{serif}
+

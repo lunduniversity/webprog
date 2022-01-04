@@ -23,6 +23,7 @@
 **/*.pdf
 **/*.fdb_latexmk
 **/*.fls
+**/*.listing
 
 # Compiled class file
 *.class

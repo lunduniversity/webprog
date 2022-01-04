@@ -1,0 +1,125 @@
+%--- Cookies ------------------------------------------------------------------------------
+\section{Cookies}
+%--- Cookies ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Cookies}
+\color{structure}
+Cookies
+\begin{itemize}\color{structure}
+  \item stored on the client, semi persistent:
+  \begin{itemize}
+    \item best effort principle, the client may delete cookies at will
+    \item max number of cookies \textasciitilde 20 (browser dependent)
+    \item have an expiration date
+  \end{itemize}
+  \item contains a string
+  \item max size of 4096 Bytes (4KB)
+  \item servers can only access cookies from the own domain
+  \item automatically send in the http-header, in every http-request
+  \begin{itemize}
+    \item \texttt{Set-Cookie: name=my data; expires=Fri, 31-Dec-2010 23:59:59 GMT; path=/; domain=.example.net}
+    \item \texttt{Cookie: name=my data; name2=data2; name3=data3}
+  \end{itemize}
+  \item security must be considered, never store sensitive data in cookies
+\end{itemize}
+\end{frame}
+
+%--- Cookies and JavaScript ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Cookies and JavaScript}
+\color{structure}
+Cookies
+\begin{itemize}\color{structure}
+  \item the cookie http-headers can not be accessed from JavaScript
+  \item JavaScript can read and write cookies:
+  \begin{itemize}
+    \item \texttt{document.cookie} - store the Set-Cookie string
+  \end{itemize}
+  \item server can prevent JavaScript access:
+  \begin{itemize}
+    \item \texttt{Set-Cookie: \ldots \ httponly}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- HTTP session ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{HTTP session}
+\color{structure}
+\begin{itemize}\color{structure}
+  \item http is a stateless protokol
+  \item some server side features needs to preserve state across requests
+  \item can use cookies:
+  \begin{itemize}
+    \item session id is stored in a client side cookie
+    \item the id is sent to the server in every request
+    \item the server stores sensitive session data (session state)
+  \end{itemize}
+  \item \texttt{Cookie: PHPSESSID=298zf09hf012fh2; csrftoken=u32t4o3tb3gg43; \_gat=1}
+  \item security must be considered, more in lecture 10
+\end{itemize}
+\end{frame}
+
+%--- Web Storage API ------------------------------------------------------------------------------
+\section{Web Storage API}
+%--- Web Storage API ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Web Storage API}
+\color{structure}
+
+\begin{itemize}\color{structure}
+  \item \texttt{Window.sessionStorage}
+  \item \texttt{Window.localStorage}
+  \item a map, \texttt{string} $\rightarrow$ \texttt{string}
+  \item \texttt{setItem(), getItem(), removeItem(), clear()}
+  \item associated with the current origin (server and port)
+  \item 2-10 MB per origin
+  \item never sends data to the server
+  \item supported, but may not be available
+  \item \texttt{StorageEvent}
+  \begin{itemize}
+    \item do not work for the same page
+    \item detects changes done by other pages
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- IndexDB ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{IndexDB}
+\color{structure}
+\begin{itemize}\color{structure}
+  \item client-side storage
+  \item significant amounts of structured data
+  \item object-oriented transactional database system
+  \item indexes for search
+  \item asynchronous API
+  \item browser dependent storage limits and eviction criteria
+  \item usage is beyond the scope of his course
+\end{itemize}
+\end{frame}
+
+%--- Service Worker ------------------------------------------------------------------------------
+\section{Service Worker}
+%--- Service Worker ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Service Worker}
+\color{structure}
+\begin{itemize}\color{structure}
+  \item sits between browser, app and network
+  \item bound to an origin and a path
+  \item can intercept incoming trafic
+  \item only https
+  \item limitations in private browsing mode
+  \item combine with IndexDB for a rich offline experience
+  \item enable push notifications
+\end{itemize}
+\end{frame}
+
+%--- Service Worker ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Service Worker}
+\begin{itemize}\color{structure}
+  \item event driven
+  \item full asynch
+  \begin{itemize}
+    \item no access to synchronous APIs, i.e. Web Storage
+  \end{itemize}
+  \item runs in its own thread
+  \item runs in a worker context, no DOM
+  \item beyond the scope of this course
+\end{itemize}
+\end{frame}

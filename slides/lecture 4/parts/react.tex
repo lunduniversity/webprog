@@ -1,0 +1,502 @@
+%--- react------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{React}
+\begin{CodeBox}{}
+ReactDOM.render(
+  <h1>Hello, world!</h1>,
+  document.getElementById('root')
+);
+\end{CodeBox}
+
+\vspace{8mm}
+\begin{itemize}
+  \item templates are JSX expressions
+  \item JSX are embedded in the JavaScript code
+  \item babel translates JSX to JavaScript objects
+  \item react injects the template object into the DOM
+\end{itemize}
+
+\end{frame}
+
+%--- JSX ------------------------------------------------------------------------------
+\section{JSX}
+%--- JSX------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{JSX}
+\begin{itemize}
+  \item any ``html tag'' is a JSX expression
+  \item all tags must be closed, xml syntax works: \code{<img />}
+  \item tags can be nested
+  \item must be one root tag
+  \item can use multiple lines
+  \item use () to avoid automatic semicolon insertion!!!
+  \item Babel compiles JSX down to \code{React.createElement()} calls
+\end{itemize}
+
+\begin{CodeBox}{}
+const element = (
+<span>
+  <h1>Hello, world!</h1>
+  <p>Some more text...</p>
+</span>);
+\end{CodeBox}
+\end{frame}
+
+%--- JSX attributes------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{JSX attributes}
+\begin{itemize}
+  \item JSX tags can have attributes
+  \item React DOM uses camelCase
+  \item html: \code{class}, JSX: \code{className}
+  \item mapps to html attributes when injected to the DOM
+\end{itemize}
+
+\vspace{8mm}
+\begin{CodeBox}{}
+const element1 = <div tabIndex="0"></div>;
+const element2 = <img src="picture.jpeg" />;
+\end{CodeBox}
+\end{frame}
+
+%--- Embedded JavaScript ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Embedded JavaScript}
+JSX can contain embedded JavaScript
+\begin{itemize}
+  \item syntax: \{ \emph{JavaScript expression} \}
+  \item use in:
+  \begin{itemize}
+    \item attribute values
+    \item tag content
+  \end{itemize}
+  \item the embedded JavaScript expression may evaluate to another JSX expression
+\end{itemize}
+\vspace{3mm}
+\begin{CodeBox}{}
+const name = 'Per';
+const imgSrc = 'picture.jpeg';
+function doSomeMagic(arg) { return <span>a frog</span> };
+const element1 = <h1>Hello {name}</h1>;
+const element2 = <img src={imgSrc} />;
+const element3 = (<span>{element1}
+  <p>You are transformed to {doSomeMagic(name)}</p></span>);
+\end{CodeBox}
+\end{frame}
+
+%--- React Components ------------------------------------------------------------------------------
+\section{React Components}
+%--- React Components------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rect Components}
+react components
+\begin{itemize}
+  \item gives a name to a template
+  \item the name can be used as a tag in JSX
+  \item must start with a capital letter
+  \item is a JavaScript object:
+  \begin{itemize}
+    \item a template, the render() function
+    \item applications state
+    \item mechanism for component-component communcation
+  \end{itemize}
+  \item Model-View design pattern
+\end{itemize}
+\end{frame}
+
+%--- React Components------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rect Components}
+stateless component
+\begin{itemize}
+  \item a function returning a react element (JSX expression)
+  \item should be pure functions
+\end{itemize}
+
+stateful component
+\begin{itemize}
+  \item is a ES6 class with these properties:
+  \begin{itemize}
+    \item \code{extends React.Component}
+    \item \code{constructor()} initialise the state
+    \item \code{render()} returns a react element (JSX expression)
+    \item \code{state} - an object containing the component state
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Component example------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Component Example}
+\begin{CodeBox}{}
+Function HelloWorld() {
+ return <h1>Hello World</h1>;
+}
+
+class Hello extends React.Component {
+  constructor() {
+    this.state ={name: 'Per'};
+  }
+  render() {
+    return <h1>Hello, {this.state.name}</h1>;
+  }
+}
+
+const element = <HelloWorld />;
+\end{CodeBox}
+\end{frame}
+
+%--- Properties------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Properties}
+a parent can pass data to a child
+\begin{itemize}
+  \item parent set the value using attributes in JSX
+  \item the values ar passed as a \code{props} parameter of the child constructor or constructor function
+\end{itemize}
+\end{frame}
+
+%--- Properties Example ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Properties Example}
+\begin{CodeBox}{}
+Function Welcome(props) {
+  return <h1>Hello {props.name}</h1>)
+}
+
+class Hello extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {name: props.name + ' Andersson'};
+  }
+  render() {
+    return <h1>Hello, {this.state.name}</h1>;
+  }
+}
+const element = <Hello name="Per" />;
+\end{CodeBox}
+\end{frame}
+
+%--- Communication ------------------------------------------------------------------------------
+\section{Communication}
+%--- Child Parent Communication ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Child Parent Communication}
+\begin{itemize}
+  \item properties pass data down in the tree
+  \item can also be used to pass data up the tree
+  \begin{itemize}
+    \item parent have a call back function to update its state
+    \item pass it as a property a child
+    \item the child calls the parent call back function to pass to parent
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- State ------------------------------------------------------------------------------
+\section{State}
+%--- State------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{State}
+\begin{itemize}
+  \item the state object is immutable
+  \item use \code{setState()} to update state
+  \item state is updated asynchronously (at some time in the future)
+  \item use functions for incremental update: \code{(state, props) => (\{...state, \})}
+  \item state updates are merged
+  \begin{itemize}
+    \item the new state contains the state properties you want to change
+    \item all other state properties remain unchanged
+    \item you can not remove properties
+    \item set undesired properties to \code{undefined}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Render Elements------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Render Elements}
+\code{ReactDOM.render()}
+\begin{itemize}
+  \item takes two parameters:
+  \begin{itemize}
+    \item a react element (JSX expression)
+    \item a DOM element
+  \end{itemize}
+  \item adds the react element to the DOM
+  \item updates the DOM if the element already was part of the DOM
+  \item optimised, only updated the delta
+\end{itemize}
+\end{frame}
+
+%--- Render Elements------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Render Elements}
+\code{setState()}
+\begin{itemize}
+  \item only for stateful components
+  \item updates the DOM
+  \item optimised, only updated the delta
+\end{itemize}
+\end{frame}
+
+%--- Event Handling ------------------------------------------------------------------------------
+\section{Event Handling}
+%--- Handling Events------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Handling Events}
+\begin{itemize}
+  \item names are camelCase
+  \item must use \code{preventDefault}, returning \code{false} do nothing
+  \item pass a function: \code{onClick =\{myCallbackFunction\}}
+  \item argument is a synthetic event according to the W3C spec
+\end{itemize}
+\begin{CodeBox}{}
+function ActionLink() {
+  function handleClick(e) {
+    e.preventDefault();
+    console.log('The link was clicked.');
+  }
+  return (
+    <a href="#" onClick={handleClick}>Click me</a>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- About this------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{About this}
+\begin{itemize}
+  \item by default \code{this} is \code{undefined} in a callback function
+  \item use \code{bind()} to bind it to the component object
+  \item or arrow functions
+\end{itemize}
+\begin{CodeBox}{}
+for (row in ...) {
+
+  const reactRow = (
+    <button onClick={(event) => this.deleteRow(row, event)}>
+      Delete {row.name}
+    </button>
+  );
+  
+}
+\end{CodeBox}
+\end{frame}
+%--- About this------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{this example}
+\begin{CodeBox}{}
+class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {count: 0};
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick() {
+    this.setState(state => ({count: state.count + 1});
+  }
+  render() {
+    return (
+      <button onClick={this.handleClick}>
+        {this.state.count}
+      </button>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Toggle />,
+  document.getElementById('root')
+);
+\end{CodeBox}
+\end{frame}
+
+%--- About this------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{About this}
+\begin{itemize}
+  \item by default \code{this} is \code{undefined} in a callback function
+  \item use \code{bind()} to bind it to the component object
+  \item or arrow functions
+\end{itemize}
+\begin{CodeBox}{}
+for (row in ...) {
+
+  const reactRow = (
+    <button onClick={(event) => this.deleteRow(row, event)}>
+      Delete {row.name}
+    </button>
+  );
+  
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Lists and key ------------------------------------------------------------------------------
+\section{Lists and key}
+%--- Lists and key------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Lists and key}
+\begin{itemize}
+  \item embedded JavaScript may return a collection of react elements
+  \item added in sequence to the DOM
+  \item to help the render optimisation:
+  \begin{itemize}
+    \item each element should have a \code{key} property
+    \item unique among siblings
+    \item the value must be preserved over time
+    \item avoid array index as key (changes when elements are deleted)
+  \end{itemize}
+\end{itemize}
+
+\begin{CodeBox}{}
+function MyList(props) {
+  const listItems = props.list.map(row => (
+    <li key={row.id}>
+      {row.text}
+    </li>
+  ));
+  return <ul>{listItems}</ul>;
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Forms------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Forms}
+\begin{itemize}
+  \item DOM forms contain state
+  \item hard for you JavaScript code to read that state
+  \item use the \emph{bound component} pattern
+  \begin{itemize}
+    \item the react component have the master state
+    \item the DOM reflects the component state using JSX embedded JavaScript
+    \item the updates its state when DOM state changes (\code{onChange})
+  \end{itemize}
+  \item \code{<form onSubmit=\{this.handleSubmit\}>} \ldots \code{</form>}
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+<input type="text" 
+        value={this.state.value}
+        onChange={this.handleChange}
+/>
+\end{CodeBox}
+\end{frame}
+
+%--- Forms, textarea------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Form, textarea}
+\begin{itemize}
+  \item html, value is the content
+  \item react uses a \code{value} property
+\end{itemize}
+\vspace{3mm}
+html
+\begin{CodeBox}{}
+<textarea>
+  Hello there, some text in a text area
+</textarea>
+\end{CodeBox}
+\vspace{3mm}
+react
+\begin{CodeBox}{}
+const text = 'Hello there, some text in a text area';
+const elem = (
+  <textarea value={this.state.value}
+               onChange={this.handleChange} />;
+\end{CodeBox}
+\end{frame}
+
+%--- Forms, select------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Form, select}
+\begin{itemize}
+  \item html, uses \code{selected} attribute in an \code{option} tag
+  \item react uses a \code{value} attribute in the \code{select} tag
+\end{itemize}
+\vspace{3mm}
+html
+\begin{CodeBox}{}
+<select>
+  <option value="lime">Lime</option>
+  <option selected value="Coconut">Coconut</option>
+</select>\end{CodeBox}
+\vspace{3mm}
+react
+\begin{CodeBox}{}
+<select value={this.state.value} onChange={this.handler}>
+  <option value="lime">Lime</option>
+  <option value="coconut">Coconut</option>
+</select>\end{CodeBox}
+\end{frame}
+
+%--- Forms, file input------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Form, file input}
+\begin{CodeBox}{}
+<input type="file"/>
+\end{CodeBox}
+\vspace{8mm}
+
+\begin{itemize}
+  \item is read-only
+  \item must be uncontrolled
+\end{itemize}
+\end{frame}
+
+%--- Forms call back------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Form, call back}
+\begin{CodeBox}{}
+class NameForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
+\end{CodeBox}
+\end{frame}
+
+%--- Forms, generic callback------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Forms, generic callback}
+\begin{CodeBox}{}
+handleInputChange(event) {
+  const target = event.target;
+  const value =
+    target.type === 'checkbox' ?
+                    target.checked : target.value;
+  const name = target.name;
+
+  this.setState({
+    [name]: value
+  });
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Form refs------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Form refs}
+\begin{CodeBox}{}
+const input = React.createRef();
+function handleSubmit(event) {
+  alert('A name was submitted: ' + input.current.value);
+  event.preventDefault();
+}
+
+const form = (
+  <form onSubmit={this.handleSubmit}>
+    <label> Name:
+      <input type="text" ref={input} />
+    </label>
+    <input type="submit" value="Submit" />
+  </form>);
+\end{CodeBox}
+\end{frame}
+
+%--- Life Cycle Hooks------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Life Cycle Hooks}
+\begin{CodeBox}{}
+class Hello extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {  }
+
+  componentWillUnmount() {  }
+
+  render() {
+    return <h1>Hello, world!</h1>;
+  }
+}
+\end{CodeBox}
+\end{frame}

@@ -1,0 +1,100 @@
+%--- Security ------------------------------------------------------------------------------
+\section{Security}
+%--- Security ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Security}
+Many parts of internet was designed based on trust
+\begin{itemize}
+  \item few users in the 70s
+  \item everyone knew eachother
+  \item example: smtp, anyone can send a mail from \emph{Santa Clause}
+\end{itemize}
+\vspace{5mm}
+This mindset still affects the internet.
+\end{frame}
+
+%--- Web Page Composition ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Web Page Composition}
+A web page is a composition of resources from different places:
+\begin{itemize}
+  \item your own JavaScript code
+  \item JavaScript code from other sources
+  \item images and css from even more sources
+\end{itemize}
+\vspace{5mm}
+Can you trust all pats of your program?
+\vspace{5mm}
+\\Do you give twitter access to your data when you use bootstrap?
+\end{frame}
+
+%--- Isolation ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Isolation}
+No harm can be done if everything is isolated.
+\vspace{5mm}
+\\The backend can never trust the frontend!
+\vspace{5mm}
+\\The web browser isolates the resources of a web page:
+\begin{itemize}
+  \item prevent access to cookies and localstorage
+  \item prevent http communication
+\end{itemize}
+\vspace{5mm}
+Which resources can trust each-other?
+\end{frame}
+
+%--- Same Origin Policy ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Same Origin Policy}
+Same Origin if the same:
+\begin{itemize}
+  \item URI scheme, e.g. \emph{https}
+  \item host name, e.g. \emph{cs.lth.se}
+  \item port, e.g. \emph{443}
+\end{itemize}
+\vspace{5mm}
+Resources from the same origin is assumed to trust each-outer and can share data.
+\end{frame}
+
+%--- Cross Cite Scripting ------------------------------------------------------------------------------
+\section{Cross Cite Scripting}
+%--- Cross Cite Scripting ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Cross Cite Scripting}
+To prevent isolation:
+\begin{itemize}
+  \item malicious code want to appear to come from your origin
+  \item uses vulnerabilities to \emph{inject code} into content delivered from a trusted source
+\end{itemize}
+\vspace{5mm}
+This strategy is called \emph{Cross Site Scripting}
+\end{frame}
+
+%--- Code Injection ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Code Injection}
+One way to inject code:
+\begin{itemize}
+  \item leverage on user feedback messages:
+  \item enter html with \code{<script>} tags in a form field
+  \item submit the form
+  \item if the original text is part of the confirmation/error message:
+  \begin{itemize}
+    \item the \code{script} tag is added to the DOM
+    \item it is executed as part of the application, the \emph{same origin}
+    \item it have full access to data, inluding authentication tokens
+    \item full access to any REST-api
+    \item authentication headers will be automatically added to any http request
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Prevent Code Injection ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Prevent Code Injection}
+\begin{itemize}
+  \item only trust data from a known source that is signed (encrypted channel)
+  \item all other data must be escaped or sanitised
+  \item commonly done automatically by frameworks
+  \item check the documentation
+  \item angular:
+  \begin{itemize}
+    \item escapes: \code{<p>\{\{htmlSnippet\}\}</p>}
+    \item sanitises: \code{<p [innerHTML]="htmlSnippet"></p>}
+  \end{itemize}
+\end{itemize}
+\end{frame}

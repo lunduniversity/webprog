@@ -1,0 +1,80 @@
+%--- Server Send Data ------------------------------------------------------------------------------
+\section{Server Send Data}
+%--- Server Send Data ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Server Send Data}
+\begin{itemize}
+  \item polling
+  \item long polling
+  \item server send events
+  \begin{itemize}
+    \item client sets upp communication
+    \item the server keeps the connection alive
+    \item sends data as \code{text/event-stream}
+  \end{itemize}
+  \item web sockets
+\end{itemize}
+\end{frame}
+
+%--- SSE Example------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{SSE, Example}
+\begin{CodeBox}{Header and Payload}
+const source = new EventSource('server-resource-url');
+source.addEventListener('message', function(e) {
+  console.log(e.data); }, false);
+source.addEventListener('open', function(e) {
+}, false);
+source.addEventListener('error', function(e) {
+ if (e.readyState == EventSource.CLOSED) {
+    // Connection was closed.
+  }
+}, false);
+}\end{CodeBox}
+\end{frame}
+
+%--- Limitations of Singe Page Web Applications------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Limitations of Singe Page Web Applications}
+Drawbacks of single page web applications
+\begin{itemize}
+  \item initial loading time can be long
+  \item links to the page from facebook, forums et.c. do not show the content 
+           \\their preview engine only show the html in index.html, no javascript
+  \item search engines do not index the content 
+           \\exception: google's web crawler runs JavaScript
+\end{itemize}
+\end{frame}
+
+%--- Server Side Rendering------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Server Side Rendering}
+Server Side Rendering
+\begin{itemize}
+  \item renders a static web page at build time
+  \item this pre-rendered html file is sent to the web browser
+  \item it shows the initial view of the application with basic features
+  \item it is small, so users experience a quick application start up
+  \item it continues to load the rest of the application
+  \item it hands over control to the application when it is loaded
+\end{itemize}
+Result
+\begin{itemize}
+  \item previews will work, index.html contains a complete html view of the application
+  \item search engines will index this content
+  \item you only need to configure the Server Side Reder engine (initial app state)
+  \item the framework will do the rest for you
+\end{itemize}
+\end{frame}
+
+%--- Service Worker------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Service Worker}
+\begin{itemize}
+  \item can run background tasks in the web browser
+  \item intercepts http requests
+  \begin{itemize}
+    \item forward it to the server
+    \item handle it on its own
+  \end{itemize}
+  \item have access to indexDB and fetch api
+  \item can not access the DOM
+  \item communicates with the application trough events
+\end{itemize}
+\end{frame}
+

@@ -1,0 +1,122 @@
+%--- Form Validation ------------------------------------------------------------------------------
+\section{Form Validation}
+%--- form validation------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Form Validation}
+\begin{itemize}
+  \item user feedback is important
+  \item common feedback comes from incorrectly filled forms
+  \item takes a lot of time to implement
+  \item html 5 introduced built in form validation
+\end{itemize}
+\end{frame}
+
+%--- html 5 form validation------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{HTML 5 Form Validation}
+html form input attributes:
+\begin{itemize}
+  \item \code{required}
+  \item \code{minlength} and \code{maxlength}
+  \item \code{min} and \code{max}
+  \item \code{type}: \code{number}, \code{email}, \ldots
+  \item \code{pattern} a regexp
+\end{itemize}
+\vspace{3mm}
+Any error prevents form submission
+\end{frame}
+
+%--- html 5 form validation------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{HTML 5 Form Validation}
+CSS pseudo classes set by the browser
+\begin{itemize}
+  \item \code{:valid}
+  \item \code{:invalid}
+\end{itemize}
+\vspace{3mm}
+\begin{CodeBox}{}
+input:invalid {
+  border: 2px dashed red;
+}
+input:invalid:required {
+  background-image: linear-gradient(to right, pink, lightgreen);
+}
+.form-control:valid~.invalid-feedback {display: none;}
+\end{CodeBox}
+\end{frame}
+
+%--- Constraint Validation API ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Constraint Validation API}
+adds read only properties to form input elements
+\begin{itemize}
+  \item \code{validationMessage}
+  \item \code{validity} an object containing more info \code{rangeOverflow} and \code{valid}
+  \item \code{checkValidity()}
+  \item \code{setCustomValidity(message)} makes the field invalid
+\end{itemize}
+\vspace{5mm}
+But, you can not style the error message
+\end{frame}
+
+%--- Custom Form Validation ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Custom Form Validation}
+Today, form validation is based on the following principle:
+\begin{itemize}
+  \item use html 5 attributes to define requirements
+  \item \code{<form novalidate>} prevents browser from displaying error messages
+  \item validation is still carried out by the browser
+  \item you can rely on the element.validity object
+  \item use JavaScript for manage error messages: catch the \code{submit} event
+  \item error messages: show or hide normal html elements, e.g. \code{<spam class="my-error-class">invalid email</span>}
+\end{itemize}
+\vspace{5mm}
+Frameworks can help you with the details.
+\end{frame}
+
+%--- Bootstrap ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Bootstrap}
+Bootstrap can style forms and error messages:
+\begin{itemize}
+  \item \code{<input type="email" class="form-control" required>}
+          \\ \code{<div class="invalid-feedback">my message</div>}
+  \begin{itemize}
+    \item style depends on tag and type
+    \item scopes \code{:invalid} and \code{:valid} styles to parent \code{.was-validated} class 
+    \item \code{formElement.classList.add("was-validated");}
+  \end{itemize}
+  \item must use \code{novalidate} on \code{<form>} for custom error messages
+\end{itemize}
+\vspace{5mm}
+check out the bootstrap documentation: \url{https://getbootstrap.com/docs/4.4/components/forms/}
+\end{frame}
+
+%--- Bootstrap ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Bootstrap example}
+\begin{CodeBox}{}
+<form novalidate>
+ <div class="form-row">
+  <div class="col-md-4 mb-3">
+   <label for="field1">First name</label>
+   <input type="text" class="form-control" id="field1" required>
+   <div class="valid-feedback">Looks good!</div>
+  </div>
+  <div class="col-md-4 mb-3">
+   <label for="field2">Last name</label>
+   <input type="text" class="form-control" id="field2" required>
+   <div class="invalid-feedback">please enter your name</div>
+  </div>
+ </div>
+ <button class="btn btn-primary" type="submit">Submit form</button>
+</form>
+\end{CodeBox}
+\end{frame}
+%--- Security ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Security}
+A note on security
+\begin{itemize}
+  \item client side form validation is mainly for giving users feedback
+  \item a malicious user can always interrupt the network communication
+  \item never trust data sent on the network (unless it is signed)
+  \item always do server side data validation!
+  \item with client side validation, server side can focus on malicious code
+\end{itemize}
+\end{frame}
+

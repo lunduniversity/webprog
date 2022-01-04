@@ -94,12 +94,13 @@ Did you notice thet foo have one extra parameter compared to the arguments list?
   \item the intended usage differs
   \item by convention: use leading capital letter in name (similar to class names in Java)
   \item only call constructor functions using \code{new}:
-  \begin{itemize}
-    \item new creates an empty object and binds it to \code{this}
+  \begin{enumerate}
+    \item creates an empty object and binds it to \code{this}
+    \item set up inheritance
     \item the constructor function is called, adds properties to the object
     \item the return value of the constructor function will be the result of \code{new}
     \item remember: the default return value of functions called by \code{new} is \code{this}
-  \end{itemize}
+  \end{enumerate}
   \item combine with closure and you have the power
 \end{itemize}
 \end{frame}
@@ -150,7 +151,7 @@ let point3 =
 
 %--- self---------------------------------------------------
 \begin{frame}[fragile] \frametitle{self}
-When a function is a ``class method''
+When a function is a ``object method''
 \begin{itemize}
   \item you do not know if \code{this} refers to the right object
   \item use closure to fix this
@@ -158,30 +159,15 @@ When a function is a ``class method''
 \end{itemize}
 \begin{CodeBox}{}
 function Person() {
-  var self = this; // Some choose `that` instead of `self`. 
-                   // Choose one and be consistent.
+  let self = this; // Some choose `that` instead of `self`. 
+                         // Choose one and be consistent.
   self.age = 0;
-
-  setInterval(function growUp() { self.age++; }, 1000);
-  setInterval(() => { this.age++;  }, 1000);
+  this.growUp = function() { self.age++; };
+  this.growUp2 = _ =>  this.age++;
 }
+let per = new Person();
+setInterval(per.growUp, 1000);
 \end{CodeBox}
-\end{frame}
-%---Undefined Names ---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Access to Undefined Names}
-Variables and properties have distinct name spaces.
-\\ \vspace{4mm}
-Variables:
-\begin{itemize}
-  \item read: throws ReferenceError
-  \item write: creates a variable in the global scope
-\end{itemize}
-\vspace{5mm}
-Properties:
-\begin{itemize}
-  \item read: evaluates to \code{undefined}
-  \item write: adds the property to the object
-\end{itemize}
 \end{frame}
 
 %--- Prototype based Inheritance ---------------------------------------------------
@@ -200,40 +186,51 @@ Properties:
 \end{itemize}
 \end{frame}
 
-%--- Set up Prototype Chain ---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Set up Prototype Chain}
-Setting up the prototype chain when a new object is created:
-\begin{itemize}
-  \item you can do it manually (but don't)
-  \item \code{new} do the work for you
-  \item all \code{Function} objects have a property \code{prototype}
-  \item remember, constructor functions are instance of \code{Function}
-  \item \code{new}:
-  \begin{itemize}
-    \item creates an empty object
-    \item {\bf and} set its parent in the prototype chain to the \code{prototype} of the constructor function
-  \end{itemize}
-  \item all names in the \code{prototype} of the constructor function are now in the prototype chain of the new object
-\end{itemize}
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Prototype Chain}
+  \centering
+  \includegraphics[width=14cm]{img/prototype_chain}
+
 \end{frame}
 
-%--- Set up Prototype Chain, example ---------------------------------------------------
-\begin{frame}[fragile] \frametitle{example}
-\begin{CodeBox}{prototype chain}
-function Family(name) {
-  this.givenName = name || 'Per';
-}
-Family.prototype.familyName = 'Andersson';
-Family.prototype.toString = function() {
-  return this.givenName + ' ' + this.familyName;
-}
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Prototype Chain}
+  \centering
+  \includegraphics[width=14cm]{img/prototype_chain2}
+\end{frame}
 
-let me = new Family();
-let sister = new Family('Anette');
-console.log(me + ' and my sister ' + sister);
-me.familyName = 'Andersson Nilsson';
-console.log(me + ' and my sister ' + sister);
+%--- Person Example 1 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{prototype}
+\begin{CodeBox}{}
+function Person() {
+  this.age = 0;
+}
+Person.prototype.growUp = function() { this.age++; };
+let per = new Person();
 \end{CodeBox}
+  \centering
+  \includegraphics[width=14cm]{img/prototype_chain3}
+\end{frame}
+
+%--- Set up Prototype Chain ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Set up Prototype Chain}
+Setting up the prototype chain:
+\begin{itemize}
+  \item \code{new} do the work for you
+  \begin{itemize}
+    \item all \code{Function} objects have a property \code{prototype}
+    \item remember, constructor functions are instance of \code{Function}
+    \item \code{new}:
+    \begin{itemize}
+      \item creates an empty object
+      \item {\bf and} set its parent in the prototype chain to the \code{prototype} in the constructor function
+    \end{itemize}
+    \item all names in the \code{prototype} of the constructor function are now in the prototype chain of the new object
+  \end{itemize}
+  \item you can do it manually: \code{Object.create()}
+\end{itemize}
 \end{frame}
 
 %--- Property Name Lookup ---------------------------------------------------
@@ -254,25 +251,40 @@ Property write:
 \end{itemize}
 \end{frame}
 
+%--- Person Example 2 ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{prototype}
+\begin{CodeBox}{}
+let cat = new Person();
+cat.grewUp = function() { this.age +=7; }
+\end{CodeBox}
+  \centering
+  \includegraphics[width=14cm]{img/prototype_chain4}
+\end{frame}
+
 %--- Inheritance ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Inheritance}
 \begin{itemize}
-  \item the \code{prototype}s of the constructor functions form the prototype chain
   \item \code{Object.create()} creates an object with a given prototype chain
-  \item use it to create the \code{prototype} of the constructor function
+  \item use it to replace the \code{prototype} in the constructor function
   \item explicit call the constructor of the superclass
 \end{itemize}
 \vspace{2mm}
-\begin{CodeBox}{JuniorFamily extends Family}
-function JuniorFamily(name) {
-  Family.call(this);
+\begin{CodeBox}{Cat extends Person}
+function Cat() {
+  this = Person.call(this);
 }
-JuniorFamily.prototype = Object.create(Family.prototype);
-JuniorFamily.prototype.toString = function() {
-  return this.givenName + ' ' + 
-             this.familyName + '  jr.';
+Cat.prototype = Object.create(Person.prototype);
+Cat.prototype.grewUp = function() { this.age +=7; }
+Cat.prototype.toString = function() {
+  return 'I am a cat of age ' + this.age';
 }
 \end{CodeBox}
+\end{frame}
+
+%--- Cat Class  ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{prototype}
+  \centering
+  \includegraphics[width=14cm]{img/prototype_chain5}
 \end{frame}
 
 %--- Class ---------------------------------------------------
@@ -296,43 +308,63 @@ a "Java class" corrsponds to two objects in JavaScript
 \begin{itemize}
   \item syntactical sugar, set up the prototype chin as outlined above
   \item \code{static} will add the property to the constructor function object
+  \item no \code{protected} or \code{private}
 \end{itemize}
 \end{frame}
 %--- Class Example ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Class Example}
 \begin{CodeBox}{}
-class Family {
-  constructor(name) {
-    super();
-    this.givenName = name || 'Per';
-    Family.count = Family.count + 1;
+class Person {
+  constructor(age) {
+    this.age = age || 0;
+    Person.count = Person.count + 1;
   }
-  toString() {
-    return this.givenName + ' ' + this.familyName;
-  }
-  familyName = 'Andersson';
   static count = 0;
 }
 \end{CodeBox}
 \end{frame}
 
+%--- Class Picture  ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{prototype}
+  \centering
+  \includegraphics[width=14cm]{img/prototype_chain6}
+\end{frame}
+
+
 %--- Class Extends---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Class Extends}
+The constructor:
 \begin{itemize}
-  \item the constructor in a derived class must call \code{super()} before you can use \code{this}
-  \item you can: \code{extend null}
+  \item in a derived class must call \code{super()} before you can access \code{this}
+  \item in a base class may not call \code{super()}
 \end{itemize}
 \begin{CodeBox}{}
-class JuniorFamily extends Family {
-  constructor(name) {
-    super(name);
+class Cat extends Person {
+  constructor(age) {
+    super(age);
   }
- toString() {
-   return this.givenName + ' ' + 
-              this.familyName + '  jr.';
+  toString() {
+    return 'I am a cat of age ' + this.age';
   }
 }
 \end{CodeBox}
+\end{frame}
+
+%---Undefined Names ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Access to Undefined Names}
+Variables and properties have distinct name spaces.
+\\ \vspace{4mm}
+Variables:
+\begin{itemize}
+  \item read: throws ReferenceError
+  \item write: creates a variable in the global scope
+\end{itemize}
+\vspace{5mm}
+Properties:
+\begin{itemize}
+  \item read: evaluates to \code{undefined}
+  \item write: adds the property to the object
+\end{itemize}
 \end{frame}
 
 %--- Standard Classes---------------------------------------------------

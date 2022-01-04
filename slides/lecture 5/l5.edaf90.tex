@@ -29,9 +29,11 @@
 % \titleimage{Pictures/ULUNDcolor} % Replaces the LU image. Voids option titleimagecolor
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%\usepackage{listcode}
+
 \newcommand{\code}[1]{\lstinline{#1}}
 
-\title[JavaScript]{JavaScript}
+\title[routing and form validation]{Routing and Form Validation}
 \author[EDAF90]{%
   EDAF90 Web Programming\newline
   Per Andersson}
@@ -84,98 +86,11 @@
   \titlepage
 \end{frame}
 
-%%%%%%%%%%%%%%%
-\begin{frame}
-  \frametitle{JavaScript}
+%---routing ---------------------------------------------------
+\include{parts/routing}
 
-\begin{itemize}
-\item ``the world's most misunderstood programming language''
-\item working name at Netscape 1995: \emph{LiveScript}
-\item syntax and name in common with Java
-\item object function oriented language
-\item interpreted
-\item dynamically typed 
-\item run in any web browser and nodejs
-\end{itemize}
-
-\end{frame}
-
-%---Types ---------------------------------------------------
-\include{parts/types}
-
-%---Truthy/Falsy ---------------------------------------------------
-\include{parts/truthy_equality}
-
-%---Functions ---------------------------------------------------
-\include{parts/functions}
-
-%---scope ---------------------------------------------------
-\include{parts/scope}
-
-%---modules ---------------------------------------------------
-\include{parts/modules}
-
-%---objects ---------------------------------------------------
-\include{parts/objects}
-
-%---arrays ---------------------------------------------------
-\include{parts/arrays}
-
-%---Destructuring assignment ---------------------------------------------------
-\include{parts/destructuring_assignment}
-
-%--- Automatic Semicolon Insertion ---------------------------------------------------
-\begin{frame}[fragile]
-  \frametitle{Automatic Semicolon Insertion}
-  If needed, a semicolon is added at the end of a line.
-\begin{CodeBox}{the function will return undefined}
-  function() { return
-  1; }
-\end{CodeBox}
-
-\vspace{4mm}
-Common to use minify to minimise script download size. All white spaces are removed.
-\begin{columns}[onlytextwidth]
-  \begin{column}{0.35\textwidth}
-\begin{CodeBox}{works}
-  let myVar = 9
-  if (myVar === 9) {
-  }
-\end{CodeBox}
-  \end{column}
-  \begin{column}{0.65\textwidth}
-\begin{CodeBox}{syntax error after minify}
-  var myVar = 9 if (myVar === 9) {}
-\end{CodeBox}
-  \end{column}
-  \begin{column}{0.3\textwidth}  \end{column}
-\end{columns}%
-
-\vspace{4mm}
-Use jslint to detect these problems.
-\end{frame}
-
-%---Strict mode ---------------------------------------------------
-\begin{frame}[fragile]
-  \frametitle{Strict mode}
-Transforms some silent warnings to errors.
-
-\begin{CodeBox}{Whole-script strict mode syntax}
-'use strict';
-var v = "Hi! I'm a strict mode script!";
-\end{CodeBox}
-
-\begin{CodeBox}{Function-level strict mode syntax}
-function strict() {
-  'use strict';
-  function nested() { return 'And so am I!'; }
-  return "Hi!  I'm a strict mode function!  " + nested();
-}
-function notStrict() { return "I'm not strict."; }
-\end{CodeBox}
-
-
-\end{frame}
+%---form validation ---------------------------------------------------
+\include{parts/validation}
 
 
 %%%%%%%%%%%

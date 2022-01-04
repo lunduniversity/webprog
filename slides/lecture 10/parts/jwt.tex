@@ -1,0 +1,111 @@
+%--- Authentication ------------------------------------------------------------------------------
+\section{Authentication}
+%--- Authentication ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Authentication}
+Commonly identify a user by a (user, password) pair.
+\begin{itemize}
+  \item never ever store passwords i plain text
+  \begin{itemize}
+    \item never in the front end
+    \item remember to clear form data
+    \item back end stores a hashed version of the password + salt
+  \end{itemize}
+\end{itemize}
+\vspace{5mm}
+Always use encrypted channels to avoid sniffers (SSL/TLS).
+\\ \noindent The server should only respond with a forward on port 80 (http)
+\vspace{5mm}
+\\How do you authenticate a user for a REST server without storing the password?
+\end{frame}
+
+%--- Authentication ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Authentication}
+HTTP authentication
+\begin{itemize}
+  \item configured at the server side
+  \item built into the http protocol:
+  \begin{itemize}
+    \item the server request a password as part of the http header handshaking
+    \item the web browser asks the user for the password
+    \item the password is automatically added to the header of each http request
+  \end{itemize}
+  \item no control of the password dialog (no styling)
+  \item have known security issues
+  \item do not use
+\end{itemize}
+\vspace{5mm}
+\end{frame}
+
+%--- Authentication ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Session}
+Session
+\begin{itemize}
+  \item the server remembers who is logged in
+  \item creates a cookie with a session id
+  \item the session id is automatically added to the header of each http request
+  \item makes you vulnerable to session hijack attacks
+\end{itemize}
+\vspace{5mm}
+\end{frame}
+
+%--- Authentication Token------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Authentication Token}
+Authentication token:
+\begin{itemize}
+  \item based on public/private key signatures
+  \item private key --- only the server kan create or modify a token
+  \item public key --- anyone can read and verify the token
+  \item the token is not encrypted - avoid storing sensitive data in it
+  \item the client adds the token to all http requests
+  \item use the header: \code{auth: the-token-as-a-string}
+  \item anyone with a token is authenticated, keep it safe
+\end{itemize}
+\end{frame}
+
+%--- JWT------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Jason Web Token}
+\begin{itemize}
+  \item RFC 7519
+  \item three JSON objects
+  \begin{itemize}
+    \item header, information about the JWT, e.g. the signature algorithm
+    \item payload, any data
+    \item signature, ensure no one can temper with the JWT
+  \end{itemize}
+  \item BASE 64 encoded
+  \item separated by a dot
+\end{itemize}
+\end{frame}
+
+%--- JWT payload------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{JWT Payload}
+payload, predefined optional properties
+\begin{itemize}
+  \item \code{iss} --- issuer
+  \item \code{exp} --- expiration time
+  \item \code{sub} --- subject
+\end{itemize}
+\end{frame}
+
+%--- JWT Example------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Jason Web Token, Example}
+\begin{CodeBox}{Header and Payload}
+{
+  "alg": "HS256",
+   "typ": "JWT"
+}, {
+  "sub": "1234567890",
+  "name": "John Doe",
+  "admin": true
+}
+\end{CodeBox}
+
+\begin{CodeBox}{JWT}
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0
+NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5
+MDIyfQ.SflKxwRJSMeKKF2QT4fwp MeJf36POk6yJV_adQssw5c
+\end{CodeBox}
+\end{frame}
+
+
+

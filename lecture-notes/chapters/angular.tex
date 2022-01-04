@@ -46,9 +46,9 @@ MyComponent.prototype.form = someValue;
 The html template is not part of the class, so you probably want to avoid \code{private} attributes.
 \item Look at the code: 
 \begin{Code}
-constructor(public todoService) { }
+constructor(public todoService: TodoService) { }
 \end{Code}
-It does two things: 1, declares a \code{public todoService} attribute 2, initialises the attribute to the value passed to the constructor, that is, it is shorthand for:
+It does two things: 1, declares a \code{public todoService: TodoService} property 2, initialises the property to the value passed to the constructor, that is, it is shorthand for:
 \begin{Code}
 export class MyComponent implements OnInit {
   public todoService: TodoService;
@@ -57,6 +57,7 @@ export class MyComponent implements OnInit {
   }
 }
 \end{Code}
+The optional typing of TypeScript also enables dependency injection. Angular see that the component needs an instance of the TodoService, and will pass the singleton object of the service to the constructor.
 \item Types, TypeScript adds static typing to JavaScript. The type syntax looks like json, for example:
 \begin{Code}
 public form: {todo: string, done: boolean};
@@ -81,9 +82,9 @@ Angular uses html as template language. There are a few additions to the html sy
 \end{Code}
 \begin{itemize}
 \item The \code{<mat-*>} tags are angular components from the angular material module, see \url{https://material.angular.io/components/form-field/overview}
-\item JavaScript expressions: you can embed JavaScript code in the html code. Note, the embedded code can not have side effects, so avoid assignments \code{+=, ++} et.c.
+\item TypeScript expressions: you can embed TypeScript/JavaScript expressions in the html code. Note, the embedded code can not have side effects, so avoid assignments \code{+=, ++} et.c.
 \begin{Code}
-<h2>{{myJavaScriptFunction()}}</h2>
+<h2>{{myTypeScriptFunction()}}</h2>
 \end{Code}
 A convenient operation that can be used in angular templates is \code{a?.b}, which is equivalent to \code{a ? a.b : a}. It might not look like a big difference, but consider rewriting \code{a?.b?.c?.d?.e} using the \code{ ? : } notation.
 
@@ -123,11 +124,11 @@ The syntax to use for data binding depends on the direction the data flows.When 
 \begin{Code}
 <button [disabled]="isUnchanged">Save</button>
 \end{Code}
-In some cases, you can also use the traditional html syntax:
+The angular template is standard html, so if the input is static, you can write
 \begin{Code}
 <div class="special">Mental Model</div>
 \end{Code}
-Note, \code{"special"} is a string, not an expression. 
+Note, \code{"special"} is a string, you can not use embedded TypeScript expression here. 
 
 When data flows from a component, for example a DOM event, use the\\ \code{(event)="expression"} syntax:
 \begin{Code}
@@ -143,7 +144,7 @@ This works exactly as bound components in react, but you do not need to write th
 
 More about bindings can be found here:\\ \url{https://angular.io/guide/template-syntax#binding-syntax-an-overview}.
 \section{@Input and @Output}
-Components can have input, use the \code{@Input} decoration to bind a class attribute to a input:
+Components can have inputs, use the \code{@Input} decoration to bind a class attribute to a input:
 \begin{Code}
 @Component({
   selector: 'app-hello-world',
@@ -261,6 +262,6 @@ Angular needs to know the tag names of all angular components, and the types of 
   bootstrap: [AppComponent]
 })
 \end{Code}
-\code{declarations} is a list of all components declared in this module. \code{providers} is a list of services declared in this module. \code{imports} is a list of other angular modules this module is depending in. After importing a module, you can use the components, pipes,  directives, and services declared in that module.
+\code{declarations} is a list of all components declared in this module. \code{providers} is a list of services declared in this module. \code{imports} is a list of other angular modules this module is depending on. After importing a module, you can use the components, pipes,  directives, and services declared in that module.
 \end{itemize}
 

@@ -72,19 +72,19 @@ The assignments bellow assumes you have a working solution for lab 3, i.e. a wor
 \begin{Code}
 > mkdir server
 > cd server
-> curl -o server.js http://fileadmin.cs.lth.se/cs/Education/EDAF90/labs/lab4/server.js
+> curl -o server.js https://fileadmin.cs.lth.se/cs/Education/EDAF90/labs/lab4/server.js
 > curl -o package.json 
-          http://fileadmin.cs.lth.se/cs/Education/EDAF90/labs/lab4/package.json
+          https://fileadmin.cs.lth.se/cs/Education/EDAF90/labs/lab4/package.json
 > npm install
 > npm start
 \end{Code}
 The server should now be running and waiting for requests. Test it using \texttt{curl} in the terminal, or write the urls in a browser:
 \begin{Code}
-> curl -is http://localhost:8080/foundations/
-> curl -is http://localhost:8080/proteins/
-> curl -is http://localhost:8080/extras/
-> curl -is http://localhost:8080/dressings/
-> curl -is http://localhost:8080/dressings/Dillmayo
+> curl -i http://localhost:8080/foundations/
+> curl -i http://localhost:8080/proteins/
+> curl -i http://localhost:8080/extras/
+> curl -i http://localhost:8080/dressings/
+> curl -i http://localhost:8080/dressings/Dillmayo
 \end{Code}
 
 \noindent \emph{Option:} You can also access the salad bar REST service on codesandbox: \url{https://wkqy6rpw25.sse.codesandbox.io/foundations} IMPORTANT: you must load the page in a web browser before you start your application. Codesandbox first send a html page containing the compilation process before it jumps to the \code{server.js} response. This will most likely give problems for your application.
@@ -108,7 +108,7 @@ const price = this.state[selected].price;
 
 \item Next we will recreate the \code{inventory} object by fetch data from the salad bar REST server. When should the app fetch the inventory data? You could fetch the data when needed, but in this case i suggests you fetch all data when the app launches. Check out the react lifecycle hooks to get some suggestions on where to place the fetch code, see \url{https://reactjs.org/docs/state-and-lifecycle.html}.
 
-Use the \code{fetch(url, [options])} function to send a request. It might be easiest to build the url using string concatenation, but you can also check out the \code{URL(url, [base])} class. Browse the documentation for \code{fetch()}. It returns a \code{Promise} that resolves to a \code{Response} object. To get the body you can use \code{Response.json()}, which returns yet another \code{Promise}. When you have the ingredient name, the next step is to fetch its properties from the server, e.g. \code{fetch(‘http://localhosr:8080/extras/Tomato’)}. Fetching the properties for all ingredients are independent actions and should be carried out in parallel.
+Use the \code{fetch(url, [options])} function to send a request. It might be easiest to build the url using string concatenation, but you can also check out the \code{URL(url, [base])} class. Browse the documentation for \code{fetch()}. It returns a \code{Promise} that resolves to a \code{Response} object. To get the body you can use \code{Response.json()}, which returns yet another \code{Promise}. When you have the ingredient name, the next step is to fetch its properties from the server, e.g. \code{fetch(‘http://localhost:8080/extras/Tomato’)}. Fetching the properties for all ingredients are independent actions and should be carried out in parallel.
 
 Every time you call \code{setState()} the DOM is potentially updated and the view is updated. This is a costly operation and we do not want to do this for each inventory (it will make the UI slow). We want to wait until all, or a sufficient subset, of the \code{fetch} operations finish. This is a perfect use case for \code{Promise.all()}. It takes an array of \code{Promise} objects, which will run in parallel, and returns a \code{Promise} that settles when all inner promises are settled. Use this to avoid to frequent updates of the state.
 

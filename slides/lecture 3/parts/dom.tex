@@ -1,0 +1,81 @@
+\section{Document Object Model}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{DOM}
+\color{structure}
+Document Object Model\\
+\begin{itemize}\color{structure}
+  \item a web page/html is a tree
+  \item the nodes are the HTML elements
+  \item HTML attriburtes are attributes in the nodes
+  \item \html{<html>} is the root of the tree
+\end{itemize}
+\end{frame}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{DOM}
+\color{structure}
+Document Object Model\\
+\begin{itemize}\color{structure}
+\item \html{Document} is a global object for accessing the DOM
+\item the nodes inherits from the \html{Element.prototype} object
+\item the global globala variables \code{document} stores the DOM
+\item API for
+  \begin{itemize}
+    \item navigate in the tree: \code{document.body.getElementsByTagName( 'H1' )}
+    \item serach for elements: \code{document.getElementById("intro")}
+    \item modify the DOM: \code{Element.innerHTML}
+    \item read/writer attribute, \code{myInputElement.value="Nisse Hult"}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Events}
+\color{structure}
+
+\begin{itemize}\color{structure}
+\item the browser creates events \code{blur, submit, resize, keydown}
+\item call-back-methods
+\begin{itemize}
+  \item \code{<p id="demo" onclick='document.getElementById("demo").style.color = "red"'>}
+  \item \code{addEventListener(eventType, handler[, options])}
+\end{itemize}
+\item \code{myEventHandler(event)}, \code{event} inherits from \code{Event}
+\item \code{this} and \code{event.target} points to the source, the DOM element
+\item event propagates trough the DOMen, three phases:
+  \begin{enumerate}
+    \item capturing
+    \item target
+    \item bubbling
+  \end{enumerate}
+\item \code{event.stopPropagation()}
+\end{itemize}
+
+\end{frame}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{event phases}
+\color{structure}
+  \centering
+  \includegraphics[width=8cm]{img/eventflow}
+
+\end{frame}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Forms}
+\color{structure}
+
+Default behaviour for many events (click on submit button, enter in input field)
+\begin{itemize}
+  \item submit the form using HTTP
+  \item the server responds with a new html-page
+  \item the browser renders the new page
+\end{itemize}
+
+\end{frame}

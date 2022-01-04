@@ -1,0 +1,96 @@
+\documentclass[aspectratio=1610]{beamer}
+\usepackage{iftex}
+\usepackage{pdfpages}
+\ifLuaTeX\else
+	\usepackage[utf8]{inputenc}
+	\usepackage[T1]{fontenc}
+\fi
+\usetheme[
+% titleimagecolor=red,       % [gray], darkgray, red, blue, green
+% titleimagemargin=2mm,      % Distance [2mm]    Frame around title page image
+% navigationsymbols=false,   % true   / [false]  Navigation symbols in the foot
+% mathseriffont=false,       % true   / [false]  Serif / non-serif math fonts
+% foot=true,                 % [true] / false    Footline or not
+% nofootslidenum=false       % true   / [false]  Keep slide num even when foot=false
+% footlogo=true,             % [true] / false    Put LU logo to the left of footer
+% english=true,              % [true] / false    English / Swedish logo
+% LTHlogo=false,             % true   / [false]  Use LTH logo instead of LU on title and end pages.
+% blackenumeratenumber=true, % [true] / false    Black enumerate numbers, o.w. Lund bronze
+% blackitemmark=false,       % true   / [false]  Black item marks, o.w. Lund bronze
+% defaultfont=palatino,      % [palatino], beamer, lu
+% sectionframe=true,
+]{ulund}
+%%%%%%%%%%%%%%%%%%%%% Layout commands 
+%%%% Foot
+% \ulundfootleft{\insertshortauthor}
+% \ulundfootmid{\insertshorttitle}
+% \ulundfootright{\insertframenumber}% {\insertframenumber:\inserttotalframenumber}
+%%%% Titleimage
+% \titleimage{Pictures/ULUNDcolor} % Replaces the LU image. Voids option titleimagecolor
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\usepackage{listcode}
+
+\newcommand{\code}[1]{\lstinline{#1}}
+
+\title[React]{React}
+\author[EDAF90]{%
+  EDAF90 Web Programming\newline
+  Per Andersson}
+%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{verbatim}
+%%%%%%%%%%%%% Verbatim code box
+\usepackage[skins,listings]{tcolorbox}
+\ifLuaTeX\else
+	\tcbuselibrary{listingsutf8}
+\fi
+\newtcblisting{CodeBox}[2][]{% Only code
+  colframe=black,
+  colback=white,
+  arc=1pt,
+  boxrule=0.5pt,
+  top=0mm,bottom=0pt,left=0pt,
+  colbacktitle=gray!40,
+  coltitle=black,
+  fonttitle=\sffamily,
+  listing only,
+  hbox,
+  listing options={
+    basicstyle=\small\ttfamily,
+    breaklines=true,
+    columns=fullflexible,
+    language=Java,
+    basicstyle = \ttfamily,
+    showstringspaces=false,
+    morekeywords= {undefined, NaN, function, export, var, let}
+  },
+  title=#2,#1
+}
+
+\lstset{
+    basicstyle=\small\ttfamily,
+    breaklines=true,
+    columns=fullflexible,
+    language=Java,
+    basicstyle = \ttfamily,
+    showstringspaces=false,
+    morekeywords= {undefined, NaN, function, export, var, let}
+}
+
+%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\begin{frame}[plain]% Use plain to suppress footline box
+  \titlepage
+\end{frame}
+
+%---HTML ---------------------------------------------------
+\include{parts/introduction}
+
+%---react ---------------------------------------------------
+\include{parts/react}
+
+%%%%%%%%%%%
+\end{document}

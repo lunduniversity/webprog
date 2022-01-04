@@ -1,0 +1,217 @@
+%--- routing ------------------------------------------------------------------------------
+\section{Routing}
+%--- routing------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Routing}
+\begin{itemize}
+  \item the browser history is part of the user experience
+  \item allows the user to navigate back to earlier visited pages
+  \item an entry in the history is added when the user
+  \begin{itemize}
+    \item navigates to a new page using a link
+    \item submits a form
+  \end{itemize}
+  \item traditionally, this loads a new page from the server
+  \item when a new page is loaded, all JavaScript objects are lost
+  \item singel page web application prevents this using \code{preventDefault()} on all relevant events
+  \item only updating the DOM will impact the user experience:
+  \begin{itemize}
+    \item can not navigate using the browser history (back button)
+    \item can not link to inner pages
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Routing Framework------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Routing Framework}
+\begin{itemize}
+  \item there is an API giving JavaScript direct access to the browser history
+  \item using it manually is tedious and error prone
+  \item let a router do the work for you
+  \item a router have two main features: link and route
+\end{itemize}
+
+\vspace{10mm}
+\begin{CodeBox}{}
+npm install react-router-dom
+\end{CodeBox}
+\end{frame}
+
+%--- Link ------------------------------------------------------------------------------
+\section{Link}
+%--- Link ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Link}
+Link component:
+\begin{itemize}
+  \item \code{<Link to="/about">About</Link>}
+  \item appears and behaves as a normal link (\code{<a href='/about.html'>}):
+  \begin{itemize}
+    \item clicking on it will add an entry to the browser history
+    \item this will update the url field in the browser
+    \item the user can bookmark or copy any page in your application
+    \item no new page is fetched from the server
+    \item your JavaScript objects are untouched (preserve the application state)
+  \end{itemize}
+  \item add styling of active link using:\\ \code{<NavLink to="/react" activeClassName="hurray">}
+\end{itemize}
+\end{frame}
+
+%--- Link Component------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Link Example}
+\begin{CodeBox}{}
+import { Link } from 'react-router-dom';
+menu = (
+  <nav>
+    <Link to="/">Home</Link>
+    <Link to="/users">Users</Link>
+    <Link to="/contact">Contact</Link>
+  </nav>
+);
+\end{CodeBox}
+\end{frame}
+
+%--- Route ------------------------------------------------------------------------------
+\section{Route}
+%--- Route ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Route}
+\code{<Route exact path="/">}
+\begin{itemize}
+  \item \code{path} - matches if the pattern is a prefix of the current browser url
+  \item use \code{exact} for a complete match (no trailing characters)
+  \item a \code{<Route>} with no \code{path} is always matched
+  \item specify content using attributes:
+  \begin{itemize}
+    \item \code{component} - renders a react component if the \code{path} matches
+    \item \code{render} - calls a function if the path matches, the function returns a react element (JSX expression)
+    \item \code{children} - always rendered, a function returning a react element
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Route ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Route}
+\begin{CodeBox}{}
+import { Route } from 'react-router-dom'
+const routes = (
+<div>
+  <Route path="/" exact component={Home} />
+  <Route path="/about"
+           render={_ => <h1>About the app</h1>}>
+</div>);
+\end{CodeBox}
+\end{frame}
+
+%--- Switch ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Switch}
+\code{<Switch>}
+\begin{itemize}
+  \item renders the first \code{<Route>} that matches
+  \item any other \code{<Route>}s will not be rendered
+\end{itemize}
+
+\vspace{5mm}
+\begin{CodeBox}{}
+import { Route, Switch } from 'react-router-dom'
+const routes = (
+<Switch>
+  <Route path="/" exact component={Home} />
+  <Route path="/items" component={Items} />
+  <Route component={PageNotFound} />
+</Switch>);
+\end{CodeBox}
+\end{frame}
+
+%--- Path Parameters ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Path Parameters}
+the router pass data from the path to the component
+\begin{itemize}
+  \item specify parameters in the \code{path} using the syntax\code{:name}
+  \item \code{props.match.params} is an object containing all path parameters
+  \item or use the \code{useParams()}  hook to get that object
+\end{itemize}
+
+\vspace{5mm}
+\begin{CodeBox}{}
+const elem = <Route path="/item/:itemId" render={Items} />;
+
+function Items(props) {
+  let { itemId } = useParams();
+  return <h1> Item {itemId} </h1>;
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Hooks ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Hooks}
+\begin{itemize}
+  \item introduced in react router 5.1
+  \item can only be used in function components (stateless)
+  \item can be used in any child of \code{Route}
+  \item \code{useParams()} - returns the url path parameters
+  \item \code{useRouteMatch()} - returns the path
+\end{itemize}
+\end{frame}
+
+%--- Hooks ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Hooks}
+\begin{CodeBox}{}
+function Item() {
+      const { id } = useParams();
+      return <p>Item {id}</p>;
+}
+function App() {
+  return (
+      <Router>
+        <Route path="item/:id">
+          <Item />
+        </Route>
+      </Router>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Nested Routes ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Nested Routes}
+\begin{itemize}
+  \item \code{<Route>} are react components and can be nested
+  \item \code{path} is absolute
+  \item \code{useRouteMatch()} helps you build relative paths
+\end{itemize}
+\begin{CodeBox}{}
+function About() {
+  let { path, url } = useRouteMatch();
+  return (
+      <Switch>
+        <Route exact path={path} component={GeneralInfo} />
+        <Route path={path + "/copyright"} 
+                 component={Copyright} />
+      </Switch>);
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Router ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Router}
+
+\begin{itemize}
+  \item any web application starts with a html file \code{index.html} 
+  \item the html file includes the react JavaScript code
+  \item all \code{<Route>}s must be inside a router
+\end{itemize}
+
+\code{<BrowserRouter>}
+\begin{itemize}
+  \item \code{http://domain.se/item/42}
+  \item to allow direct links: the server must return the main html file for all urls
+  \item node do this for you
+  \item apache can be configured with redirect
+\end{itemize}
+
+\code{<HashRouter>}
+\begin{itemize}
+  \item \code{http://domain.se/#/item/42}
+  \item compatible with all servers
+\end{itemize}
+\end{frame}
+

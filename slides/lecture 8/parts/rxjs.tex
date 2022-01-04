@@ -1,0 +1,97 @@
+%--- ReactiveX ------------------------------------------------------------------------------
+\section{ReactiveX}
+%--- ReactiveX ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{ReactiveX}
+\begin{itemize}\color{structure}
+  \item API for
+  \begin{itemize}
+    \item asynchronous programming
+    \item observable streams
+  \end{itemize}
+  \item RxJS is a JavaScript implementation
+  \item \texttt{npm install rxjs}
+  \item ES6 module, use in react or angular app
+  \item significant API-change in version 6
+\end{itemize}
+\end{frame}
+
+%--- Observable ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Observable}
+\begin{itemize}\color{structure}
+  \item emits a sequence of items
+  \item may complete
+  \begin{itemize}
+    \item successfully
+    \item abnormal
+  \end{itemize}
+  \item many ways to create
+  \begin{itemize}
+    \item \texttt{of()}
+    \item \texttt{range()}
+    \item \texttt{fromEvent()}
+    \item \texttt{interval()}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Observable ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Observable}
+\begin{itemize}\color{structure}
+  \item hot or cold
+  \item \texttt{subscribe(observer)}
+  \item \texttt{unsubscribe()}
+\end{itemize}
+\begin{CodeBox}{}
+const observer = {
+  next: x => console.log('next value: ' + x),
+  error: err => console.error('error: ' + err),
+  complete: () => console.log('completed'),
+};
+\end{CodeBox}
+\end{frame}
+
+%--- Pipeable Operator ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Pipeable Operator}
+\begin{CodeBox}{}
+obserbableInstance.pipe(
+  op1(),
+  op2(),
+  op3(),
+  op3(),
+).subscribe();
+\end{CodeBox}
+\begin{itemize}
+  \item \texttt{filter( item => boolean)}
+  \item \texttt{map( item => newItem)}
+  \item \texttt{tap( item => sideEffect)}
+  \item \texttt{last()}
+  \item \texttt{takeUntil()}
+  \item \texttt{debounce()}
+\end{itemize}
+\end{frame}
+
+%--- RxJS ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{RxJS}
+\begin{CodeBox}{}
+import { range } from "rxjs";
+import { map, filter } from "rxjs/operators";
+
+range(1, 200)
+  .pipe(
+    filter(x => x % 2 === 1),
+    map(x => x + x)
+  )
+  .subscribe(x => console.log(x));
+}
+\end{CodeBox}
+\end{frame}
+  
+%--- higher order functions ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{higher order observables}
+observables where the items are observables
+\begin{itemize}\color{structure}
+  \item \texttt{concatMap}
+  \item \texttt{switchMap}
+  \item \texttt{mergeMap}
+\end{itemize}
+\end{frame}

@@ -1,0 +1,448 @@
+%--- Concurrency------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Concurrency}
+\begin{itemize}
+  \item today concurrency is the key to performance
+  \item parallellism is great for
+  \begin{itemize}
+    \item speed
+    \item energy efficiency
+  \end{itemize}
+  \item but adds challenges for the programmer
+  \begin{itemize}
+    \item race conditions
+    \item locks and deadlock
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Race Condition------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Race Condition}
+\begin{itemize}
+  \item the program behaviour depends on timing
+  \item dependant concurrent activities
+\end{itemize}
+\vspace{3mm}
+
+\begin{CodeBox}{}
+let balance = 1000;
+\end{CodeBox}
+Lets do two transactions in parellel:
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.4\textwidth}
+      \begin{CodeBox}{}
+let tmp = balance;
+\\ tmp is now 1000
+tmp = tmp + 1000;
+balance = tmp;
+      \end{CodeBox}
+    \end{column}
+  \begin{column}{0.55\textwidth}
+    \begin{CodeBox}{}
+let tmp = balance;
+\\ tmp is now 1000
+tmp = tmp - 100;
+balance = tmp;
+      \end{CodeBox}
+    \end{column}
+    \begin{column}{0.3\textwidth}  \end{column}
+  \end{columns}%
+\vspace{3mm}
+\code{balance} is either 2000 or 900. One transaction is lost.
+\end{frame}
+
+%--- strategies for concurrency------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Strategies for Concurrency Problems}
+Ignorance is bliss:
+\begin{itemize}
+  \item works surprisingly well
+  \item conflicts are rare in many applications
+  \item last write wins
+\end{itemize}
+\vspace{3mm}
+Serialise access to shared data
+\begin{itemize}
+  \item locks and transactions: traditional approach for threads
+  \item single thread
+\end{itemize}
+\vspace{3mm}
+Functional approach:
+\begin{itemize}
+  \item pure functions
+  \item immutable data structures
+\end{itemize}
+\end{frame}
+
+%--- Locks------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Locks}
+\begin{itemize}
+  \item to address this, locks was introduced
+  \item \emph{semaphores} is the commonly used low level lock
+  \item only one thread can own the lock
+  \item all other needs to wait
+  \item not a problem for performance, only a tiny part of the program is serialized
+  \item for this course: you only need to know what a lock is
+  \item locks are covered in: EDAP10 - Concurrent Programming
+\end{itemize}
+\end{frame}
+
+%--- Deadlock------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Deadlock}
+\begin{itemize}
+  \item using locks can lead to deadlocks
+  \item classical example: dining philosopers
+  \item can only occur when:
+  \begin{itemize}
+    \item a thread holds a resource while requesting another
+    \item there is a cycle in the dependency graph
+  \end{itemize}
+  \item deadlock analysis is covered in: EDAP10 - Concurrent Programming
+\end{itemize}
+\end{frame}
+
+%--- Pure Functions and Immutable Data Structures------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Pure Functions and Immutable Data Structures}
+Pure Function
+\begin{itemize}
+  \item output only depends on input
+  \item stateless
+\end{itemize}
+\vspace{3mm}
+
+Immutable Data Structures
+\begin{itemize}
+  \item data can not change over time
+  \item ensure consistent data
+  \item component state in react is based on this principle
+\end{itemize}
+
+\vspace{5mm}
+Common in web frameworks, e.g. react component state
+\end{frame}
+
+%--- Polling and Busy Wait------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Polling and Busy Wait}
+\begin{itemize}
+  \item Polling:
+  \begin{itemize}
+    \item ask for a resource without locking
+  \end{itemize}
+  \item can be ok if it is unfrequent
+  \item busy wait
+  \begin{itemize}
+    \item repeatedly ask for a resource in a loop that do nothing else
+    \item  kills performance
+    \item starves the other threads
+    \item nothing happens
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- JavaScript ------------------------------------------------------------------------------
+\section{JavaScript}
+%--- JavaScript------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{JavaScript}
+\begin{itemize}
+  \item single threaded according to the specification
+  \item the code runs from start to finish:
+  \begin{itemize}
+    \item can not be interrupted
+    \item can not hand over execution to another function/thread
+  \end{itemize}
+  \item advantages:
+  \begin{itemize}
+    \item no need for locks
+  \end{itemize}
+  \item but:
+  \begin{itemize}
+    \item any longer computations blocks the entire application and GUI
+    \item asynchronous events can cause race conditions (read/write data from server)
+    \item \code{alert()} is blocking.
+  \end{itemize}
+\end{itemize}
+\vspace{5mm}
+You should break down your app into small functions
+\end{frame}
+
+%--- Call Back Functions------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Call Back Functions}
+Call Back Functions
+\begin{itemize}
+  \item no need for polling
+  \item are central to JavaScript programming
+  \item many APIs are based on call backs
+  \item most of the application code are the call back functions
+  \item called when events occur
+  \item you can not control the order of execution
+\end{itemize}
+\end{frame}
+
+%--- Current Thread Loop ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Current Thread Loop}
+Current Thread Loop manage the execution of callback functions
+\begin{itemize}
+  \item also called \emph{Event Loop}
+  \item a queue of functions to execute
+  \item functions in the queue are executed one by one, in sequence
+  \item remember, JavaScript is single threaded and execution can no be interrupted
+  \item DOM and network events and JavaScript code will add new call back functions to the execution queue
+\end{itemize}
+\end{frame}
+
+%--- SetTimeout------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{SetTimeout}
+You can add your own functions to the execution queue:
+\begin{itemize}
+  \item \code{const id = setTimeout(foo, delay, arg1, arg2, ...)}
+  \item \code{clearTimeout(id)}
+  \item \code{const id = setInterval(foo, period, arg1, arg2, ...)}
+  \item \code{clearInterval(id)}
+  \item \code{this} defaults to \code{global}
+  \item use a timeout of 0 to add the function directly to the execution queue
+  \item do this to break long computations
+\end{itemize}
+\end{frame}
+
+%--- SetTimeout------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{SetTimeout}
+\begin{CodeBox}{}
+const myArray = ['zero', 'one', 'two'];
+myArray.foo = function (index) {
+  console.log(this[index]);
+};
+setTimeout(myArray.foo, 0.5*1000, 1);
+\end{CodeBox}
+\vspace{4mm}
+Use \code{bind} if you use \code{this}
+\vspace{4mm}
+\begin{CodeBox}{}
+myArray.foo = myArray.foo.bind(myArray);
+\end{CodeBox}
+
+\end{frame}
+
+%--- Execution Order ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Execution Order}
+Using callback functions, it can be hard to follow the order of execution.
+\vspace{5mm}
+\begin{CodeBox}{}
+const print = txt => console.log(txt);
+setTimeout(print, 1000, 'three');
+setTimeout(print, 1100, 'four');
+setTimeout(print, 1200, 'five');
+setTimeout(print, 0, 'two');
+print('one');
+\end{CodeBox}
+\end{frame}
+
+%--- Pyramid of DOOM ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Pyramid of DOOM}
+Nesting callbacks are common, but leads to callback hell
+\vspace{5mm}
+\begin{CodeBox}{}
+loadScript('1.js', function(error, script) {
+
+  if (error) {
+    handleError(error);
+  } else {
+    loadScript('2.js', function(error, script) {
+      if (error) {
+        handleError(error);
+      } else {
+        loadScript('3.js', function(error, script) {
+          if (error) {
+            handleError(error);
+          } else {
+            // ...continue after all scripts are loaded (*)
+          }
+        });
+      }
+    })
+  }
+});\end{CodeBox}
+\end{frame}
+
+%--- Promise ------------------------------------------------------------------------------
+\section{Promise}
+%--- Promise------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Promise}
+\begin{itemize}
+  \item wraps a value that eventually will be produced
+  \item can have the states: \emph{pending}, \emph{fulfilled}, or \emph{rejected}
+  \item a promise is \emph{settled} when  \emph{fulfilled} or \emph{rejected}
+  \item can have exactly one result or error
+  \item you can not read the state, or the result directly
+  \item the resolution function is executed directly
+  \item commonly have asynchronous calls, \code{resolve()} will be called later
+  \item replace callback functions in modern APIs
+\end{itemize}
+\end{frame}
+
+%---Example------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Example}
+\vspace{5mm}
+\begin{CodeBox}{}
+const promise1 = new Promise(
+  (resolve, reject) => setTimeout(resolve, 10*1000, 1))
+);
+const promise2 = new Promise(
+  (resolve, reject) => reject(new Error('failed'))
+);
+\end{CodeBox}
+\end{frame}
+
+%--- Reject------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Reject}
+\begin{itemize}
+  \item \code{throw} an error in the resolution function is the same as calling reject
+  \item recommendation: pass an \code{Error} object when rejecting a \code{Promise}
+  \item remember: run time errors throws exceptions
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+const promise1 = new Promise(
+  (resolve, reject) => {
+    const ref = undefined;
+    const a = ref.bellyUp;
+});
+const promise2 = new Promise(
+  (resolve, reject) => reject(new Error('belly up'))
+);
+\end{CodeBox}
+\end{frame}
+
+%--- .then------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{.then}
+\begin{itemize}
+  \item \code{.then()} gives your the result when a promise is settled
+  \item parameters are two callback functions:
+  \begin{itemize}
+    \item success handler
+    \item reject handelr
+  \end{itemize}
+  \item called asynchronously
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+myPromise.then(
+  (value) => handleSuccess(value),
+  (errorValue) => handleFailure(errorValue),
+);
+\end{CodeBox}
+\end{frame}
+
+%--- chaining------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{chanining}
+\begin{itemize}
+  \item \code{.then()} always returns a promise
+  \item the promise wraps the return value of \code{then} handler:
+  \begin{itemize}
+    \item a promise, a copy is passed on
+    \item other value is wrapped inside a new resolved promise
+    \item don not return anything, a resolved promise with the value \code{undefined}
+    \item throws an exception: the exception is wrapped into a rejected promise
+  \end{itemize}
+  \item if a handler is missing, te input is passed on
+\end{itemize}
+\vspace{1mm}
+\begin{CodeBox}{}
+myPromise.then(
+  (values) => myMapFunction(values)
+).then(
+ (values) => myFilterFunction(values)
+).then(
+ (values) => moreProcessing(values),
+ (error) => somethingWentBad(error)
+);
+\end{CodeBox}
+\end{frame}
+
+%--- catch, finally------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{catch, finally}
+\begin{itemize}
+  \item \code{.catch()} handler for rejected promises
+  \item \code{.finally()}
+  \begin{itemize}
+    \item handler has no parameter
+    \item pass on the input parameter
+  \end{itemize}
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+myPromise.finally(
+  () => { done = true; }
+).catch(
+ (error) => {
+   bellyUp(error);
+   return [];
+ }
+);
+\end{CodeBox}
+\end{frame}
+
+%--- PromiseAll ------------------------------------------------------------------------------
+\section{PromiseAll}
+%--- Promise.all------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Promise.all}
+\begin{itemize}
+  \item takes an iterable of promises as parameter 
+  \item return a promise that will settle when the input promises settles
+  \item will be rejected as soon as any of the input promises is rejected
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+const p1 = Promise.resolve(3);
+const p2 = 1337;
+const p3 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("foo");
+  }, 100);
+}); 
+Promise.all([p1, p2, p3]).then(values => { 
+  console.log(values); // [3, 1337, "foo"] 
+});
+\end{CodeBox}
+\end{frame}
+
+
+%--- Asynchronous Functions------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Asynchronous Functions}
+\code{async function foo() \{ /* body */ \}}
+\begin{itemize}
+  \item the body is added to the event loop
+  \item returns a \code{Promise} object, wrapping the future return vale
+  \item in the future, when the body is executed, the promise will settle to the return value
+  \item the execution continues with the code after the function call
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+async function one() {
+  return 1;
+}
+const inc = async x => x=1;
+
+one().then(
+  x => inc(x)
+);
+\end{CodeBox}
+\end{frame}
+
+%--- await------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{await}
+\begin{itemize}
+  \item can only be used inside \code{async} functions
+  \item waits for the promise returned by the \code{async} function to settle
+  \item returns the resolved value
+  \item If the promise is rejected, the await expression throws the rejected value.
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+const inc = async x => x=1;
+
+async function foo(x) {
+  x = await inc(x);
+  x = x*32;
+  return inc(x);
+}
+\end{CodeBox}
+\end{frame}
+

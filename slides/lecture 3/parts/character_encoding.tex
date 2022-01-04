@@ -1,0 +1,170 @@
+\section{Character encoding}
+
+%---------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Locales and Word Order}
+\color{structure}
+A (value $ \leftrightarrow $ character) mapping is not enough to represent text.\\
+How to render dates, digits and time depends on where you are:
+Digits: 3.14 or 3,14?\\
+Date: 01/02/03\\
+\begin{itemize}\color{structure}
+\item 3 februari 2001?
+\item January 2, 2003?
+\item 1 February 2003?
+\end{itemize}
+Character order (Collating): Is Andersson before or after Åkesson?
+\end{frame}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Character encoding}
+\color{structure}
+There exists many different ways to encode characters
+\begin{itemize}\color{structure}
+  \item fixed width
+  \item variable width (compare to Hoffman coding)
+\end{itemize}
+Some common standards:
+\begin{itemize}\color{structure}
+  \item Unicode and utf8, no just encoding, also collation (sorting)
+  \item ISO-8859-1/latin 1
+  \item UTF8 is conquering the world, it is standard for Java och JavaScript.
+\end{itemize}
+\end{frame}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Unicode}
+\color{structure}
+A standard including:
+\begin{itemize}\color{structure}
+  \item visual reference
+  \item set of standard character encodings
+  \item an encoding method
+  \item character properties (lower/upper case)
+  \item rules for normalization, decomposition, collation
+  \item rules for rendering, and bidirectional text display order (right-to-left, left-to-right scripts)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Unicode Blocks (Simplified)}
+\color{structure}
+\begin{footnotesize}
+\begin{table}
+\begin{center}
+\begin{tabular}{llll}
+\hline
+\textbf{Code}& \textbf{Name}& \textbf{Code}& \textbf{Name} \\
+\hline
+U+0000& Basic Latin& U+1400& Unified Canadian Aboriginal Syllabic \\
+%\hline
+U+0080& Latin-1 Supplement& U+1680& Ogham, Runic \\
+%\hline
+U+0100& Latin Extended-A& U+1780& Khmer \\
+%\hline
+U+0180& Latin Extended-B& U+1800& Mongolian \\
+%\hline
+U+0250& IPA Extensions& U+1E00& Latin Extended Additional \\
+%\hline
+U+02B0& Spacing Modifier Letters& U+1F00& Extended Greek  \\
+%\hline
+U+0300& Combining Diacritical Marks& U+2000& Symbols \\
+%\hline
+U+0370& Greek& U+2800& Braille Patterns \\
+%\hline
+U+0400& Cyrillic& U+2E80& CJK Radicals Supplement \\
+%\hline
+U+0530& Armenian& U+2F80& KangXi Radicals \\
+%\hline
+U+0590& Hebrew& U+3000& CJK Symbols and Punctuation \\
+%\hline
+U+0600& Arabic& U+3040& Hiragana, Katakana \\
+%\hline
+U+0700& Syriac& U+3100& Bopomofo \\
+%\hline
+U+0780& Thaana& U+3130& Hangul Compatibility Jamo \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+\end{footnotesize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Unicode Blocks (Simplified) (II)}
+\color{structure}
+\begin{footnotesize}
+\begin{table}
+\begin{center}
+\begin{tabular}{llll}
+\hline
+\textbf{Code}& \textbf{Name}& \textbf{Code}& \textbf{Name} \\
+\hline
+%\hline
+U+0900& Devanagari, Bengali& U+3190& Kanbun \\
+%\hline
+U+0A00& Gurmukhi, Gujarati& U+31A0& Bopomofo Extended \\
+%\hline
+U+0B00& Oriya, Tamil& U+3200& Enclosed CJK Letters and Months \\
+%\hline
+U+0C00& Telugu, Kannada& U+3300& CJK Compatibility \\
+%\hline
+U+0D00& Malayalam, Sinhala& U+3400& CJK Unified Ideographs Extension A \\
+%\hline
+U+0E00& Thai, Lao& U+4E00& CJK Unified Ideographs \\
+%\hline
+U+0F00& Tibetan& U+A000& Yi Syllables \\
+%\hline
+U+1000& Myanmar& U+A490& Yi Radicals \\
+%\hline
+U+10A0& Georgian& U+AC00& Hangul Syllables \\
+%\hline
+U+1100& Hangul Jamo& U+D800& Surrogates \\
+%\hline
+U+1200& Ethiopic& U+E000& Private Use \\
+%\hline
+U+13A0& Cherokee& U+F900& Others \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+\end{footnotesize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The Unicode Encoding Schemes}
+\color{structure}
+\begin{itemize}
+\item each character have a unique unicode
+\item different ways to store the unique unicodes in a file:
+  \begin{itemize}
+    \item UTF-8, UTF-16, and UTF-32.\\
+  \end{itemize}
+\item UTF-16 used to be standard\\
+\item uses 16 bits per character – 2 bytes –\\
+\item \textit{FÊTE} \verb=0046 00CA 0054 0045=\\
+\item UTF-8 has variable length for each character\\
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{UTF-8}
+\color{structure}
+\begin{center}
+\begin{tabular}{rl}
+\hline
+\multicolumn{1}{l}{\textbf{Range}}& \textbf{Encoding} \\
+\hline
+U-0000 -- U-007F& 0xxxxxxx \\
+%\hline
+U-0080 -- U-07FF& 110xxxxx 10xxxxxx \\
+%\hline
+U-0800 -- U-FFFF& 1110xxxx 10xxxxxx 10xxxxxx \\
+%\hline
+U-010000 -- U-10FFFF& 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx \\
+\hline
+\end{tabular}
+\end{center}
+\end{frame}
