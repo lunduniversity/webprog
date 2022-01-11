@@ -17,7 +17,7 @@
 % foot=true,                 % [true] / false    Footline or not
 % nofootslidenum=false       % true   / [false]  Keep slide num even when foot=false
 % footlogo=true,             % [true] / false    Put LU logo to the left of footer
-% english=true,              % [true] / false    English / Swedish logo
+english=false,              % [true] / false    English / Swedish logo
 % LTHlogo=false,             % true   / [false]  Use LTH logo instead of LU on title and end pages.
 % blackenumeratenumber=true, % [true] / false    Black enumerate numbers, o.w. Lund bronze
 % blackitemmark=false,       % true   / [false]  Black item marks, o.w. Lund bronze
@@ -32,7 +32,7 @@
 %%%% Titleimage
 % \titleimage{Pictures/ULUNDcolor} % Replaces the LU image. Voids option titleimagecolor
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title[EDAF90 Web Programming]{EDAF90 Web Programming}
+\title[EDAF90 Webbprogrammering]{EDAF90 - \\Webbprogrammering}
 \author[Per Andersson]{%
   Per Andersson\newline
   Dept.\@ of CS, Lund University}
@@ -67,18 +67,16 @@
 \begin{frame}
   \frametitle{Course Content}
 
-This course is about programming apps running in a web browser.
-
-\vspace{5mm}
-
-During the course you will:
+Kursen handlar om tekniken för program som kör i en webbläsare:
 \begin{itemize}
-\item learn web terminology and consepts
-\item learn basic principles for HTLM and CSS
-\item build applications for web browsers
-\item understand some internet protokolls
-\item learn basic asynchronous programming and streams
-\item be introduced to concurrency, race conditions, and deadlocks
+\item fördjupad programmeringsfärdigheter
+\item grundläggande asynkron programming and strömmar
+\item en introduktion till kapplöpning och dödläge (concurrency)
+\item webbläsare som exekveringsplattform: webb formulär, händelsehantering, schemaläggning.
+\item grundläggande terminologi och koncept inom webbprogrammering
+\item grundläggande principer för HTLM, CSS
+\item ramverk för webbapplikationer (react, angular, bootstrap)
+\item nätverksprotokoll för internet
 \end{itemize}
 
 \end{frame}
@@ -86,32 +84,28 @@ During the course you will:
 
 %%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Not Covered in the Course}
-I assume you know class based object oriented programming.
-\\ \vspace{5mm}
-The course do not cover:
+  \frametitle{Kursen kommer inte lära dig}
 \begin{itemize}
-\item advanced or a complete guide to HTML
-\item advanced or a complete guide to  CSS
-\item GUI design/interaction design
-\item security
-\item backend
-\item software architectures and design patterns for the web
+\item avancerad eller "best practice" för HTML
+\item avancerad eller "best practice" för CSS
+\item GUI design/interaktions design/användarpespektiv
+\item säkerhet
+\item serverprogrammering
+\item mjukvaruarkitekturer och design patterns för webben
 \end{itemize}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Additional knowledge:}
-Complements to this course:
+  \frametitle{Kompletterande kurser}
 \begin{itemize}
-\item EITF05 - Web Security
-\item EITN41 - Advanced Web Security
+\item EITF05 - Webbsäkerhet
+\item EITN41 - Avancerad Webbsäkerhet
 \item MAMN25 - Interaction Design
-\item EDAP10  - Concurrent Programming
-\item EDAF75 - Database Technology
-\item EDAN40 - Functional Programming
+\item EDAP10  - Flertrådad programmering
+\item EDAF75 - Databasteknik
+\item EDAN40 - Funktionsprogrammering
 \item EDAG05 - Agil programvaruutveckling - projekt
 \end{itemize}
 
@@ -119,85 +113,90 @@ Complements to this course:
 
 %%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Outline}
-Course content:
+  \frametitle{Struktur}
+Kursen består av:
 \begin{itemize}
-\item 10 lectures in Swedish
-\item 4 labs
-\item project
+  \item 10 föreläsningar
+  \item 4 labbar
+  \item 1 projekt
 \end{itemize}
 \vspace{2mm}
-All activities are in zoom. You find the links in the schedule.
-\\ \vspace{2mm}
-Labs must be reported in groups of 2:
+Labbarna görs i grupper om 2:
 \begin{itemize}
- \item solve the lab together
-    \begin{enumerate}
-      \item collaborate using zoom and/or git.
-   \end{enumerate}
- \item solve the assignment independently
+ \item lös uppgiften tillsammans
+ \item lös uppgiften självständigt, innan redovisning:
    \begin{enumerate}
-     \item compare solutions
-     \item alternate who's solution you show
+     \item jämför lösningarna
+     \item alternera vems lösning som redovisas
    \end{enumerate}
 \end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Outline}
-Course content:
+  \frametitle{CEQ 2021}
+Positivt:
 \begin{itemize}
-\item 10 lectures in Swedish
-\item 4 labs
-\item project
+  \item rolig kurs
+  \item bra och lärorika labbar
+  \item bra med fritt projekt, styr inte uppgiften
+  \item projektet ska behållas även om det ibland upplevs som stressigt
 \end{itemize}
 \vspace{2mm}
-All activities are in zoom. You find the links in the schedule.
-\\ \vspace{2mm}
-Labs must be reported in groups of 2:
+Kritik:
 \begin{itemize}
- \item solve the lab together
-    \begin{enumerate}
-      \item collaborate using zoom and/or git.
-   \end{enumerate}
- \item solve the assignment independently
-   \begin{enumerate}
-     \item compare solutions
-     \item alternate who's solution you show
-   \end{enumerate}
+  \item otydliga instruktioner till labbarna, kod behöver skrivas om mellan labbar
+  \item mycket text att läsa, 3 böcker
+  \item oklart vad kursen omfattar
+  \item bloggar och hemsidor gör det oklart vad kursen omfattar
+  \item svår med flera nya språk: JavaScript, HTML, JSX, Angular template language
+  \item fler övningar
+  \item hög arbetsbelastning
 \end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Registration}
-To claim your participation:
+  \frametitle{CEQ 2021}
+Åtgärder:
 \begin{itemize}
-  \item register in LADOK
-  \item enroll for the labs in \href{https://sam.cs.lth.se/LabsSelectSession?occasionId=693}{SAM}
+  \item labbinstruktionerna skrivs om
+  \item labbarna blir mer styrda
+  \item reflektionsfrågor i labbarna
+  \item träning i att läsa bloggar och hemsidor behövs för att följa ämnet
+  \item all text ska inte läsas, du behöver göra en egen bedömning
+  \item vad som ingår i kursen står i förorden till \emph{lecture notes}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Registrering}
+\begin{itemize}
+  \item kursregistrering i LADOK
+  \item anmäl dig till labbarna i \href{https://sam.cs.lth.se/Labs}{SAM}
 \end{itemize}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%
 \begin{frame}
-  \frametitle{Study materials}
+  \frametitle{Kursmaterial}
 
-The course content is best described in several different sources, see the reading instructions.
+Kursmaterialet består av böcker, bloggar och annat material online, se läsinstruktionerna i canvas.
 \\ \vspace{3mm}
-Books
+Böcker
 \begin{itemize}
 \item \href{https://github.com/getify/You-Dont-Know-JS}{You Dont Know JS by Kyle Simpson} 
 \item \href{https://eloquentjavascript.net/}{Eloquent JavaScript by Marijn Haverbeke}
-\item \href{http://shop.oreilly.com/product/9780596517748.do}{JavaScript: The Good Parts by Douglas Crockford}
+\item \href{http://shop.oreilly.com/product/9780596517748.do}{JavaScript: The Good Parts by Douglas Crockford} (för den intresserade)
 \end{itemize}
 
-Other sources
+Annat material
 \begin{itemize}
 \item \href{http://fileadmin.cs.lth.se/cs/Education/EDAF90/lectures/lecture-notes.pdf}{Lecture notes for EDAF90}
-\item \href{https://developer.mozilla.org/en-US/docs/Learn}{Mozilla online material: Learn web development}
-\item links to online material on the home page
+\item \href{https://developer.mozilla.org/en-US/docs/Learn}{Mozilla online material: tutorials and language reference}
+\item fler länkar finns under läsanvisningarna inför varje föreläsning.
 \end{itemize}
 
 \end{frame}

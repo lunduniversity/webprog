@@ -54,9 +54,10 @@ exports.inventory = {
 
 // recursively freeze the data structure.
 (function() {
+  Object.freeze(exports.inventory);
   deepFreeze(exports.inventory);
   function deepFreeze(obj) {
-      Object.keys(obj).map(prop => deepFreeze(obj[prop]));
+      Object.keys(obj).forEach(prop => deepFreeze(obj[prop]));
       Object.freeze(obj);
   }
 })();
