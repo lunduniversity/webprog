@@ -12,11 +12,11 @@
   \item the tail of an array can be stored in a variable: \code{...remainingValues}
 \end{itemize}
 \begin{CodeBox}{}
-const foo = ['one', 'two'];
-const [red, yellow, green = 'default three'] = foo;
+const foo = ['red', 'green'];
+const [one, two, three = 'blue'] = foo;
+console.log(one); // "red"
+console.log(three); // "default three"
 const [one, ...rest] = foo;
-console.log(red); // "one"
-console.log(green); // "default three"
 \end{CodeBox}
 \end{frame}
 

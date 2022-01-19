@@ -30,7 +30,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\code}[1]{\lstinline{#1}}
-
 \title[JavaScript]{JavaScript}
 \author[EDAF90]{%
   EDAF90 Web Programming\newline
@@ -60,7 +59,6 @@
     language=Java,
     basicstyle = \ttfamily,
     showstringspaces=false,
-    morekeywords= {undefined, NaN, function, export, var, let}
   },
   title=#2,#1
 }
@@ -72,7 +70,7 @@
     language=Java,
     basicstyle = \ttfamily,
     showstringspaces=false,
-    morekeywords= {undefined, NaN, function, export, var, let}
+    morekeywords= {undefined, NaN, function, export, var, let, of, in}
 }
 
 %%%%%%%%%%%%%%%%%%%%%
@@ -95,10 +93,29 @@
 \item object function oriented language
 \item interpreted
 \item dynamically typed 
-\item run in any web browser and nodejs
+\item run in any web browser and node.js
 \end{itemize}
-
 \end{frame}
+
+%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Interpreted}
+
+\begin{itemize}
+\item no compilation $\rightarrow$ no compilation errors
+\item design decision: try to execute everything
+  \begin{itemize}
+  \item many silent errors
+  \item weird and unexpected behaviour
+  \item for example a miss spelled  property name
+  \end{itemize}
+\item the programmer have more responsibility
+\item programmers needs extended language knowledge
+\item use jslint to check your code
+\item write test cases to catch compilation errors
+\end{itemize}
+\end{frame}
+
 
 %---Types ---------------------------------------------------
 \include{parts/types}

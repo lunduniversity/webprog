@@ -2,7 +2,8 @@
 \begin{frame}[fragile] \frametitle{Name Spaces}
 \begin{itemize}
  \item one name space for variables and parameters
- \item each object have their own name space for parameters
+ \item each object have their own name space for properties
+ \item you must use \code{this} when accessing object properties
 \end{itemize}
 \vspace{3mm}
 Global name space
@@ -127,12 +128,12 @@ a[2]();
 %---Immediately Invoked Function Expressions ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Immediately Invoked Function Expressions}
 \begin{itemize}
-  \item creates a closure when declared
+  \item creates a new scope level, do not pollute surrounding
   \item if inside a loop
   \begin{itemize}
-    \item one closure for each loop iteration
-    \item variables are initialised in each loop iteration
-    \item clone and freeze outer statte (loop variable)
+    \item one scope for each loop iteration
+    \item local variables are instantiated in each loop iteration
+    \item can be used to clone and freeze outer state (loop variable)
   \end{itemize}
 \end{itemize}
 
@@ -156,7 +157,7 @@ console.log(x);
 var domElements = [...];
 for (var i=0; i<10; i++) {
   (function () {
-    let id = i;
+    var id = i;
     domElement[i].onClick(
       _ => { alert('clicked ' + id); }
     );

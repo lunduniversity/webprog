@@ -60,16 +60,17 @@
 \end{enumerate}
 
 \subsubsection*{Bootstrap}
-Open the bootstrap documentation to get an overview of the different bootstrap components to choose from. The pages contains examples, so it is easy to copy the template code.
-\\ \url{https://getbootstrap.com/docs/4.6/components/jumbotron/}
+Open the bootstrap documentation to get an overview of the different bootstrap components to choose from. The pages contains examples, so it is easy to copy the template code. Note, the examples ar HTML and uses \code{class="btn btn-primary"}. In a react component you must use the react template syntax:\code{className="btn btn-primary"}
+\\ \url{https://getbootstrap.com/docs/5.1/components/buttons/}
 
 %\clearpage
 \subsection*{Set up}
 
 In the first lab you created JavaScript code to manage custom made salads. In this lab you will create a web page where a user can compose and order salads.
 
-On the course home page you find the instructions for creating a new react project, see \url{https://cs.lth.se/edaf90/labs/react-bootstrap-project/}. Later you will store a list of salads in the App component. Classes must be used for components with state. Make sure App is a class:
+On the course canvas page you find the instructions for creating a new react project, see \url{https://canvas.education.lu.se/courses/17001/pages/react-skapa-ett-projekt}. Later you will store a list of salads in the App component. Function components do not have a state so you must change it to class:
 \begin{Code}
+import React from 'react';
 class App extends Component {
   render() {
     return (
@@ -80,20 +81,12 @@ class App extends Component {
 
 \end{Code}
 
-\noindent If you do not intend to use bootstrap modals, skip the \code{npm install jquery popper.js} step. If you change your mind, you can always add them later.
-
-In this lab we use ECMAscript modules, so download the ES6 variant of the inventory file (or download from the url using a web browser):
-\begin{Code}
-> cd lab2
-> curl -o src/inventory.ES6.js 
-          https://fileadmin.cs.lth.se/cs/Education/EDAF90/labs/lab2/inventory.ES6.js
-\end{Code}
-
+In this lab we use ECMAscript modules, so download the ES6 variant of the inventory file.
 \subsection*{Assignments}
 
 \begin{Assignments}
 
-\item Study the relevant material for lecture 3 and 4, see \url{https://cs.lth.se/edaf90/reding-instructions/lecture-3/}. Pay special attention to the "main concepts" part of the react documentation: \url{https://reactjs.org/docs/hello-world.html}.
+\item Study the relevant material for lecture 3 and 4.
 
 \item If you are using the linux system at LTH, remember to run \code{initcs} to add \code{node} to the path.
 

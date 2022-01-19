@@ -89,18 +89,19 @@ Did you notice thet foo have one extra parameter compared to the arguments list?
 \begin{frame}[fragile] \frametitle{Constructor Functions}
 
 \begin{itemize}
-  \item like classes in Java: forms objects when they are created
-  \item normal functions
-  \item the intended usage differs
-  \item by convention: use leading capital letter in name (similar to class names in Java)
-  \item only call constructor functions using \code{new}:
+  \item The \code{new} operator lets developers create an instance of an object type that has a constructor function.
+  \item \code{new} accepts any functions
+  \item \emph{constructor function} are like classes in Java: forms and initialises objects when used with \code{new}
+  \item by convention: use leading capital letter in \emph{constructor function} names (similar to class names in Java)
+  \item \code{new ConstructorFunction(args)} will:
   \begin{enumerate}
-    \item creates an empty object and binds it to \code{this}
+    \item creates an empty object
     \item set up inheritance
-    \item the constructor function is called, adds properties to the object
-    \item the return value of the constructor function will be the result of \code{new}
-    \item remember: the default return value of functions called by \code{new} is \code{this}
+    \item calls \code{ConstructorFunction(args)} with the new object as \code{this}
+    \item the result of \code{new} is the value returned by the \emph{constructor function}\\
+             remember: the default return value of functions called by \code{new} is \code{this}
   \end{enumerate}
+  \item only call constructor functions using \code{new}:
   \item combine with closure and you have the power
 \end{itemize}
 \end{frame}
@@ -136,7 +137,7 @@ let point3 =
 \begin{frame}[fragile] \frametitle{this}
 \begin{itemize}
   \item \code{this} is defined in all functions
-  \item arrow functions, \code{this} from the enclosing scope is used
+  \item arrow functions: \code{this} from the enclosing scope is used
   \item its value depends on how the function is called:
   \begin{itemize}
     \item function call: \code{foo()} - the global object
@@ -174,7 +175,8 @@ setInterval(per.growUp, 1000);
 \begin{frame}[fragile] \frametitle{Prototype Based Inheritance}
 
 \begin{itemize}
-  \item all object inherit from another object
+  \item all object inherit from another object or \code{null}
+  \item default is \code{Object}
   \item objects forms a \emph{prototype chain}
   \item property name lookup follows the prototype chain
   \item you can access the prototype chain (but don't):
@@ -377,10 +379,27 @@ In JavaScript there are many standard classes. Some important:
 \end{itemize}
 \end{frame}
 
+%--- Property Properties---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Property Properties}
+Object properties have metadata (properties)
+\begin{itemize}
+  \item \emph{Own property} - true for all names in \code{this}, false for inherited names
+  \item \emph{Enumerable}
+  \item \emph{Writable}
+\end{itemize}
+Iteration
+\begin{itemize}
+  \item \code{Object.getOwnPropertyNames()} - a given object's own property names, but not \code{Symbols}
+  \item \code{Object.keys()} - a given object's own enumerable property names
+  \item \code{for (const property in object)} - object's own enumerable properties
+
+\end{itemize}
+\end{frame}
+
 %--- More to learn---------------------------------------------------
 \begin{frame}[fragile] \frametitle{More to learn}
 
-This is the basics of objects in JavaScript, but there are more under the surface\ldots
+The JavaScript syntax only give you access to a subset of the language\ldots
 \vspace{8mm}
 \begin{CodeBox}{}
 Object.defineProperty(obj, "prop", {

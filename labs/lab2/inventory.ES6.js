@@ -54,7 +54,7 @@ let inventory = {
 
 // recursively freeze the data structure.
 (function() {
-  deepFreeze(inventory);
+  deepFreeze(exports.inventory);
   function deepFreeze(obj) {
       Object.keys(obj).map(prop => deepFreeze(obj[prop]));
       Object.freeze(obj);

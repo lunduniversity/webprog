@@ -168,14 +168,20 @@ let foo = (width, height) => { width * height };
 \begin{frame}[fragile] \frametitle{Function Oriented Programming}
 
 JavaScript have all features of a function oriented language.
-\vspace{8mm}
+%\vspace{8mm}
 
 \begin{CodeBox}{function oriented programming}
 let list = [1, 2, 3, 4, 5];
-
 let a = list.map(x => x + 2);
-leb b = list.reduce((sum, x) => sum + x);
-leb b = list.filter((x) => x % 2 === 0);
+let b = a.filter((x) => x % 2 === 0);
+b.forEach(x => console.log(x));
+let c = b.reduce((sum, x) => sum + x, 0);
+\end{CodeBox}
+\begin{CodeBox}{chaining}
+let sum = [1, 2, 3, 4, 5]
+.map(x => x + 2);
+.filter((x) => x % 2 === 0);
+.reduce((sum, x) => sum + x, 0);
 \end{CodeBox}
 \end{frame}
 
