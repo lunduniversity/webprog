@@ -191,6 +191,10 @@ let myCaesarSalad = new Salad()
 .add('Ceasardressing', imported.inventory['Ceasardressing']);
 console.log(JSON.stringify(myCaesarSalad) + '\n');
 \end{Code}
+\emph{Optional assignment:} The class above creates an empty salad. Sometimes you want to copy another salad. Implement this functionality in the constructor. There are two important cases: another \code{Salad} object, and a string containing a JSON representation of a \code{Salad}. 
+\\\emph{Hint 1:} assume \code{class Salad\{ constructor(arg) ...\}}, you do not need to pass an argument when calling the function: \code{new Salad()} is ok, the value of \code{arg} will be \code{undefined}.
+\\\emph{Hint 2:} use \code{typeof} on the constructor argument. 
+\\\emph{Hint 3:} \code{JSON.parse()}
 \item \emph{Assignment 3:} Next task is to add additional functionality to the \code{Salad} class. This must be done by adding the functions to the \code{Salad}'s prototype chain, not inside \code{class Salad\{ ...\}}.
 
 Add a function, \code{getPrice()} to calculate the price. The price is simply the sum of the prices of all ingredients. The computation should be done using functional style, i.e. no loops (\code{for}/\code{while}). 
@@ -234,8 +238,8 @@ myGourmetSalad.add('Bacon', imported.inventory['Bacon'], 1)
 console.log('Med extra bacon kostar den '
     + myGourmetSalad.getPrice() + ' kr');
 
-// Min gourmetsallad med lite bacon kostar 40 kr
-// Med extra bacon kostar den 50 kr
+// Min gourmetsallad med lite bacon kostar 50 kr
+// Med extra bacon kostar den 60 kr
 \end{Code}
 
 \item In the coming labs you will use \code{Salad} objects in a web application. Sometimes you want to refer to the object from the html code, for example a remove button on the shopping cart page. HTML i text only, so sometimes you want a string identifier for an object. One way to deal with this is to add a unique id to each \code{Salad} object. Then you can refer to a specific object from the HTML code using this id. 
