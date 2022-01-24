@@ -19,9 +19,9 @@ Document Object Model\\
 \color{structure}
 Document Object Model\\
 \begin{itemize}\color{structure}
-\item \html{Document} is a global object for accessing the DOM
+\item \html{Document} is a class for representing the DOM
 \item the nodes inherits from the \html{Element.prototype} object
-\item the global globala variables \code{document} stores the DOM
+\item the globala variable \code{document} refers to the DOM
 \item API for
   \begin{itemize}
     \item navigate in the tree: \code{document.body.getElementsByTagName( 'H1' )}
@@ -45,7 +45,8 @@ Document Object Model\\
   \item \code{addEventListener(eventType, handler[, options])}
 \end{itemize}
 \item \code{myEventHandler(event)}, \code{event} inherits from \code{Event}
-\item \code{this} and \code{event.target} points to the source, the DOM element
+\item \code{this}===\code{event.currentTarget}, the DOM element containing the handler
+\item \code{event.target} the source of the event, a DOM element
 \item event propagates trough the DOMen, three phases:
   \begin{enumerate}
     \item capturing
@@ -53,6 +54,7 @@ Document Object Model\\
     \item bubbling
   \end{enumerate}
 \item \code{event.stopPropagation()}
+\item \code{event.preventDefault()}
 \end{itemize}
 
 \end{frame}
@@ -71,7 +73,15 @@ Document Object Model\\
 \frametitle{Forms}
 \color{structure}
 
-Default behaviour for many events (click on submit button, enter in input field)
+\begin{lstlisting}[style=htmlcssjs]
+<form onsubmit="myFunction(event)">
+  <label for="id-checkbox">Checkbox:</label>
+  <input type="checkbox" id="id-checkbox"/>
+  <input type="submit" value="Send Request">
+</form>
+\end{lstlisting}
+
+Form submission is default behaviour for many events (click on submit button, enter in input field)
 \begin{itemize}
   \item submit the form using HTTP
   \item the server responds with a new html-page
