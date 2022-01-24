@@ -38,13 +38,39 @@ Document Object Model\\
 \color{structure}
 
 \begin{itemize}\color{structure}
-\item the browser creates events \code{blur, submit, resize, keydown}
+\item the browser creates events: \code{blur, submit, resize, keydown}
 \item call-back-methods
 \begin{itemize}
-  \item \code{<p id="demo" onclick='document.getElementById("demo").style.color = "red"'>}
+  \item \code{<p id="demo" onclick="myHandler(event)">}
   \item \code{addEventListener(eventType, handler[, options])}
 \end{itemize}
-\item \code{myEventHandler(event)}, \code{event} inherits from \code{Event}
+\item \code{event} is an instance of \code{Event}
+\item event propagates trough the DOMen, three phases:
+  \begin{enumerate}
+    \item capturing
+    \item target
+    \item bubbling
+  \end{enumerate}
+\end{itemize}
+
+\end{frame}
+
+%--------------------------------------------------------------------------------- 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
+\begin{frame}[fragile]
+\frametitle{event phases}
+\color{structure}
+  \centering
+  \includegraphics[width=8cm]{img/eventflow}
+
+\end{frame}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{Events}
+\color{structure}
+
+\begin{itemize}\color{structure}
+\item not all events propagate, \code{focus} do not.
 \item \code{this}===\code{event.currentTarget}, the DOM element containing the handler
 \item \code{event.target} the source of the event, a DOM element
 \item event propagates trough the DOMen, three phases:
@@ -56,15 +82,6 @@ Document Object Model\\
 \item \code{event.stopPropagation()}
 \item \code{event.preventDefault()}
 \end{itemize}
-
-\end{frame}
-
-%---------------------------------------------------------------------------------
-\begin{frame}[fragile]
-\frametitle{event phases}
-\color{structure}
-  \centering
-  \includegraphics[width=8cm]{img/eventflow}
 
 \end{frame}
 
