@@ -40,32 +40,50 @@ npm install react-router-dom
 \section{Link}
 %--- Link ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Link}
-Link component:
+\code{<Link to="/animals">animals</Link>}
+\\ \code{<Link to="animals/fish">fishs</Link>}
 \begin{itemize}
-  \item \code{<Link to="/about">About</Link>}
-  \item appears and behaves as a normal link (\code{<a href='/about.html'>}):
-  \begin{itemize}
+    \item let users navigate in your app
     \item clicking on it will add an entry to the browser history
     \item this will update the url field in the browser
-    \item the user can bookmark or copy any page in your application
     \item no new page is fetched from the server
     \item your JavaScript objects are untouched (preserve the application state)
-  \end{itemize}
-  \item add styling of active link using:\\ \code{<NavLink to="/react" activeClassName="hurray">}
 \end{itemize}
 \end{frame}
 
-%--- Link Component------------------------------------------------------------------------------
+%--- NavLink ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{NavLink}
+Add styling of active link using:
+\begin{itemize}
+  \item adda a css class to the element
+  \item \code{<NavLink to="animals" />Animals</Link>}
+  \item \code{<NavLink to="animals/fish" className=\{styleFunction\} />}
+\end{itemize}
+
+\begin{CodeBox}{}
+function styleFunction(isActive) {
+  if(isActive) {
+    return "active";
+  } else {
+    return undefined;
+  }
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Link Example------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Link Example}
 \begin{CodeBox}{}
 import { Link } from 'react-router-dom';
-menu = (
-  <nav>
-    <Link to="/">Home</Link>
-    <Link to="/users">Users</Link>
-    <Link to="/contact">Contact</Link>
-  </nav>
-);
+function Menu() {
+  return (
+    <nav>
+      <Link to="animal" />
+      <Link to="animal/fish" />
+      <Link to="animal/bird" />
+    </nav>
+  );
+}
 \end{CodeBox}
 \end{frame}
 
@@ -73,50 +91,69 @@ menu = (
 \section{Route}
 %--- Route ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Route}
-\code{<Route exact path="/">}
+\code{<Route path="/" component=\{<h1>Hello</h1>\} />}
 \begin{itemize}
-  \item \code{path} - matches if the pattern is a prefix of the current browser url
-  \item use \code{exact} for a complete match (no trailing characters)
-  \item a \code{<Route>} with no \code{path} is always matched
-  \item specify content using attributes:
+  \item renders components based on url matching
+  \item the user can bookmark or copy the url to any page in your application
+  \item renders the \code{component} if \code{path} matches the current browser url
+  \item wildcard: * matches any url
+  \item \code{<Route>} must be direct child of \code{Routes} or \code{<Route>}
+\end{itemize}
+\end{frame}
+
+%--- Nested Routs ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Nested Routs}
+Routs can be nested:
+\begin{itemize}
+  \item each level matches a part of the path
+  \item at most one sibling \code{Route} will be matched
+  \item all matched \code{Route element}s will be rendered
+  \item most specific match wins
+  \item wildcard have lowest priority
+  \item index route:\\ \code{<Route index element=\{<SelectAnimal />\} />}
   \begin{itemize}
-    \item \code{component} - renders a react component if the \code{path} matches
-    \item \code{render} - calls a function if the path matches, the function returns a react element (JSX expression)
-    \item \code{children} - always rendered, a function returning a react element
+    \item selected if parent is matched but no siblings
+    \item do not have any \code{path}
+    \item do have a \code{index} attribute
   \end{itemize}
 \end{itemize}
 \end{frame}
 
-%--- Route ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Route}
+
+%--- Route example------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Route Example}
 \begin{CodeBox}{}
-import { Route } from 'react-router-dom'
-const routes = (
-<div>
-  <Route path="/" exact component={Home} />
-  <Route path="/about"
-           render={_ => <h1>About the app</h1>}>
-</div>);
+import { Route, Routes } from 'react-router-dom';
+function App() {
+  return (
+    <Routes>
+      <Route path="animal" element={<Animal />}>
+        <Route path="fish"} element={<Fish />}/>
+        <Route path="bird"} element={<Bird />}/>
+        <Route index element={<SelectAnimal />}/>
+      </Route>
+    </Routes>
+  );
+}
 \end{CodeBox}
+/animal/fish $\rightarrow$ \code{<Animal><Fish /><Animal>}
+\\/animal/cat $\rightarrow$ no match
 \end{frame}
 
-%--- Switch ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Switch}
-\code{<Switch>}
-\begin{itemize}
-  \item renders the first \code{<Route>} that matches
-  \item any other \code{<Route>}s will not be rendered
-\end{itemize}
-
+%--- Outlet ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{\code{<Outlet />}}
+The child element is rendered in the parents \code{<Outlet />}
 \vspace{5mm}
 \begin{CodeBox}{}
-import { Route, Switch } from 'react-router-dom'
-const routes = (
-<Switch>
-  <Route path="/" exact component={Home} />
-  <Route path="/items" component={Items} />
-  <Route component={PageNotFound} />
-</Switch>);
+import { Outlet } from 'react-router-dom';
+function Animal() {
+  return (
+    <div>
+      <h1>Animals</h1>
+      <Outlet />
+    </div>
+  );
+}
 \end{CodeBox}
 \end{frame}
 
@@ -125,70 +162,50 @@ const routes = (
 the router pass data from the path to the component
 \begin{itemize}
   \item specify parameters in the \code{path} using the syntax\code{:name}
-  \item \code{props.match.params} is an object containing all path parameters
-  \item or use the \code{useParams()}  hook to get that object
+  \item use the \code{useParams()}  hook to get an object with the values
 \end{itemize}
 
 \vspace{5mm}
 \begin{CodeBox}{}
-const elem = <Route path="/item/:itemId" render={Items} />;
+import { useParams } from "react-router-dom";
 
-function Items(props) {
-  let { itemId } = useParams();
-  return <h1> Item {itemId} </h1>;
+const elem = 
+  <Route path="/item/:itemId" element={<Item />} />;
+
+function Item() {
+  let params = useParams();
+  return <h2>item: {params.invoiceId}</h2>;
 }
 \end{CodeBox}
 \end{frame}
 
-%--- Hooks ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Hooks}
-\begin{itemize}
-  \item introduced in react router 5.1
-  \item can only be used in function components (stateless)
-  \item can be used in any child of \code{Route}
-  \item \code{useParams()} - returns the url path parameters
-  \item \code{useRouteMatch()} - returns the path
-\end{itemize}
-\end{frame}
-
-%--- Hooks ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Hooks}
+%--- Route example again------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Route Example again}
 \begin{CodeBox}{}
-function Item() {
-      const { id } = useParams();
-      return <p>Item {id}</p>;
-}
+import { Route, Routes } from 'react-router-dom';
 function App() {
   return (
-      <Router>
-        <Route path="item/:id">
-          <Item />
-        </Route>
-      </Router>
+    <Routes>
+      <Route path="animal" element={<Animal />}>
+        <Route path=":animal"} element={<ShowAnimal />}/>
+        <Route index element={<SelectAnimal />}/>
+      </Route>
+    </Routes>
   );
 }
 \end{CodeBox}
+/animal/fish $\rightarrow$ \code{<Animal><ShowAnimal /><Animal>}
+\\/animal/cat $\rightarrow$ \code{<Animal><ShowAnimal /><Animal>}
 \end{frame}
 
-%--- Nested Routes ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Nested Routes}
+%--- Hooks ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Hooks}
 \begin{itemize}
-  \item \code{<Route>} are react components and can be nested
-  \item \code{path} is absolute
-  \item \code{useRouteMatch()} helps you build relative paths
+  \item can be used in any child of \code{Route}
+  \item \code{useParams()} - returns an object with the URL path parameters
+  \item \code{useLocation()} - returns the browser location
+  \item \code{useSearchParams()} - interact with query string in the URL
 \end{itemize}
-\begin{CodeBox}{}
-function About() {
-  let { path, url } = useRouteMatch();
-  return (
-      <Switch>
-        <Route exact path={path} component={GeneralInfo} />
-        <Route path={path + "/copyright"} 
-                 component={Copyright} />
-      </Switch>);
-  );
-}
-\end{CodeBox}
 \end{frame}
 
 %--- Router ------------------------------------------------------------------------------
@@ -197,14 +214,13 @@ function About() {
 \begin{itemize}
   \item any web application starts with a html file \code{index.html} 
   \item the html file includes the react JavaScript code
-  \item all \code{<Route>}s must be inside a router
+  \item to allow direct links: the server must return \code{index.html} for all URLs
 \end{itemize}
 
 \code{<BrowserRouter>}
 \begin{itemize}
   \item \code{http://domain.se/item/42}
-  \item to allow direct links: the server must return the main html file for all urls
-  \item node do this for you
+  \item node.js built in server do this for you
   \item apache can be configured with redirect
 \end{itemize}
 

@@ -65,7 +65,7 @@ Today, form validation is based on the following principle:
   \item validation is still carried out by the browser
   \item you can rely on the element.validity object
   \item use JavaScript for manage error messages: catch the \code{submit} event
-  \item error messages: show or hide normal html elements, e.g. \code{<spam class="my-error-class">invalid email</span>}
+  \item error messages: show or hide normal html elements, e.g. \code{<span class="my-error-class">invalid email</span>}
 \end{itemize}
 \vspace{5mm}
 Frameworks can help you with the details.
@@ -114,7 +114,7 @@ A note on security
 \begin{itemize}
   \item client side form validation is mainly for giving users feedback
   \item a malicious user can always interrupt the network communication
-  \item never trust data sent on the network (unless it is signed)
+  \item server can never trust data sent from the client (unless it is signed)
   \item always do server side data validation!
   \item with client side validation, server side can focus on malicious code
 \end{itemize}
