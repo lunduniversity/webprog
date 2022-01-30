@@ -54,7 +54,7 @@
 \n The third lab is about routing and form validation, \emph{objectives}:
 
 \begin{enumerate}\firmlist
-\item Understanding how a web application can be split into different pages using the react router.
+\item Understanding how a web application can be split into different pages using the React router.
 \item Get experience with passing props between components and combining them with parameters from the url.
 \item Get some experience with form validation and the html 5 form validation api.
 \end{enumerate}
@@ -82,20 +82,49 @@ The assignments here assumes you have a working solution for lab 2, i.e. a worki
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 \end{Code}
 
-\item Next, create a navigation bar for your app. When using the react router, use the \code{<Link to='my-path'>} for links, instead of the native html element \code{<a href="my-path">}. Use bootstrap classes to style it, see \url{https://getbootstrap.com/docs/4.4/components/navs/}. Here is the example code adapted for the react router:
-\begin{Code}
-<ul className="nav nav-pills">
-  <li className="nav-item">
-    <Link className="nav-link" to='compose-salad'>
-      Komponera din egen sallad
-    </Link>
-  </li>
-  {/* more links */}
-</ul>
-\end{Code}
-Add the code above to the \code{App} component. Add a second link for the \code{ViewOrder} alternative. Go to your browser and klick on the links. The path in your browser changes, and you see the navigations in the browsers history. However, all pages look the same.
+\noindent All routing components, for example \code{<Link> and <Route>}, must be children of a router in the React component tree. We use \code{BrowserRouter} since our application is to be run in a web browser. Note that we renamed it to \code{Router} which is the name we use in JSX. Add a \code{<Router>} element to your \code{App}. The \code{<Link>} do not to be direct child of \code{Router} so do not worry if you add additional elements between the routing elements. The html code quickly becomes hard to read when it grows, especially when you add wrapping \code{<div>} elements for styling. It is a good idea to separate the different parts of the page to separate render functions. When adding a new portion to a page, it is good practice to first create an empty React function component and add the the JSX code there. This is what i have:
 
-\item Let's change this. Based on the url in the address bar of the browser, we want to render either the \code{ComposeSalad}, or the \code{ViewOrder} component. Note, do not use a modal here. When you navigate to the page you want to see the compose salad form, not a button to open the form. To show a component based on the path, you can use the following JSX-code: \code{<Route path='/compose-salad' component=\{ComposeSalad\}>}. However, it is not enough to just replace \code{<ComposeSalad ...>} with \code{<Route ...>}. \code{<Route ...>} does not interact directly with the browser. Instead, this is done by another component: \code{<BrowserRouter>}. \code{<BrowserRouter>} must be an ancestor to \code{<Route>}. It is probably easiest to place it in the root (note, \code{<BrowserRouter>} was renamed to \code{<Router>} during the import):
+\begin{Code}
+class App {
+  render() {
+    return (
+      <Router>
+        <div className="container py-4">
+          <Header />
+          </* ViewOrder and ComposeSalad components */}
+          <Footer />
+        </div>
+      </Router>
+  );}
+}
+function Header() {
+  return (
+    <header className="pb-3 mb-4 border-bottom">
+      <span className="fs-4">Min egen salladsbar</span>
+    </header>
+  );
+}
+\end{Code}
+
+\item Next, create a navigation bar for your app. When using the react router, use the \code{<Link to='my-path'>} for links, instead of the native html element \code{<a href="my-path">}. Use bootstrap classes to style it, see \url{https://getbootstrap.com/docs/5.1/components/navs-tabs/}. Bellow is the example code adapted for the react router. Place this in a \code{Navbar} component and add it to \code{App}.
+\\ \emph{Option:} If you want an responsive design where the menu collapse on small screens, use navbar \url{https://getbootstrap.com/docs/5.1/components/navbar/}.
+
+\begin{Code}
+function Navbar() {
+  return (
+  <ul className="nav nav-tabs">
+    <li className="nav-item">
+      <Link className="nav-link" to="compose-salad">
+        Komponera en sallad
+      </Link>
+    </li>
+    {/* more links */}
+  </ul>);
+}
+\end{Code}
+Add the code above to the \code{App} component. Add a second link for the \code{ViewOrder} alternative. Go to your browser and klick on the links. The path in your browser changes (url), the selected page is highlighted in the menu, and you use the browser back icon to go to the previous page. However, all pages look the same.
+
+\item Let's change this. Based on the url in the address bar of the browser, we want to render either the \code{ComposeSalad}, or the \code{ViewOrder} component. To show a component based on the path, you can use the following JSX-code: \code{<Route path='/compose-salad' component=\{ComposeSalad\}>}. However, it is not enough to just replace \code{<ComposeSalad ...>} with \code{<Route ...>}. \code{<Route ...>} does not interact directly with the browser. Instead, this is done by another component: \code{<BrowserRouter>}. \code{<BrowserRouter>} must be an ancestor to \code{<Route>}. It is probably easiest to place it in the root (note, \code{<BrowserRouter>} was renamed to \code{<Router>} during the import):
 \begin{Code}
 class App extends Component {
   render() {
@@ -107,21 +136,21 @@ class App extends Component {
   }
 }
 \end{Code}
-Now we can use \code{<Route ...>}, but there is one more thing. Both \code{<ComposeSalad>} and \code{<ViewOrder>} depends on props passed down from \code{App}. In this situation, we need to use the \code{<Route path='compose-salad' render=\{foo\}>} pattern. \code{foo} is a function that takes the route props and returns a react element. The easiest way to create the instance is to use an arrow function with a JSX expression in the body:
+Now we can use \code{<Route ...>}, but there is one more thing. Both \code{<ComposeSalad>} and \code{<ViewOrder>} depends on props passed down from \code{App}. In this situation, we need to use the \code{<Route path='compose-salad' render=\{composeSalad\}>} pattern. \code{composeSalad} is a function that takes the route props and returns a react element. The easiest way to create the instance is to use an arrow function with a JSX expression in the body:
 \begin{Code}
-const foo = (params) => <ComposeSalad {...params} inventory={inventory} 
+const composeSalad = (params) => <ComposeSalad {...params} inventory={inventory} 
   onOrderSalad={this.onOrderSalad} />;
 \end{Code}
 The spread operator, \code{...params}, was used to pass the router parameters to \code{<ComposeSalad>}. This is just shorthand for, \code{match=\{params.match\}}, repeated for all properties of the \code{params} object. Lets put it all together:
 \begin{Code}
 class App extends Component {
   render() {
-    const composeSaladElem = (params) => <ComposeSalad {...params} inventory={inventory} 
+    const composeSalad = (params) => <ComposeSalad {...params} inventory={inventory} 
                        onOrderSalad={this.onOrderSalad} />;
     return (
       <Router>
         {/* header and menu bar */}
-        <Route path='/compose-salad' render={composeSaladElem}/>
+        <Route path='/compose-salad' render={composeSalad}/>
       </Router>
     );
   }

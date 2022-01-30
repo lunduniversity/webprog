@@ -23,19 +23,22 @@ use JavaScript:
   \item generate html trees and add them to the DOM
   \item update the DOM when application state changes
   \item cumbersome when only using JavaScript
-  \item libraries, such as jQuery, \$, helps
+  \item early approach: libraries, such as jQuery, \$, helps
 \end{itemize}
 \vspace{4mm}
-react, vue.js, angular:
+Current approach: react, vue.js, angular
 \begin{itemize}
-  \item component based
-  \item templates: html/JSX with embedded JavaScript
-  \item templates are compiled
+  \item components:
+  \begin{itemize}
+    \item templates: mix of html/JSX and JavaScript
+    \item state: JavaScript object
+    \item functionality: JavaScript functions
+  \end{itemize}
   \item framework synchronise template, application state and DOM
 \end{itemize}
 \end{frame}
 
 %--- empty page ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{}
-\end{frame}
+%\begin{frame}[fragile] \frametitle{}
+%\end{frame}
 
