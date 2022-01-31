@@ -32,7 +32,7 @@ CSS pseudo classes set by the browser
   \item \code{:invalid}
 \end{itemize}
 \vspace{3mm}
-\begin{CodeBox}{}
+\begin{lstlisting}[style=htmlcssjs]
 input:invalid {
   border: 2px dashed red;
 }
@@ -40,7 +40,7 @@ input:invalid:required {
   background-image: linear-gradient(to right, pink, lightgreen);
 }
 .form-control:valid~.invalid-feedback {display: none;}
-\end{CodeBox}
+\end{lstlisting}
 \end{frame}
 
 %--- Constraint Validation API ------------------------------------------------------------------------------
@@ -61,11 +61,17 @@ But, you can not style the error message
 Today, form validation is based on the following principle:
 \begin{itemize}
   \item use html 5 attributes to define requirements
-  \item \code{<form novalidate>} prevents browser from displaying error messages
+  \item \lstinline[style=htmlcssjs]{<form novalidate>} prevents browser from displaying error messages
   \item validation is still carried out by the browser
-  \item you can rely on the element.validity object
-  \item use JavaScript for manage error messages: catch the \code{submit} event
-  \item error messages: show or hide normal html elements, e.g. \code{<span class="my-error-class">invalid email</span>}
+  \item you can rely on the \code{:valid} and \code{:invalid} pseudo classes
+  \item when needen, use JavaScript for custom form validation:
+  \begin{enumerate}
+    \item catch the \code{submit} or \code{blur} event
+    \item perform custom form validation, use custom CSS classes
+  \end{enumerate}
+  \item error messages: use css to show or hide normal html elements
+          \\ \lstinline[style=htmlcssjs]{visibility: hidden}
+          \\ \lstinline[style=htmlcssjs]{<span class="my-error-class">invalid email</span>}
 \end{itemize}
 \vspace{5mm}
 Frameworks can help you with the details.
@@ -73,40 +79,43 @@ Frameworks can help you with the details.
 
 %--- Bootstrap ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Bootstrap}
-Bootstrap can style forms and error messages:
+Bootstrap have classes for styling forms and error messages:
 \begin{itemize}
-  \item \code{<input type="email" class="form-control" required>}
-          \\ \code{<div class="invalid-feedback">my message</div>}
+  \item \lstinline[style=htmlcssjs]{<form novalidate>} to hide the browser default error messages
+  \item html 5
+          \\ \lstinline[style=htmlcssjs]{<input maxlength="3" type="email" class="form-control">}
+          \\ \lstinline[style=htmlcssjs]{<select required class="form-select">}
+          \\ \lstinline[style=htmlcssjs]{<div class="valid-feedback">well done</div>}
+          \\ \lstinline[style=htmlcssjs]{<div class="invalid-feedback">not so good</div>}
   \begin{itemize}
-    \item style depends on tag and type
-    \item scopes \code{:invalid} and \code{:valid} styles to parent \code{.was-validated} class 
-    \item \code{formElement.classList.add("was-validated");}
+    \item different classes for different elements
+    \item must set the \lstinline[style=htmlcssjs]{.was-validated} class on a parent to show style/messages
   \end{itemize}
-  \item must use \code{novalidate} on \code{<form>} for custom error messages
+  \item custom validation:
+  \begin{itemize}
+    \item set the classes \code{.is-invalid} and \code{.is-valid} on the field element
+    \item warning: \code{:valid} is set when no html 5 requirements are specified
+          \\ all \lstinline[style=htmlcssjs]{valid-feedback} are shown
+    \item set \lstinline[style=htmlcssjs]{.was-validated} on the form group when mixing html 5 and custom validation in the same form
+  \end{itemize}
 \end{itemize}
-\vspace{5mm}
-check out the bootstrap documentation: \url{https://getbootstrap.com/docs/4.4/components/forms/}
 \end{frame}
 
-%--- Bootstrap ------------------------------------------------------------------------------
+%--- Bootstrap example ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Bootstrap example}
-\begin{CodeBox}{}
-<form novalidate>
- <div class="form-row">
-  <div class="col-md-4 mb-3">
-   <label for="field1">First name</label>
-   <input type="text" class="form-control" id="field1" required>
-   <div class="valid-feedback">Looks good!</div>
+\begin{lstlisting}[style=htmlcssjs]
+<form class="needs-validation" novalidate>
+  <div>
+    <label for="field1" class="form-label">First name</label>
+    <input type="text" class="form-control" id="field1" required>
+    <div class="valid-feedback"> Looks good! </div>
+    <div class="invalid-feedback"> no good! </div>
   </div>
-  <div class="col-md-4 mb-3">
-   <label for="field2">Last name</label>
-   <input type="text" class="form-control" id="field2" required>
-   <div class="invalid-feedback">please enter your name</div>
+  <div>
+    <button class="btn btn-primary" type="submit">Submit form</button>
   </div>
- </div>
- <button class="btn btn-primary" type="submit">Submit form</button>
 </form>
-\end{CodeBox}
+\end{lstlisting}
 \end{frame}
 %--- Security ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Security}

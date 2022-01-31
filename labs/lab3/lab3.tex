@@ -180,9 +180,10 @@ Note the \code{:name} part of the path. The router will take the matching text f
 \item Now your app is split to different pages, where each page have a clear functionality. This is good, do not confuse the user by putting too many unrelated things on one page. Let's move on to another important part of the user experience, form validation and feedback. When a user orders a salad we want to make sure that:
 \begin{itemize}
   \item one foundation is selected
+  \item one protein is selected
   \item one dressing is selected
 \end{itemize}
-If these conditions are not met, an error message should be displayed and the form submission should stop. We will use html 5 form validation, which have a set of predefined constraints. One of them is \code{required}, which ensures that a value is provided for the form field. Html is text, and the default action is to send a http request, which is also text based, so in this context ``a value'' means anything but the empty string. First, let's look at \code{<select>}. If you do not already done this, make sure that there is an invalid default selection for the \code{<select>} fileds. This is done by adding an invalid \code{<option>} at the top of the list:
+If these conditions are not met, an error message should be displayed and the form submission should stop. We will use html 5 form validation, which have a set of predefined constraints. One of them is \code{required}, which ensures that a value is provided for the form field. Html is text, and the default action is to send a http request, which is also text based, so in this context ``a value'' means anything but the empty string. Remember, the empty sting is falsy in JavaScript. First, add \code{required} to the \code{<select>} fields. To test error handling with select fields, make sure that there is an invalid selection (\code{<option value="">}) and that your component form state is set to an empty sting in the constructor and after form submission.
 \begin{Code}
 <select required ...>
   <option value=''>make a choice...</option>
