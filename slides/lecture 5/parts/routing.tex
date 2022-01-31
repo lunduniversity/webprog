@@ -31,9 +31,7 @@
 \end{itemize}
 
 \vspace{10mm}
-\begin{CodeBox}{}
-npm install react-router-dom
-\end{CodeBox}
+\code{npm install react-router-dom}
 \end{frame}
 
 %--- Link ------------------------------------------------------------------------------
@@ -94,10 +92,10 @@ function Menu() {
 \code{<Route path="/" component=\{<h1>Hello</h1>\} />}
 \begin{itemize}
   \item renders components based on url matching
-  \item the user can bookmark or copy the url to any page in your application
   \item renders the \code{component} if \code{path} matches the current browser url
   \item wildcard: * matches any url
-  \item \code{<Route>} must be direct child of \code{Routes} or \code{<Route>}
+  \item \code{<Route>} must be direct child of \code{<Routes>} or \code{<Route>}
+  \item the user can bookmark or copy the url to any page in your application
 \end{itemize}
 \end{frame}
 
@@ -122,6 +120,7 @@ Routs can be nested:
 
 %--- Route example------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Route Example}
+\vspace{-3mm}
 \begin{CodeBox}{}
 import { Route, Routes } from 'react-router-dom';
 function App() {
@@ -136,6 +135,7 @@ function App() {
   );
 }
 \end{CodeBox}
+\vspace{-5mm}
 /animal/fish $\rightarrow$ \code{<Animal><Fish /><Animal>}
 \\/animal/cat $\rightarrow$ no match
 \end{frame}
