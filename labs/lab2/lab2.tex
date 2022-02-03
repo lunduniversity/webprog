@@ -130,7 +130,7 @@ Add \code{ComposeSalad} in the render function:
 
 \noindent \emph{Reflection question 1:} \code{ComposeSalad} is a class extending \code{react.Component}. Is there a difference between class based components and function components, for example \code{function App()\{...\}} that the react template builder created for you?
 \\\emph{Reflection question 2:} The render function must be a proper function of \code{this.props} and \code{this.state}. What happens if the output of the render function is depending on other data?
-\\\emph{Reflection question 3:} In the code above, \code{foundations} are computed every time a component is rendered. The inventory changes very infrequent so this is inefficient. Can you cache \code{foundations} so it is only computed when \code{props.inventory} changes?
+\\\emph{Reflection question 3:} In the code above, \code{extras} are computed every time a component is rendered. The inventory changes very infrequent so this is inefficient. Can you cache \code{foundations} so it is only computed when \code{props.inventory} changes?
 
 \item In your \code{ComposeSalad} react component, add a html form for composing a salad. This requires a fair amount of code and understanding. Divid it to smaller steps:
 \begin{enumerate}
