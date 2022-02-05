@@ -169,13 +169,17 @@ export default ComposeSaladWrapper;
 \noindent Update \code{ComposeSalad} so it jumps to the view order page when a salad is ordered.
 
 
-\item Create a component, \code{ViewIngredient}, that shows the information from the \code{inventory} object about an ingredient, i.e vegan, lactose et.c. You should be able to navigate to the \code{ViewIngredient} component by clicking on an ingredient in the \code{ComposeSalad} component. To solv this, you should:
+\item Create a component, \code{ViewIngredient}, that shows the information from the \code{inventory} object about an ingredient, i.e vegan, lactose et.c. You should be able to navigate to the \code{ViewIngredient} component by clicking on the extras in the \code{ComposeSalad} component. To solv this, you should:
 
 \begin{itemize}
   \item Add a \code{<Link ...>} around each ingredient name in \code{ComposeSalad}.
   \item Create a functional component: \code{ViewIngredient}. The ingredient name can be found in the params. Pass \code{inventory} to it as a prop.
   \item Add \code{<Route path='/view-ingredient/:name' ...>} to your router.
 \end{itemize}
+
+\noindent \emph{Oprional assignemnt:} Add a "view info" button next to the select dropdowns. When the user clicks on it, jump to the \code{view-ingredient} page for the selected ingredient.
+
+\emph{Note:} If you return to the \code{compose-salad} page after viewing the info about an ingredient the form will be empty. This is because React will create a new \code{ComposeSalad} object when you navigate to the page (even if you use the browser history). Consequently any earlier state is lost. Normally you would use pop-ups to show the ingredient info, but here I want you to get experience using router params.
 
 \item Now your app is split to different pages, where each page have a clear functionality. This is good, do not confuse the user by putting too many unrelated things on one page. Let's move on to another important part of the user experience, form validation and feedback. When a user orders a salad we want to make sure that:
 \begin{itemize}
