@@ -145,11 +145,11 @@ fetch(...)
   console.error(error);
 });
 \end{Code}
-\noindent Or you wrap all data needed down the chain in an object:
+\noindent Or, you wrap all data needed down the chain in an object:
 \begin{Code}
 fetch(...)
 .then(x => ({x, step1: foo(x)}))
-.then(y => (...))  // now y contains both x and foo(x)
+.then(y => (...)) // x is not in the scope, but y contains both x and foo(x)
 .catch(error => {
   console.error(error);
 });
