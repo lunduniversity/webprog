@@ -98,7 +98,7 @@ To minimise the changes to the application we will recreate the inventory object
 \end{Code}
 This leads to some errors since \code{inventory} is removed from the global name space. A good practice is to always have a valid data structure for dynamically fetched data in your app. In the constructor of \code{App}, add an empty inventory to the state:
 \begin{Code}
-this.state = {shoppingCart: [], inventory: {}};
+this.state = {shoppingBasket: [], inventory: {}};
 \end{Code}
 Update the rest of the code in \code{App} so it works with this change, e.g. replace \code{inventory} with \code{this.state.inventory}. \emph{Note:} make sure your components can handle an empty inventory object, for example in \code{ViewOrder} or in \code{ComposeSalad}, you might have something like:
 \begin{Code}
@@ -109,10 +109,51 @@ const price = this.state.inventory[selected].price;
 
 \item Next we will update \code{this.state.inventory} by fetch data from the salad bar REST server. When should the app fetch the inventory data? You could fetch the data when needed, but in this case i suggests you fetch all data when the app launches. Check out the lifecycle of a React component to get some suggestions on where to place the fetch code, see \url{https://reactjs.org/docs/state-and-lifecycle.html}.
 
-Use the \code{fetch(url, [options])} function to send a request. It might be easiest to build the url using string concatenation, but you can also check out the \code{URL(url, [base])} class. Browse the documentation for \code{fetch()}. It returns a \code{Promise} that resolves to a \code{Response} object. To get the body you can use \code{Response.json()}, which returns yet another \code{Promise}. When you have the ingredient name, the next step is to fetch its properties from the server, e.g. \code{fetch(‘http://localhost:8080/extras/Tomat’)}. Fetching the properties for all ingredients are independent actions and must be carried out in parallel.
+Use the \code{fetch(url, [options])} function to send a request. It might be easiest to build the url using string concatenation, but you can also check out the \code{URL(url, [base])} class. Browse the documentation for \code{fetch()}. It returns a \code{Promise} that resolves to a \code{Response} object. To get the body you can use \code{Response.json()}, which returns yet another \code{Promise}. When you have the ingredient name, the next step is to fetch its properties from the server, e.g. \code{fetch(‘http://localhost:8080/extras/Tomat’)}. Fetching the properties for all ingredients are independent actions and must be carried out in parallel. Important! \code{fetch()} throws an error in some situations, but not all. If the server response code is 404, \code{fetch()} will ignore this. For proper error handling you need handle this:
+\begin{Code}
+fetch(url)
+.then(response => {
+  if(!response.ok) {
+    throw new Error(`${url} returned status ${response.status}`);
+  }
+  return response.json();
+}).then (...)
+.catch(error =>
+  console.error(error);
+});
+\end{Code}
 
 Every time you call \code{setState()} the render functions are potentially called and the DOM is updated. This is a costly operation and we do not want to do this for each inventory (it can make the UI slow). We want to wait until all, or a sufficient subset for example all foundations, of the \code{fetch} operations finish. This is a perfect use case for \code{Promise.all()}. It takes an array of \code{Promise} objects, which will run in parallel, and returns a \code{Promise} that settles when all inner promises are settled. Use this to avoid to frequent updates of the state.
 
+Having nested calls to \code{fetch()} becomes complicated if you try to write a singel chain of \code{.then()}. Divide this task into small steps:
+\begin{enumerate}
+\item Write a function for fetching a single ingredient. It should return a \code{Promise}.
+\item Write the code to fetch the list of foundations.
+\item Foreach ingredient, use \code{fetchIngredient()} to get the ingredient properties from the server.
+\item Use \code{Promise.all} to wait for all promises from 1 to settle.
+\item If needed, merge the data to a singel object
+\item Use \code{setState} with this object to update the component state.
+\end{enumerate}
+\emph{Hint:} the task might be simpler if you leverage on closure. In the example bellow, \code{inventory}, is visible in all \code{.then} blocks:
+\begin{Code}
+const inventory = {};
+fetch(...)
+.then(x => {...})
+.then(y => {...})
+.then(z => {...})
+.catch(error => {
+  console.error(error);
+});
+\end{Code}
+\noindent Or you wrap all data needed down the chain in an object:
+\begin{Code}
+fetch(...)
+.then(x => ({x, step1: foo(x)}))
+.then(y => (...))  // now y contains both x and foo(x)
+.catch(error => {
+  console.error(error);
+});
+\end{Code}
 \emph{Note}: For security reasons, JavaScript code is only allow to send http requests to the server it was downloaded from, its origin. The reason is to protect the user from cross site scripting attacks, which will be covered in the last lecture. The origin is both the IP-address and the port. The salad bar REST server is running on a different port than the react development server, so the servers have different origins and, by default, the browser prevents your app from communicating with the salad bar REST server. Luckily there is a way to relax this constraint. A server can allow communication with scripts from other origins using the Access-Control-Allow-Origin header. If you look at the headers returned by the salad bar REST server, see the output in the terminal from the \code{curl} commands in assignment 1. In the headers you see that the server allows access from *, meaning any server. The browser still do not trust this communication, and hides most http headers. Do not bother looking for the header information in your app. In the lab you may assume that the body contains json data, however do check the status code to make sure your request was successful.
 
 \item There is one more functionality involving a REST call missing in your app, placing an order. Add an order button in the \code{ViewOrder} component. To place an order, you need to send a \texttt{POST} request containing the details. The REST api for this can be tested using:
@@ -147,7 +188,7 @@ npm i uuid
 \end{Code}
 \noindent And in \code{Salad.js}:
 \begin{Code}
-import { v4: uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 constructor(){ 
   ...
   this.uuid = uuidv4();
