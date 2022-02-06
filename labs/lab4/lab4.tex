@@ -111,18 +111,16 @@ const price = this.state.inventory[selected].price;
 
 Use the \code{fetch(url, [options])} function to send a request. It might be easiest to build the url using string concatenation, but you can also check out the \code{URL(url, [base])} class. Browse the documentation for \code{fetch()}. It returns a \code{Promise} that resolves to a \code{Response} object. To get the body you can use \code{Response.json()}, which returns yet another \code{Promise}. When you have the ingredient name, the next step is to fetch its properties from the server, e.g. \code{fetch(‘http://localhost:8080/extras/Tomat’)}. Fetching the properties for all ingredients are independent actions and must be carried out in parallel. Important! \code{fetch()} throws an error in some situations, but not all. If the server response code is 404, \code{fetch()} will ignore this. For proper error handling you need handle this:
 \begin{Code}
-fetch(url)
-.then(response => {
-  if(!response.ok) {
-    throw new Error(`${url} returned status ${response.status}`);
-  }
-  return response.json();
-}).then (...)
-.catch(error =>
-  console.error(error);
-});
+function safeFetchJson(url) {
+  return fetch(url)
+  .then(response => {
+    if(!response.ok) {
+      throw new Error(`${url} returned status ${response.status}`);
+    }
+    return response.json();
+  });
+}
 \end{Code}
-
 Every time you call \code{setState()} the render functions are potentially called and the DOM is updated. This is a costly operation and we do not want to do this for each inventory (it can make the UI slow). We want to wait until all, or a sufficient subset for example all foundations, of the \code{fetch} operations finish. This is a perfect use case for \code{Promise.all()}. It takes an array of \code{Promise} objects, which will run in parallel, and returns a \code{Promise} that settles when all inner promises are settled. Use this to avoid to frequent updates of the state.
 
 Having nested calls to \code{fetch()} becomes complicated if you try to write a singel chain of \code{.then()}. Divide this task into small steps:
