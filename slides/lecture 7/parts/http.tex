@@ -16,7 +16,7 @@ The protocols of internet are layered
 \begin{frame}[fragile]\frametitle{MAC Address}
 MAC address (simplified)
 \begin{itemize}
-  \item unique for each network interface
+  \item universally unique for each network interface
   \item static, set when manufactured
   \item manufaturer prefix
   \item 6 bytes, 48 bits
@@ -88,14 +88,18 @@ URL is based on 7 bit ASCII
 HTTP Request
 \begin{itemize}\color{structure}
   \item text based - human readable
+\end{itemize}
+\begin{enumerate}
   \item request line
   \item header lines
   \item body
-\end{itemize}
-\texttt{
-\noindent GET /edaf90/ HTTP/1.1\\
-HOST: cs.lth.se
-}
+\end{enumerate}
+\vspace{5mm}
+\noindent
+\begin{verbatim}
+GET /edaf90/ HTTP/1.1
+User-Agent: Mozilla/5.0
+\end{verbatim}
 \end{frame}
 
 %--- HTTP Commands------------------------------------------------------------------------------
@@ -125,18 +129,17 @@ HTTP Response
 \item  body
 \end{itemize}
 
-\texttt{
-\noindent 
+\begin{verbatim}
 HTTP/1.1 200 OK
-\\Date: Sat, 09 Feb 2019 15:51:26 GMT
-\\Server: Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips PHP/7.0.27
-\\Content-Type: text/html; charset=utf-8
-\\X-Cache: cached
-\\Content-Length: 38430
-\\~ 
-\\<!DOCTYPE html>
-\\... more text, a total of 38430 bytes
-}
+Date: Sat, 09 Feb 2019 15:51:26 GMT
+Server: Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips PHP/7.0.27
+Content-Type: text/html; charset=utf-8
+X-Cache: cached
+Content-Length: 38430
+
+<!DOCTYPE html>
+... more text, a total of 38430 bytes
+\end{verbatim}
 \end{frame}
 
 %--- Status Code------------------------------------------------------------------------------
@@ -213,14 +216,14 @@ Data manipulation operations returns the updated object in the response body.
 
 %--- Naming Convents ------------------------------------------------------------------------------
 \begin{frame}[fragile]
-\frametitle{Naming Convents}
+\frametitle{URL Naming Convents}
 \color{structure}
 \noindent Names:
 \begin{itemize}\color{structure}
   \item the api should be self explained
   \item only nouns
-  \item plural names for collections
   \item avoid verbs, the http command contains this information
+  \item plural names for collections
   \item use lower case letters.
   \item avoid CamelCase since the path of the URLs are case insensitive.
   \item separates words using the minus sign,\\  \texttt{/piano-chair/} vs \texttt{/piano\%20chair/})
@@ -243,6 +246,10 @@ Values:
   \item  an object \code{\{\}}, comma separated \emph{name : value} - pairs
   \item  an array \code{[]}, comma separated values
 \end{itemize}
+\begin{CodeBox}{}
+obj = JSON.parse(text);
+text = JSON.stringify(obj);
+\end{CodeBox}
 \begin{CodeBox}{}
 {"name": "Per", "teacher": true }
 \end{CodeBox}
@@ -315,7 +322,7 @@ fetch(url, {
 fetch('flowers.jpg')
   .then((response) => {
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error('error code ' + response.status);
     }
     return response.blob();
   })
