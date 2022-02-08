@@ -168,12 +168,13 @@ curl -isX POST -H "Content-Type: application/json"
 "price":55,
 "order":[["Sallad","Norsk fjordlax","Tomat","Gurka","Dillmayo"]]}
 \end{verbatim}
-\noindent View the order confirmation to the user, for example using a toast: \url{https://getbootstrap.com/docs/5.1/components/toasts/}. 
+\noindent View an order confirmation to the user.
+\\\emph{Note:} if you want to use a toast, you need to initialise it: \url{https://stackoverflow.com/questions/67946016/how-to-show-bootstrap-5-toast-in-react-js}. 
 \\\emph{Optional assignment:} Store the order confirmations in \code{App} and view them in a new component.
 
 \item I have one more assignment for you. Store the order in local store, and load it when the app starts. This is done using the \code{window.localStorage}. There are two functions: \code{setItem(key, value)} and \code{getItem(key)}. All values are stored in localestore as text, so use \code{JSON.stringify()}, and \code{JSON.parse()}. Note, \code{parse} gives you a JavaScript object with the right structure, but it is not an instance of the \code{Salad} class. The \code{getPrice()} method et.c. are missing. There ar several solutions to this:
 \begin{itemize}
-\item \code{const salad = new Salad(text)} if your salad class support it.
+\item \code{const salad = new Salad(text)} if your salad class support it. (in this app you need a factory since text is a JSON array of salad objects)
 \item Use \code{Object.setPrototypeOf()} so set up the right prototype chain for the objects returned from \code{JSON.parse()}
 \item Do not use \code{Salad} objects for storing the data. Instead create static functions that takes \code{Object} instances as a parameter. The functions assumes that the argument have the same structure as a \code{Salad} class instance. For example: \code{Salad.getPrice(mySalad)} instead of \code{mySalad.getPrice()}.
 \item Set \code{this} when calling \code{getPrice()}: \code{Salad.prototype.getPrice.call(mySalad)}, instead of \code{mySalad.getPrice()}.
