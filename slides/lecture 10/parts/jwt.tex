@@ -56,7 +56,7 @@ Authentication token:
   \item private key --- only the server kan create or modify a token
   \item public key --- anyone can read and verify the token
   \item the token is not encrypted - avoid storing sensitive data in it
-  \item the client adds the token to all http requests
+  \item the client manually adds the token to all http requests (JavaScript)
   \item use the header: \code{auth: the-token-as-a-string}
   \item anyone with a token is authenticated, keep it safe
 \end{itemize}
