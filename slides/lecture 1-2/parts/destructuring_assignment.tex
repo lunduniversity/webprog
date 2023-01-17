@@ -32,9 +32,9 @@ const user = {
   }
 };
 
-const userId = ({id}) => id;
+const {id:selectedId} = user;
 
-function whois({displayName, fullName: {firstName: name}}) {
+function whoIs({displayName, fullName: {firstName: name}}) {
   return `${displayName} is ${name}`;
 }
 \end{CodeBox}
@@ -43,7 +43,7 @@ function whois({displayName, fullName: {firstName: name}}) {
 %--- Spread Syntax---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Spread Syntax}
 The spread syntax \code{...} can be used on \\
-An iIterable, such as an array expression or string, can be expanded instead of:
+An iIterable, such as an array or string, can be expanded instead of:
 \begin{itemize}
   \item zero or more arguments (for function calls)
   \item elements (for array literals)
@@ -61,7 +61,7 @@ function sum(x, y, z) {
 
 const numbers = [1, 2, 3];
 
-console.log(sum(...numbers));
+const total = sum(...numbers);
 \end{CodeBox}
 \end{frame}
 

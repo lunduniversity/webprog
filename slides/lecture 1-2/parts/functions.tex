@@ -178,9 +178,9 @@ b.forEach(x => console.log(x));
 let c = b.reduce((sum, x) => sum + x, 0);
 \end{CodeBox}
 \begin{CodeBox}{chaining}
-let sum = [1, 2, 3, 4, 5]
-.map(x => x + 2);
-.filter((x) => x % 2 === 0);
+let sum = [1, 2, 3, 4, 5];
+sum.map(x => x + 2)
+.filter((x) => x % 2 === 0)
 .reduce((sum, x) => sum + x, 0);
 \end{CodeBox}
 \end{frame}

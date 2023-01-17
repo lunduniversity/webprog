@@ -2,7 +2,7 @@
 \begin{frame}[fragile] \frametitle{Name Spaces}
 \begin{itemize}
  \item one name space for variables and parameters
- \item each object have their own name space for properties
+ \item object properties are stored in a separate dictionary
  \item you must use \code{this} when accessing object properties
 \end{itemize}
 \vspace{3mm}
@@ -113,12 +113,9 @@ foo()  // 0, 1
 
 \begin{CodeBox}{}
 var a = [];
-function foo() {
-  for (var i=0; i<3; i++) {
-    a[i] = function() { console.log(i); };
-  }
+for (var i=0; i<3; i++) {
+  a[i] = function() { console.log(i); };
 }
-foo();
 a[0]();
 a[1]();
 a[2]();

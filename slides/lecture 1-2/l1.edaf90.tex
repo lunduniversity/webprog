@@ -37,7 +37,7 @@
 %%%%%%%%%%%%%%%%%%%%%
 %\usepackage{verbatim}
 %%%%%%%%%%%%% Verbatim code box
-\usepackage[skins,listings]{tcolorbox}
+\usepackage{centernot}\usepackage[skins,listings]{tcolorbox}
 \ifLuaTeX\else
 	\tcbuselibrary{listingsutf8}
 \fi
@@ -103,7 +103,7 @@
 
 \begin{itemize}
 \item no compilation $\rightarrow$ no compilation errors
-\item design decision: try to execute everything
+\item JS language design leads to:
   \begin{itemize}
   \item many silent errors
   \item weird and unexpected behaviour
@@ -113,6 +113,7 @@
 \item programmers needs extended language knowledge
 \item use jslint to check your code
 \item write test cases to catch compilation errors
+\item work with small increments
 \end{itemize}
 \end{frame}
 
@@ -145,7 +146,7 @@
 \begin{frame}[fragile]
   \frametitle{Automatic Semicolon Insertion}
   If needed, a semicolon is added at the end of a line.
-\begin{CodeBox}{the function will return undefined}
+\begin{CodeBox}{returns undefined}
   function() { return
   1; }
 \end{CodeBox}

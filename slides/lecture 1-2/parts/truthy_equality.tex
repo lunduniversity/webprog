@@ -59,9 +59,25 @@ if (name == null || name.length == 0){
 \begin{frame}[fragile]
   \frametitle{Optional Chaining operator}
   \begin{itemize}
-    \item \code{a?.b}
-    \item evaluate to \code{undefined} if \code{a} is not an object
+    \item \code{object?.property}
+    \item access a property or calls a function
+    \item short-circuit and return \code{undefined} if:
+    \begin{itemize}
+      \item \code{property} is not a property of \code{object}, or
+      \item \code{object} is \code{null} or \code{undefined}
+    \end{itemize}
   \end{itemize}
+\begin{CodeBox}{throws no exceptions}
+  function myFunction(obj) {
+    console.log( obj.?prop );
+    console.log( obj.?[1]);
+    console.log( obj.func.?());
+    obj.func = 3;
+    console.log( obj.func.?()); // Uncaught TypeError:
+    obj?.a?.b?.[0]?.()?.c;
+  }
+\end{CodeBox}
+
 \end{frame}
 
 
@@ -70,15 +86,17 @@ if (name == null || name.length == 0){
   \frametitle{Equality and sameness}
   There are four equality algorithms in ES2015:
   \begin{itemize}
-    \item Abstract Equality Comparison: \verb|==|, \verb|!=|
-    \item Strict Equality Comparison: \verb|===|, \verb|!==|
-    \item SameValueZero: used by \verb|%TypedArray%| and \verb|ArrayBuffer|
-    \item SameValue: used in all other places (\verb|Object.is|)
+    \item Abstract/Loose Equality: \verb|==|, \verb|!=|
+    \begin{itemize}
+      \item not symmetric  $a==b \centernot \implies b==a$
+    \end{itemize}
+    \item Strict Equality: \verb|===|, \verb|!==| (\verb|Object.is|)
+    \item conform to IEEE 754 (so \code{NaN != NaN}, and \code{-0 == +0)}
+    \item === and Object.is() only differs when comparing {NaN, -0,} and \code{+0}
   \end{itemize}
 \begin{columns}[onlytextwidth]
   \begin{column}{0.45\textwidth}
 \begin{CodeBox}{evaluates to true}
-  NaN != NaN;
   1 == '1';
   [1, 2] == '1,2';
   [1, 2] != '1, 2';

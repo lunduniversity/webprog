@@ -1,36 +1,27 @@
 %---Objects ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Objects}
 \begin{itemize}
-  \item an object is a map: string $\rightarrow$ any value
-  \item objects have properties - a (string, value) par in the map (attributes, methods)
+  \item an object is a dictionary: string $\rightarrow$ any value
+  \item objects have properties - a (string, value) par in the dictionary (attributes, methods)
   \item properties can have any name, including reserved words and operations
   \item access properties using:
   \begin{itemize}
     \item dot notation: \code{myObj.prop}
     \item array index notation: \code{myObj['prop']}
   \end{itemize}
+  \item properties are not in scope of methods, must use \code{this}
   \item \code{typeof objRef === 'object'}
   \item add properties by writing to them \code{myObj.newProp = 'adding stuff';}
   \item remove properties by: \code{delete myObj.newProp}
 \end{itemize}
 \end{frame}
 
-%---Objects, example 1 ---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Objects, example 1}
- \begin{CodeBox}{basic object}
-let myObject = {
-  givenName: 'Per',
-  familyName: 'Andersson',
-  selector: 'givenName',
-  getValue: function () {
-    return this[this.selector];
-  }
-}
- 
-console.log(myObject.getValue());
-myObject.selector = 'familyName';
-console.log(myObject.getValue());
- \end{CodeBox}
+%--- Create Objects ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Create Objects}
+\begin{itemize}
+  \item object literals $\{prop: value\}$
+  \item \code{new ConstructorFunction(args);}
+\end{itemize}
 \end{frame}
 
 %---Object Literals ---------------------------------------------------
@@ -44,11 +35,12 @@ console.log(myObject.getValue());
   \item \code{\{a:a\}} is the same as \code{\{a\}}
 \end{itemize}
 \begin{CodeBox}{object literal}
-let myObject = {
-  five: 2 + 3,
-  '5': 'five',
-  '+' : 'plus',
-  'null': 'not a good idea name'
+const myObject = {
+  givenName: 'Per',
+  selector: 'givenName',
+  getValue: function () {
+    return this[this.selector];
+  }
  }
 \end{CodeBox}
 \end{frame}
@@ -61,24 +53,24 @@ let myObject = {
   \item they bring structure and readability to programs
 \end{itemize}
 \begin{CodeBox}{object literals}
-let myPoints = [{a: 0, y: 0}, {x:10, y:15}];
+let myPoints = [{x: 0, y: 0}, {x:10, y:15}];
 
-function foo(a, b, c, d, e, f) {
- console.log('d = '+ d);
+function foo(x, y, a, b, c, d) {
+ console.log('b = '+ b);
 }
-function bar(arg) {
- console.log('d = '+ arg.d);
+function bar(x, y, options) {
+ console.log('d = '+ options?.b);
 }
 \end{CodeBox}
 \end{frame}
 
 %--- Named Parameters ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Named Parameters}
-Remember, \code{foo} and \code{bar} prints parameter \code{d}.
+Remember, \code{foo} and \code{bar} prints option \code{b}.
 \vspace{5mm}
 \begin{CodeBox}{What is printed?}
-foo(0, 0, 0, 0, 1, 1, 1);
-bar({a: 0, b: 0, c: 0, d: 1, e: 1, f:1});
+foo(0, 0, 0, 0, 1, undefined, 1);
+bar(0, 0, {a: 0, b: 1, d:1});
 \end{CodeBox}
 \vspace{10mm}
 Did you notice thet foo have one extra parameter compared to the arguments list?
@@ -89,20 +81,24 @@ Did you notice thet foo have one extra parameter compared to the arguments list?
 \begin{frame}[fragile] \frametitle{Constructor Functions}
 
 \begin{itemize}
-  \item The \code{new} operator lets developers create an instance of an object type that has a constructor function.
-  \item \code{new} accepts any functions
-  \item \emph{constructor function} are like classes in Java: forms and initialises objects when used with \code{new}
-  \item by convention: use leading capital letter in \emph{constructor function} names (similar to class names in Java)
+  \item same purpose as classes in Java
+  \begin{itemize}
+    \item initialises objects when used with \code{new}
+  \end{itemize}
+  \item are	 function, intended use differs
+  \begin{itemize}
+    \item \code{function ConstructorFunction(args) \{ ... \}}
+    \item by convention: use leading capital letter
+  \end{itemize}
   \item \code{new ConstructorFunction(args)} will:
   \begin{enumerate}
     \item creates an empty object
     \item set up inheritance
     \item calls \code{ConstructorFunction(args)} with the new object as \code{this}
+    \item the constructor function adds properties to \code{this} and assign them values
     \item the result of \code{new} is the value returned by the \emph{constructor function}\\
              remember: the default return value of functions called by \code{new} is \code{this}
   \end{enumerate}
-  \item only call constructor functions using \code{new}:
-  \item combine with closure and you have the power
 \end{itemize}
 \end{frame}
 
@@ -127,7 +123,7 @@ let point1 = new Point(3, 6);
 let point2 = new Point();
 let point2 = new Point(5);
 let point3 = 
-  new Point(null, 5);
+  new Point(undefined, 5);
 \end{CodeBox}
   \end{column}
 \end{columns}%
@@ -137,7 +133,6 @@ let point3 =
 \begin{frame}[fragile] \frametitle{this}
 \begin{itemize}
   \item \code{this} is defined in all functions
-  \item arrow functions: \code{this} from the enclosing scope is used
   \item its value depends on how the function is called:
   \begin{itemize}
     \item function call: \code{foo()} - the global object
@@ -147,6 +142,7 @@ let point3 =
     \item as an DOM event handler - the element the event fired from (not all cases for all browsers)
     \item as an inline DOM event handler - the DOM element on which the listener is placed
   \end{itemize}
+  \item arrow functions: \code{this} from the enclosing scope is used
 \end{itemize}
 \end{frame}
 
@@ -160,14 +156,14 @@ When a function is a ``object method''
 \end{itemize}
 \begin{CodeBox}{}
 function Person() {
-  let self = this; // Some choose `that` instead of `self`. 
-                         // Choose one and be consistent.
+  const self = this; // Some choose `that` instead of `self`. 
+                           // Choose one and be consistent.
   self.age = 0;
-  this.growUp = function() { self.age++; };
-  this.growUp2 = _ =>  this.age++;
+  this.birthday = function() { self.age++; };
+  this.birthday2 = _ =>  this.age++;
 }
 let per = new Person();
-setInterval(per.growUp, 1000);
+setInterval(per.birthday, 1000);
 \end{CodeBox}
 \end{frame}
 
@@ -179,12 +175,12 @@ setInterval(per.growUp, 1000);
   \item default is \code{Object}
   \item objects forms a \emph{prototype chain}
   \item property name lookup follows the prototype chain
+  \item the chain ends with \code{null}
   \item you can access the prototype chain (but don't):
   \begin{itemize}
     \item \code{Object.getPrototypeOf(object)}
     \item \code{Object.setPrototypeOf(object, chain)}
   \end{itemize}
-  \item the chain ends with \code{null}
 \end{itemize}
 \end{frame}
 
@@ -194,6 +190,33 @@ setInterval(per.growUp, 1000);
   \centering
   \includegraphics[width=14cm]{img/prototype_chain}
 
+\end{frame}
+
+%--- Function Object ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function Object}
+Every functions is stored in a function object:
+\begin{itemize}
+  \item Function object:
+  \begin{itemize}
+    \item stores the function body
+    \item the value of function expression: \code{function()\{  \}}
+    \item is callable, left hand side of ()
+    \item store static properties
+    \item inherits from \code{Function.prototype}
+    \item constructor functions must have the property \code{prototype}
+      \begin{itemize}
+      \item all functions except: methods, arrow functions, or async functions
+      \end{itemize}
+  \end{itemize}
+\end{itemize}
+\begin{itemize}
+  \item Prototype object:
+  \begin{itemize}
+    \item added to the \emph{prototype chain} by \code{new}
+    \item store inherited properties
+    \item \code{constructor} refers to the function object
+  \end{itemize}
+\end{itemize}
 \end{frame}
 
 %---------------------------------------------------------------------------------
@@ -209,7 +232,7 @@ setInterval(per.growUp, 1000);
 function Person() {
   this.age = 0;
 }
-Person.prototype.growUp = function() { this.age++; };
+Person.prototype.birtday = function() { this.age++; };
 let per = new Person();
 \end{CodeBox}
   \centering
@@ -222,14 +245,13 @@ Setting up the prototype chain:
 \begin{itemize}
   \item \code{new} do the work for you
   \begin{itemize}
-    \item all \code{Function} objects have a property \code{prototype}
-    \item remember, constructor functions are instance of \code{Function}
+    \item all constructor functions have the \code{prototype} property
     \item \code{new}:
     \begin{itemize}
       \item creates an empty object
       \item {\bf and} set its parent in the prototype chain to the \code{prototype} in the constructor function
     \end{itemize}
-    \item all names in the \code{prototype} of the constructor function are now in the prototype chain of the new object
+    \item all properties in the \code{prototype} of the constructor function are now in the prototype chain of the new object
   \end{itemize}
   \item you can do it manually: \code{Object.create()}
 \end{itemize}
@@ -257,7 +279,7 @@ Property write:
 \begin{frame}[fragile] \frametitle{prototype}
 \begin{CodeBox}{}
 let cat = new Person();
-cat.grewUp = function() { this.age +=7; }
+cat.birtday = function() { this.age += 7; }
 \end{CodeBox}
   \centering
   \includegraphics[width=14cm]{img/prototype_chain4}
@@ -267,7 +289,7 @@ cat.grewUp = function() { this.age +=7; }
 \begin{frame}[fragile] \frametitle{Inheritance}
 \begin{itemize}
   \item \code{Object.create()} creates an object with a given prototype chain
-  \item use it to replace the \code{prototype} in the constructor function
+  \item store it as the \code{prototype} property in the constructor function
   \item explicit call the constructor of the superclass
 \end{itemize}
 \vspace{2mm}
@@ -276,7 +298,7 @@ function Cat() {
   this = Person.call(this);
 }
 Cat.prototype = Object.create(Person.prototype);
-Cat.prototype.grewUp = function() { this.age +=7; }
+Cat.prototype.birthday = function() { this.age += 7; }
 Cat.prototype.toString = function() {
   return 'I am a cat of age ' + this.age';
 }
@@ -291,7 +313,7 @@ Cat.prototype.toString = function() {
 
 %--- Class ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Class}
-a "Java class" corrsponds to two objects in JavaScript
+a "Java class" corresponds to two objects in JavaScript
 \begin{itemize}
   \item a constructor function:
   \begin{itemize}
@@ -310,7 +332,7 @@ a "Java class" corrsponds to two objects in JavaScript
 \begin{itemize}
   \item syntactical sugar, set up the prototype chin as outlined above
   \item \code{static} will add the property to the constructor function object
-  \item no \code{protected} or \code{private}
+  \item \code{public} or \code{#private}
 \end{itemize}
 \end{frame}
 %--- Class Example ---------------------------------------------------
@@ -319,9 +341,12 @@ a "Java class" corrsponds to two objects in JavaScript
 class Person {
   constructor(age) {
     this.age = age || 0;
-    Person.count = Person.count + 1;
+    Person.#count = Person.#count + 1;
   }
-  static count = 0;
+  birthday() {
+    this.age++;
+  }
+  static #count = 0;
 }
 \end{CodeBox}
 \end{frame}
@@ -345,6 +370,9 @@ class Cat extends Person {
   constructor(age) {
     super(age);
   }
+  birthday() {
+    this.age += 7;
+  }
   toString() {
     return 'I am a cat of age ' + this.age';
   }
@@ -356,13 +384,13 @@ class Cat extends Person {
 \begin{frame}[fragile] \frametitle{Access to Undefined Names}
 Variables and properties have distinct name spaces.
 \\ \vspace{4mm}
-Variables:
+Name Scope: Variables and Parameters
 \begin{itemize}
   \item read: throws ReferenceError
   \item write: creates a variable in the global scope
 \end{itemize}
 \vspace{5mm}
-Properties:
+Objects: Properties
 \begin{itemize}
   \item read: evaluates to \code{undefined}
   \item write: adds the property to the object
