@@ -29,18 +29,32 @@
 \begin{itemize}
   \item superset of JSON
   \item comma separated list of properties inside \code{\{ \}}
-  \item a property is defined by: \code{property-name : value}
+  \item a property is defined by:
+  \begin{itemize}
+    \item \code{property-name : value}
+    \item \code{method(parameters) \{ statements \}}
+  \end{itemize}
   \item name in plain text, quotes if needed 
   \item value is any JavaScript expression
   \item \code{\{a:a\}} is the same as \code{\{a\}}
 \end{itemize}
+\end{frame}
+
+%---Object Literals ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Object Literals}
 \begin{CodeBox}{object literal}
+const familyName = 'Andersson';
 const myObject = {
   givenName: 'Per',
+  familyName,
   selector: 'givenName',
   getValue: function () {
     return this[this.selector];
-  }
+  },
+  setValue(value) {
+    this[this.selector] = value;
+  },
+  '+': 'plus'
  }
 \end{CodeBox}
 \end{frame}
@@ -59,7 +73,7 @@ function foo(x, y, a, b, c, d) {
  console.log('b = '+ b);
 }
 function bar(x, y, options) {
- console.log('d = '+ options?.b);
+ console.log('b = '+ options?.b);
 }
 \end{CodeBox}
 \end{frame}
@@ -339,14 +353,16 @@ a "Java class" corresponds to two objects in JavaScript
 \begin{frame}[fragile] \frametitle{Class Example}
 \begin{CodeBox}{}
 class Person {
+  static #count = 0;
+
   constructor(age) {
     this.age = age || 0;
     Person.#count = Person.#count + 1;
   }
+
   birthday() {
     this.age++;
   }
-  static #count = 0;
 }
 \end{CodeBox}
 \end{frame}
@@ -408,19 +424,32 @@ In JavaScript there are many standard classes. Some important:
 \end{frame}
 
 %--- Property Properties---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Property Properties}
-Object properties have metadata (properties)
+\begin{frame}[fragile] \frametitle{Property Descriptors}
+Distinction between
 \begin{itemize}
-  \item \emph{Own property} - true for all names in \code{this}, false for inherited names
-  \item \emph{Enumerable}
-  \item \emph{Writable}
+  \item \emph{own properties}
+  \item \emph{inherited properties}
 \end{itemize}
-Iteration
-\begin{itemize}
-  \item \code{Object.getOwnPropertyNames()} - a given object's own property names, but not \code{Symbols}
-  \item \code{Object.keys()} - a given object's own enumerable property names
-  \item \code{for (const property in object)} - object's own enumerable properties
 
+Object properties have descriptors (metadata)
+\begin{itemize}
+  \item \emph{value}
+  \item \emph{writable}
+  \item \emph{configurable}
+  \item \emph{enumerable}
+\end{itemize}
+\end{frame}
+
+%--- Iteration---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Iteration}
+Iterating over object property names and values
+\begin{itemize}
+  \item \code{for ... in} --- all enumerable string properties (include inherited)
+  \item \code{Object.keys()} --- own enumerable
+  \item \code{Object.values()} --- own enumerable
+  \item \code{Object.entries()} --- own enumerable
+  \item \code{Object.getOwnPropertyNames()} --- own
+  \item \code{...}, spread --- own enumerable
 \end{itemize}
 \end{frame}
 
