@@ -6,7 +6,7 @@
 
 const imported = require("./inventory.js");
 
-console.log('Sallad: ' + imported.inventory['Sallad']);
+console.log('Sallad:', imported.inventory['Sallad']);
 
 console.log('Object.keys():')
 let names = Object.keys(imported.inventory);

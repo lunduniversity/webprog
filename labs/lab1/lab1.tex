@@ -91,8 +91,8 @@ exports.inventory = {
 \noindent The properties \code{foundation}, \code{protein}, \code{extra}, and \code{dressing} indicate which part of the salad the ingredient is to be used for. All ingredients also have a \code{price} and may also have properties \code{vegan}, \code{gluten}, \code{lactose}
 
 \noindent \emph{Reflection question 1:} In most programming languages a complete record for each ingredient would be used, for example: 
-\code{Sallad: \{price: 10, foundation: true, protein: false, extra: false, dressing: false, vegan: true, gluten:false, lactose: false\}}
-This is not the case in \code{inventory.js}, which is common when writing JavaScript code. Why don't we need to store properties with the value \code{fale} in the JavaScript objects?
+\code{Sallad: \{price: 10, foundation: true, protein: false, extra: false, dressing: false, vegan: true, gluten: false, lactose: false\}}
+This is not the case in \code{inventory.js}, which is common when writing JavaScript code. Why don't we need to store properties with the value \code{false} in the JavaScript objects?
 
 
 \subsubsection*{Node.js}
@@ -124,7 +124,7 @@ In this lab you will use Node.js as execution environment. The tool is installed
 
 \item %To get started you can either set the project up yourself or use the starter code from GitHub. 
 %\subsubsection{Set up the project yourself}
-Set up the project: Create a directory and add a new file named \code{lab1.js} containing the code bellow (or download it from canvas). You also need to download \code{inventory.js}.
+Set up the project: Create a directory and add a new file named \code{lab1.js} containing the code below (or download it from canvas). You also need to download \code{inventory.js}.
 \begin{Code}
 'use strict';
 const imported = require("./inventory.js");
@@ -311,7 +311,7 @@ This will download the source code and place it in the directory \code{node\_mod
 
 \end{Assignments}
 
-\noindent There are all assignments for lab 1. In Lab 2 you will develop your first react application. Lab 2 will take significantly loger time compared to lab 1.
+\noindent There are all assignments for lab 1. In Lab 2 you will develop your first react application. Lab 2 will take significantly longer time compared to lab 1.
 
 \input{../prechapters/licence-contributors.tex}
 
