@@ -9,7 +9,7 @@ const imported = require("./inventory.js");
 console.log('Sallad:', imported.inventory['Sallad']);
 
 console.log('Object.keys():')
-let names = Object.keys(imported.inventory);
+const names = Object.keys(imported.inventory);
 names
   .sort((a, b) => a.localeCompare(b, "sv", { sensitivity: 'case' }))
   .forEach(name => console.log(name));
@@ -32,9 +32,9 @@ console.log(makeOptions(imported.inventory, 'foundation'));
 
 console.log('\n--- Assignment 2 ---------------------------------------')
 class Salad {
-  constructor() {}
+  constructor() { }
   add(name, properties) { }
-  remove(name) {}
+  remove(name) { }
 }
 /*
 let myCaesarSalad = new Salad()

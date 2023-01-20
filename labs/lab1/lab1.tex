@@ -143,7 +143,7 @@ console.log(imported.inventory['Sallad']);
 
 \item In the \code{inventory.js} file you can find all data for composing a salad. Its structure is good for looking up properties of the ingredients, i.e. \code{imported.inventory['Krutonger']}. You might think that this structure is not good for presenting the options for the customers, where you want to present foundations, proteins extras, and dressings in separate boxes. However, using functional programming style, function chaining and the functions from \code{Array.prototype}, you can easily transform the data structure to match your needs. The documentation of the functions can be found at \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array}. To get started, let's print the names of all ingredients:
 \begin{Code}
-let names = Object.keys(imported.inventory);
+const names = Object.keys(imported.inventory);
 names.forEach(name => console.log(name));
 \end{Code}
 In this case, you will get the same result with:
@@ -162,7 +162,7 @@ names
 \end{Code}
 This is an example of function chaining. Each function in the chain returns a collection and you can easily add additional functions the the chain without storing the intermediate result in a local variable . This is the same principle as used with streams, which we will use later in this course. This is very convenient when generating data dependent content of web pages.
 
-\emph{Assignment 1:} Write a function that returns the options HTML code of a select box for a part of a salad. Example:
+\emph{Assignment 1:} Write a function that returns a string containing the HTML code for a select box with all salad ingredients with a certain property. Example:
 \code{makeOptions(imported.inventory, 'foundation')} returns 
 \begin{Code}
 <option value="Pasta"> Pasta, 10 kr</option>
