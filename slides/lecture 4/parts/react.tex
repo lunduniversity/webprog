@@ -1,10 +1,10 @@
 %--- react------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{React}
 \begin{CodeBox}{}
-ReactDOM.render(
-  <h1>Hello, world!</h1>,
+const root = ReactDOM.createRoot(
   document.getElementById('root')
 );
+root.render(<h1>Hello, world!</h1>);
 \end{CodeBox}
 
 \vspace{8mm}
@@ -88,15 +88,14 @@ const element3 = (<span>{element1}
 \begin{frame}[fragile] \frametitle{Rect Components}
 react components
 \begin{itemize}
-  \item gives a name to a template
-  \item the name can be used as a tag in JSX
-  \item must start with a capital letter
-  \item is a JavaScript object:
+  \item JavaScript object:
   \begin{itemize}
-    \item a template: a function returning an JSX expression
-    \item applications state
-    \item mechanism for component-component communcation
+    \item mechanism to render itself
+    \item state
+    \item function or class
   \end{itemize}
+  \item a named template
+  \item used in JSX expressions
   \item Model-View design pattern
 \end{itemize}
 \end{frame}
@@ -136,8 +135,7 @@ function HelloWorld(props) {
   );
 }
 
-const element = (<HelloWorld 
-                   message="EDAF90 - web programming"/>);
+const element = (<HelloWorld message="web programming"/>);
 \end{CodeBox}
 \end{frame}
 
@@ -147,9 +145,9 @@ const element = (<HelloWorld
   \item properties pass data down in the tree
   \item can also be used to pass data up the tree
   \begin{itemize}
-    \item parent have a call back function to update its state
+    \item parent have a call-back function to update its state
     \item pass it as a property a child
-    \item the child calls the parent call back function
+    \item the child calls the parent call-back function
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -158,25 +156,19 @@ const element = (<HelloWorld
 %--- State ------------------------------------------------------------------------------
 \section{State}
 %--- React Components------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Rect Components}
-stateless component
-\begin{itemize}
-  \item a function returning a react element (JSX expression)
-  \item should be pure functions
-  \item or, use hooks to manage state
-\end{itemize}
-
-stateful component
-\begin{itemize}
-  \item is a ES6 class with these properties:
+\begin{frame}[fragile] \frametitle{Rect Class Components}
+A React component can be a ES6 class:
   \begin{itemize}
     \item \code{extends React.Component}
-    \item \code{constructor(props)} initialise the state
-    \item \code{render()} returns a react element (JSX expression)
-    \item \code{this.state} - an object containing the component state
-    \item \code{this.state} - must be an immutable object
+    \item two data properties:
+    \begin{itemize}
+      \item \code{this.props}
+      \item \code{this.state}
+      \item immutable data structure, React updates them
+    \end{itemize}
+    \item \code{constructor(props)} should assign to \code{this.state}
+    \item \code{render()} must be a pure function of \code{this.props} and \code{this.state}
   \end{itemize}
-\end{itemize}
 \end{frame}
 
 %--- State Example ------------------------------------------------------------------------------
@@ -199,21 +191,126 @@ const element = <Hello name="Per" />;
 \end{CodeBox}
 \end{frame}
 
-%--- State------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{State}
+%--- State in class components ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{State in Class Components}
 \begin{itemize}
-  \item the state object is immutable
+  \item the state must be an immutable data structure
   \item use \code{setState()} to update state
   \item state is updated asynchronously (at some time in the future)
-  \item use functions for incremental update: \code{(state, props) => (\{...state, \})}
-  \item state updates are merged
+  \item state updates patches the old state:
   \begin{itemize}
-    \item the new state contains the state properties you want to change
-    \item all other state properties remain unchanged
+    \item \code{nextState = \{ ...oldState, ...newState\}}
     \item you can not remove properties
     \item set undesired properties to \code{undefined}
   \end{itemize}
 \end{itemize}
+\end{frame}
+
+%--- setState ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{setState}
+Two variants:\\
+new state is independent of old state
+\begin{CodeBox}{\code{setState} takes a value:}
+onReset() {
+  this.setState( {count: 0} );
+}
+\end{CodeBox}
+
+new state depends on old state
+\begin{CodeBox}{\code{setState} takes a function:}
+onClick() {
+  this.setState(
+    oldState => {count: oldState.count + 1}
+);}
+\end{CodeBox}
+
+\end{frame}
+
+%--- State in function components ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{State in Function Components}
+\begin{itemize}
+  \item must use hooks, introduced in 16.8.0
+  \item component state is a sequence of values
+  \item \code{useState} return the next value in the sequence
+  \item the state values are returned in the same order in each render run
+           \\do not call \code{useState} inside \code{if}, \code{while}
+  \item \code{const [value, setState] = useState(initialState);}
+  \item \code{setState} replace the state property value, no merge
+  \item new state should not affect any ongoing rendering
+\end{itemize}
+\end{frame}
+
+%--- State in function components ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{State in Function Components}
+\begin{CodeBox}{useState hook}
+function Example() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(n => n + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}\end{CodeBox}
+\end{frame}
+
+%--- function vs class ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Function vs Class Components}
+Class Component
+\begin{itemize}
+  \item leverage of the full powers of the JavaScript language
+  \item must understand:
+  \begin{itemize}
+    \item \code{this} --- how it gets a value
+    \item prototype based inheritance
+    \item use scopes/\code{bind()} for \code{this} in event handers
+  \end{itemize}
+\end{itemize}
+
+Function Component
+\begin{itemize}
+  \item easy to use and understand
+  \item everything is inside the scope of a function
+  \item potential for ahead of time compilation in future
+\end{itemize}
+
+\end{frame}
+
+%--- life cycle ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Component Life Cycle --- class}
+Mounting
+\begin{itemize}
+  \item \code{constructor()}
+  \item \code{static getDerivedStateFromProps()}
+  \item \code{render()}
+  \item \code{componentDidMount()}
+\end{itemize}
+Updating
+\begin{itemize}
+  \item \code{static getDerivedStateFromProps()}
+  \item \code{shouldComponentUpdate()}
+  \item \code{render()}
+  \item \code{getSnapshotBeforeUpdate()}
+  \item \code{componentDidUpdate()}
+\end{itemize}
+\end{frame}
+
+%--- life cycle ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Component Life Cycle --- class}
+Unmounting
+\begin{itemize}
+  \item \code{componentWillUnmount()}
+\end{itemize}
+
+Error Handling
+\begin{itemize}
+  \item \code{static getDerivedStateFromError()}
+  \item \code{componentDidCatch()}
+\end{itemize}
+
 \end{frame}
 
 %--- Render Elements------------------------------------------------------------------------------
@@ -228,23 +325,13 @@ const element = <Hello name="Per" />;
   \end{itemize}
   \item updates the DOM if the element already was part of the DOM
   \item optimised, only updated the delta
-  \item 
 \end{itemize}
-\end{frame}
-
-%--- Render Elements------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Render Elements}
-\begin{itemize}
-\item \code{state} - an immutable object
-\item never change the state object, or any object it refers to!
-\item \code{setState()} - change the state of a component
-\begin{itemize}
-  \item \code{asyncrounous}
-  \item will updates the component eventually
-  \item will updates the DOM
-  \item optimised, only updated the delta
-\end{itemize}
-\end{itemize}
+\begin{CodeBox}{bootstrap the app}
+ReactDOM.render(
+   <App />,
+  document.getElementById('root')
+);
+\end{CodeBox}
 \end{frame}
 
 %--- Event Handling ------------------------------------------------------------------------------
@@ -252,10 +339,10 @@ const element = <Hello name="Per" />;
 %--- Handling Events------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Handling Events}
 \begin{itemize}
-  \item names are camelCase
+  \item event names are camelCase in JSX
   \item must use \code{preventDefault}, returning \code{false} do nothing
   \item pass a function: \code{onClick =\{myCallbackFunction\}}
-  \item argument is a synthetic event according to the W3C spec
+  \item called with one argument, a synthetic event according to the W3C spec
 \end{itemize}
 \begin{CodeBox}{}
 function ActionLink() {
@@ -275,14 +362,15 @@ function ActionLink() {
 \begin{itemize}
   \item by default \code{this} is \code{undefined} in a callback function
   \item use \code{bind()} to bind it to the component object
-  \item or arrow functions
+  \item or arrow function:
 \end{itemize}
 \begin{CodeBox}{}
-inventory.map(row => { return (
-    <button onClick={(event) => this.deleteRow(row, event)}>
-      Delete {row.name}
-    </button>
-)};
+  constructor(props) {
+    super(props);
+    this.state = {count: 0};
+    this.handleClick = this.setState(
+      state => ({count: state.count + 1});
+  )};
 \end{CodeBox}
 \end{frame}
 %--- this example------------------------------------------------------------------------------
@@ -331,11 +419,11 @@ class Counter extends React.Component {
 \begin{CodeBox}{}
 function MyList(props) { return (
   <ul>
-    props.list.map(row => (
+    {props.list.map(row => (
       <li key={row.id}>
         {row.text}
       </li>
-    ))
+    ))}
   </ul>);
 }
 \end{CodeBox}
@@ -349,17 +437,18 @@ function MyList(props) { return (
   \item use the \emph{controlled component} pattern
   \begin{itemize}
     \item the react component have the master state
-    \item the DOM reflects the component state using JSX embedded JavaScript
-    \item catch events (\code{onChange}): update the component state
+    \item the DOM reflects the component state
+    \item event listener (\code{onChange}): update the component state
   \end{itemize}
-  \item \code{<form onSubmit=\{this.handleSubmit\}>} \ldots \code{</form>}
 \end{itemize}
 \vspace{5mm}
 \begin{CodeBox}{}
-<input type="text" 
+<form onSubmit={this.handleSubmit}>
+  <input type="text" 
         value={this.state.value}
         onChange={this.handleChange}
-/>
+  />
+</form>
 \end{CodeBox}
 \end{frame}
 
@@ -422,7 +511,7 @@ const elem = (
 \end{frame}
 
 %--- Forms call back------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Form, call back}
+\begin{frame}[fragile] \frametitle{Form, event handlers}
 \begin{CodeBox}{}
 class NameForm extends React.Component {
   constructor(props) {
@@ -442,14 +531,19 @@ class NameForm extends React.Component {
 \end{CodeBox}
 \end{frame}
 
-%--- Forms, generic callback------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Forms, generic callback}
+%--- parametrised event handler------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Parametrised Event Handler}
+
+\begin{CodeBox}{}
+<input type="text" name="givenName" 
+  value="this.state.givenName">
+\end{CodeBox}
 \begin{CodeBox}{}
 handleInputChange(event) {
   const target = event.target;
   const value =
     target.type === 'checkbox' ?
-                    target.checked : target.value;
+        target.checked : target.value;
   const name = target.name;
 
   this.setState({
@@ -477,22 +571,3 @@ handleInputChange(event) {
 %  </form>);
 %\end{CodeBox}
 %\end{frame}
-
-%--- Life Cycle Hooks------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Life Cycle Hooks}
-\begin{CodeBox}{}
-class Hello extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {  }
-
-  componentWillUnmount() {  }
-
-  render() {
-    return <h1>Hello, world!</h1>;
-  }
-}
-\end{CodeBox}
-\end{frame}

@@ -4,16 +4,21 @@
 \begin{frame}
 \frametitle{Locales and Word Order}
 \color{structure}
-A (value $ \leftrightarrow $ character) mapping is not enough to represent text.\\
-How to render dates, digits and time depends on where you are:
-Digits: 3.14 or 3,14?\\
-Date: 01/02/03\\
-\begin{itemize}\color{structure}
-\item 3 februari 2001?
-\item January 2, 2003?
-\item 1 February 2003?
+Text communicate infomation to the user. To handle text in a program you need:
+\begin{itemize}
+  \item encoding --- A mapping (value $ \leftrightarrow $ symbol)
+  \item locale --- How to render dates, digits and time depends on where you are:
+  \begin{itemize}
+    \item Digits: 3.142 or 3,142?
+    \item Date: 01/02/03
+    \begin{itemize}\color{structure}
+      \item 3 februari 2001?
+      \item January 2, 2003?
+      \item 1 February 2003?
+    \end{itemize}
+  \end{itemize}
+  \item collation --- character order. Is Andersson before or after Åkesson?
 \end{itemize}
-Character order (Collating): Is Andersson before or after Åkesson?
 \end{frame}
 
 %---------------------------------------------------------------------------------
