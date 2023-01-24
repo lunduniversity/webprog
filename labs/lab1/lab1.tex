@@ -74,7 +74,7 @@
 %\clearpage
 \subsection*{Background}
 
-Later in the course you will develop a web application for orders in a salad bar, similar to \emph{Grönt o' Gott} at the LTH campus. The customer composes their own salads from a selection of ingredients. Each salad is composed of one foundation, one proteins, a selection of extras, and one dressing. For example, a Caesar salad is composed of: lettuce, chicken breast, bacon, croutons, parmesan cheese, and Caesar dressing.
+Later in the course you will develop a web application for orders in a salad bar, similar to \emph{Grönt o' Gott} at the LTH campus. The customer composes their own salads from a selection of ingredients. Each salad is composed of one foundation, one protein, a selection of extras, and one dressing. For example, a Caesar salad is composed of: lettuce, chicken breast, bacon, croutons, Parmesan cheese, and Caesar dressing.
 
 In addition to handling salad composition, the application should also provide additional information about the salad, for example the price and if it contains ingredients that could cause an allergic reaction.
 
@@ -88,7 +88,7 @@ exports.inventory = {
   /* more ingredients */
 };
 \end{Code}
-\noindent The properties \code{foundation}, \code{protein}, \code{extra}, and \code{dressing} indicate which part of the salad the ingredient is to be used for. All ingredients also have a \code{price} and may also have properties \code{vegan}, \code{gluten}, \code{lactose}
+\noindent The properties \code{foundation}, \code{protein}, \code{extra}, and \code{dressing} indicate which part of the salad the ingredient is to be used for. All ingredients also have a \code{price} and may also have properties \code{vegan}, \code{gluten} and \code{lactose}.
 
 \noindent \emph{Reflection question 1:} In most programming languages a complete record for each ingredient would be used, for example: 
 \code{Sallad: \{price: 10, foundation: true, protein: false, extra: false, dressing: false, vegan: true, gluten: false, lactose: false\}}
@@ -97,12 +97,12 @@ This is not the case in \code{inventory.js}, which is common when writing JavaSc
 
 \subsubsection*{Node.js}
 
-In this lab you will use Node.js as execution environment. The tool is installed on the linux computers at LTH. You can also install it on your own computer, see \url{https://nodejs.org/}. You start Node.js from the terminal with the command: \code{node}. If you do not provide any arguments, you will start the REPL (Read-Eval-Print-Loop). Write \code{.exit} to quit the REPL, see \url{https://nodejs.org/api/repl.html}. This is great for testing stuff, but it is a good idea to save the code for the labs in a file. To execute the JavaScript code in a file, you simply give the file name as argument to \code{node}:
+In this lab you will use Node.js as execution environment. The tool is installed on the Linux computers at LTH. You can also install it on your own computer, see \url{https://nodejs.org/}. You start Node.js from the terminal with the command: \code{node}. If you do not provide any arguments, you will start the REPL (Read-Eval-Print-Loop). Write \code{.exit} to quit the REPL, see \url{https://nodejs.org/api/repl.html}. This is great for testing stuff, but it is a good idea to save the code for the labs in a file. To execute the JavaScript code in a file, you simply give the file name as argument to \code{node}:
 \begin{Code}
   node lab1.js
 \end{Code}
  
-\noindent Please add additional printouts so it is clear which text belongs to which task. There is a template file, \code{lab1.js} in canvas so you do not need to copy code from this pdf. Node.js does not support ECMAScript modules, so we will use CommonJS modules instead. Try the following code (you need to download ./ingredients.js from canvas or github first):
+\noindent Please add additional printouts, to make it clear which text belongs to which task. There is a template file, \code{lab1.js}, in Canvas that does this for you, so you do not need to copy code from this pdf. Node.js does not support ECMAScript modules, so we will use CommonJS modules instead. Try the following code (you need to download ./ingredients.js from Canvas or GitHub first):
 \begin{Code}
   const imported = require("./inventory.js");
   console.log(imported.inventory);
@@ -112,19 +112,19 @@ In this lab you will use Node.js as execution environment. The tool is installed
 
 \subsubsection*{IDE}
 
-\noindent Do you want to use an IDE when writing code? I recommend Visual Studio Code, see \url{https://code.visualstudio.com}. Check out their tutorial on running and debugging javascript programs using node.js (skip the "An Express application" part), see \url{https://code.visualstudio.com/docs/nodejs/nodejs-tutorial}. There is also a video showing how to debug JavaScript code here \url{https://www.youtube.com/watch?v=2oFKNL7vYV8}. It has great support for JavaScript and TypeScript. We will use TypeScript later in the course which Eclipse has poor support for. TypeScript is JavaScript extended with static typing.
+\noindent Do you want to use an IDE when writing code? I recommend Visual Studio Code, see \url{https://code.visualstudio.com}. Check out their tutorial on running and debugging JavaScript programs using node.js (skip the "An Express application" part), see \url{https://code.visualstudio.com/docs/nodejs/nodejs-tutorial}. There is also a video showing how to debug JavaScript code here \url{https://www.youtube.com/watch?v=2oFKNL7vYV8}. It has great support for JavaScript and TypeScript. We will use TypeScript later in the course which Eclipse has poor support for. TypeScript is JavaScript extended with static typing.
 
 \subsection*{Assignments}
 
 \begin{Assignments}
 
-\item Study the relevant material for lecture 1-2, see the reading instructions for lecture-1-2 in canvas. 
+\item Study the relevant material for lecture 1-2, see the reading instructions for lecture-1-2 in Canvas. 
 
 %\item If you are using the linux system at LTH, remember to run \code{initcs} to add \code{node} to the path.
 
 \item %To get started you can either set the project up yourself or use the starter code from GitHub. 
 %\subsubsection{Set up the project yourself}
-Set up the project: Create a directory and add a new file named \code{lab1.js} containing the code below (or download it from canvas). You also need to download \code{inventory.js}.
+Set up the project: Create a directory and add a new file named \code{lab1.js} containing the code below (or download it from Canvas). You also need to download \code{inventory.js}.
 \begin{Code}
 'use strict';
 const imported = require("./inventory.js");
@@ -141,7 +141,7 @@ console.log(imported.inventory['Sallad']);
 %  node lab1.js
 %\end{Code}
 
-\item In the \code{inventory.js} file you can find all data for composing a salad. Its structure is good for looking up properties of the ingredients, i.e. \code{imported.inventory['Krutonger']}. You might think that this structure is not good for presenting the options for the customers, where you want to present foundations, proteins extras, and dressings in separate boxes. However, using functional programming style, function chaining and the functions from \code{Array.prototype}, you can easily transform the data structure to match your needs. The documentation of the functions can be found at \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array}. To get started, let's print the names of all ingredients:
+\item In the \code{inventory.js} file you can find all data for composing a salad. Its structure is good for looking up properties of the ingredients, e.g. \code{imported.inventory['Krutonger']} for looking up properties of \emph{krutonger}. However, it might not be ideal for presenting the options to the customers, where you want to present foundations, proteins, extras and dressings in separate boxes. Fortunately, using functional programming style, function chaining and the functions from \code{Array.prototype}, you can easily transform the data structure to match your needs. The documentation of the functions can be found at \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array}. To get started, let's print the names of all ingredients:
 \begin{Code}
 const names = Object.keys(imported.inventory);
 names.forEach(name => console.log(name));
@@ -152,17 +152,17 @@ for (const name in imported.inventory) {
   console.log(name);
 }
 \end{Code}
-\emph{Reflection question 2:} When will the two examples above give different outputs and why is inherited functions, such as \code{sort()} not printed? Hint: read about enumerable properties and own properties.
+\emph{Reflection question 2:} When will the two examples above give different outputs, and why is inherited functions, such as \code{sort()}, not printed? Hint: read about enumerable properties and own properties.
 
-The for loop might seem to be simpler code, but using arrays have advantages. One advantage is the ease of add additional data transformations. Lets sort the array before printing:
+The for loop might seem to be simpler code, but using arrays have advantages. One advantage is the ease of add additional data transformations. Let's sort the array before printing:
 \begin{Code}
 names
 .sort((a, b) => a.localeCompare(b, "sv", {sensitivity: 'case'}))
 .forEach(name => console.log(name));
 \end{Code}
-This is an example of function chaining. Each function in the chain returns a collection and you can easily add additional functions the the chain without storing the intermediate result in a local variable . This is the same principle as used with streams, which we will use later in this course. This is very convenient when generating data dependent content of web pages.
+This is an example of function chaining. Each function in the chain returns a collection, and you can easily add additional functions to the chain without storing the intermediate result in a local variable. This is the same principle as used with streams, which we will use later in this course. This is very convenient when generating data-dependent content of web pages.
 
-\emph{Assignment 1:} Write a function that returns a string containing the HTML code for a select box with all salad ingredients with a certain property. Example:
+\emph{Assignment 1:} Write a function that returns a string containing the HTML code for the options of a select box, that has all salad ingredients with a certain property. Example:
 \code{makeOptions(imported.inventory, 'foundation')} returns 
 \begin{Code}
 <option value="Pasta"> Pasta, 10 kr</option>
@@ -170,7 +170,7 @@ This is an example of function chaining. Each function in the chain returns a co
 \end{Code}
 \emph{Hint:} Use the functions \code{Array.prototype.filter()}, \code{Array.prototype.map()} and \\\code{Array.prototype.reduce()}.
 
-\item We need a representation for a salad. Create a JavaScript class named \code{Salad} for that. You need to store the \code{foundation}, \code{protein}, \code{extras}, and \code{dressing}. Salad objects will be passed to different components in the web app and to avoid passing the inventory to all components the salad object should also store the properties of the ingredients in the salad. Use one object as a dictionary to store the ingrediens, see the printout bellow.
+\item We need a representation for a salad. Create a JavaScript class named \code{Salad} for that. You need to store the \code{foundation}, \code{protein}, \code{extras}, and \code{dressing}. Later on, salad objects will be passed to different components in the web app and to avoid having to pass along the inventory to all components, the salad object should itself also store copies of the properties of the ingredients in the salad. Use one object as a dictionary to store the ingredients, see the printout bellow.
 
 \emph{Assignment 2:} Create a Salad class. You may use the ECMAScript 2015 \code{class} syntax, or the backwards compatible constructor function for this and the remaining assignments (except in assignment 3). The class must contain the following methods:
 \begin{Code}
@@ -180,7 +180,7 @@ class Salad {
   remove(name);           // return this object to make it chainable
 }
 \end{Code}
-Create an object for a caesar salad:
+Create an object for a Caesar salad:
 \begin{Code}
 let myCaesarSalad = new Salad()
 .add('Sallad', imported.inventory['Sallad'])
@@ -206,13 +206,16 @@ This is my printout for the final salad:
 }
 \end{Code}
 
-\item \emph{Assignment 3:} Next task is to update the \code{Salad} class with two more functions. This must be done by modifying the existing class. Add the functions to the existing \code{Salad}'s prototype object, do not modify the code inside \code{class Salad\{ ... \}}.
+\item \emph{Assignment 3:} Next task is to update the \code{Salad} class with two more functions. For this exercise, you must do this by modifying the existing class. That is, add the functions to the existing \code{Salad}'s prototype object, and \textbf{not} by modifying the code inside \code{class Salad\{~...~\}}.
 
-Add a function, \code{getPrice()} to calculate the price. The price is simply the sum of the prices of all ingredients. The computation should be done using functional style, i.e. (\code{Array.prototype.reduce} et.c.). 
+\begin{itemize}
+  \item Add a function, \code{getPrice()}, to calculate the price. The price is simply the sum of the prices of all ingredients. The computation should be done using functional style, i.e. using \code{Array.prototype.reduce} etc. 
+  
+  \item Also, add a second function, \code{count(property)}, that counts the number of ingredients with a given property. This can be used to check if a salad is well-formed (for example, that it has exactly one foundation and at least three extras).\\
+  \emph{Hint}: \code{Object.values()}.
+\end{itemize}
 
-Also, add a second function, \code{count(property)}, that counts the number of ingredients with a property. This can be used to check if a salad is well formed (one foundation and at least three extras...)
-\\ \emph{hint}: \code{Object.values()}.
-\\ \noindent Test your code:
+\noindent Test your code:
 \begin{Code}
 console.log('En ceasarsallad kostar ' + myCaesarSalad.getPrice() + ' kr');
 console.log('En ceasarsallad har ' + myCaesarSalad.count('lactose') + 
@@ -223,18 +226,21 @@ console.log('En ceasarsallad har ' + myCaesarSalad.count('extra') + ' tillbehör
 // En ceasarsallad har 2 ingredienser med laktos
 // En ceasarsallad har 3 tillbehör
 \end{Code}
-\emph{Reflection question 3:} How are classes and inherited properties represented in JavaScript? Let's explore this by checking some types. What is the type and value of: \code{Salad}, \code{Salad.prototype}, \code{Salad.prototype.prototype}, \code{myCaesarSalad}, and \code{myCaesarSalad.prototype}?
-\\ \emph{Hint: } \code{console.log('typeof Salad: ' + typeof Salad);}
-\\Which objects have a \code{prototype} property? How do you get the next object in the prototype chain? Also try:
+\emph{Reflection question 3:} How are classes and inherited properties represented in JavaScript? Let's explore this by checking some types. What is the type and value of: \code{Salad}, \code{Salad.prototype}, \code{Salad.prototype.prototype}, \code{myCaesarSalad} and \code{myCaesarSalad.prototype}?
+\\ \emph{Hint:} \code{console.log('typeof Salad: ' + typeof Salad);}
+\\\\
+What is the difference between an object's prototype chain and having a \code{prototype} property? Which objects have a \code{prototype} property? How do you get the next object in the prototype chain? Also try:
 \begin{Code}
 console.log('check 1: ' + 
-  (Salad.prototype === Object.getPrototypeOf(myCaesarSalad)));
+  (Salad.prototype === Object.getPrototypeOf(Salad)));
 console.log('check 2: ' + 
+  (Salad.prototype === Object.getPrototypeOf(myCaesarSalad)));
+console.log('check 3: ' + 
   (Object.prototype === Object.getPrototypeOf(Salad.prototype)));
  \end{Code}
 
-\item The class above creates an empty salad. Sometimes you want to copy another salad. 
-\\ \emph{assignment 4:} Implement this functionality by adding a parameter to the constructor. There are two representations of a salad you must support: a \code{Salad} object, and a string containing a JSON representation of a \code{Salad}. 
+\item The Salad class currently creates an empty salad. However, sometimes you want to copy another salad. 
+\\ \emph{Assignment 4:} Implement this functionality by adding a parameter to the constructor. There are two representations of a salad you must support: a \code{Salad} object, and a string containing a JSON representation of a \code{Salad}. 
 \\\emph{Hint 1:} JavaScript do not support function overloading, you can not have both \code{constructor()} and \code{constructor(arg)} in the same class. This is not a problem since \code{constructor(arg)} can be called without arguments. \code{new Salad()} will not generate any error, \code{arg} will have the value \code{undefined}.
 \\\emph{Hint 2:} use \code{typeof} to distinguish between sting and Salad object values. \code{instanceof} is also relevant.
 \\\emph{Hint 3:} \code{JSON.parse()} will return an object which is not an instance of \code{Salad}. All methods are missing.
@@ -251,9 +257,9 @@ console.log('originalet kostar kostar ' + myCaesarSalad.getPrice() + ' kr');
 console.log('med gurka kostar den ' + jsonCopy.getPrice() + ' kr');
 \end{Code}
 
-\item One limitation with the Salad class is that you can only have a fixed amount of each ingredient. What happens if a customer wants extra parmesan?
+\item One limitation with the Salad class is that you can only have a fixed amount of each ingredient. What happens if a customer wants extra Parmesan?
 \\\emph{Assignment 5:} 
-Create a new class, \code{GourmetSalad}, which extends Salad to support this. In a \code{GourmetSalad} the customer can specify the size of each ingredient when adding it to the salad as an optional third parameter. You can add the same ingredient several times to the same salad. For each addition, add the amount to any previous amount already in the salad. The price is adjusted linearly, so if you add 1.5 portion parmesan it costs 1.5 times the price of parmesan. The size should be stored among the other properties of the ingredient.
+Create a new class, \code{GourmetSalad}, which extends Salad to support this. In a \code{GourmetSalad} the customer can specify the size of each ingredient when adding it to the salad as an optional third parameter. You can add the same ingredient several times to the same salad. For each addition, add the amount to any previous amount already in the salad. The price is adjusted linearly, so if you add 1.5 portion Parmesan it costs 1.5 times the price of Parmesan. The size should be stored among the other properties of the ingredient.
 \code{GourmetSalad.add(ingredient, props, size)} must add a size property to \code{props} and use the \code{Salad.prototype.add} function (\code{super.add(name, propertiesWithSize)}). 
 \\\emph{Note}: You should not modify the \code{imported.inventory} object. Make sure you copy any object before modifying it. If you forget this you will get a run-time error since inventory is read only, see deepFreeze() at the bottom of \code{inventory.js}.
 \\ Here is a test case:
@@ -275,7 +281,7 @@ console.log('Med extra bacon kostar den '
 // Med extra bacon kostar den 60 kr
 \end{Code}
 
-\item In the coming labs you will use \code{Salad} objects in a web application. Sometimes you want to refer to the object from the html code, for example a remove button on the shopping cart page. HTML i text only, so for this purpose you want a string identifier for the object. One way to accomplish this is to add a unique identifier to each \code{Salad} object. Then you can refer to a specific object from the HTML code using this id.
+\item In the coming labs you will use \code{Salad} objects in a web application. Sometimes you want to refer to the object from the HTML code; For example, a remove button on the shopping cart page must be able to identify. HTML is text only, so for this purpose you want a string identifier for the object. One way to accomplish this is to add a unique identifier to each \code{Salad} object. Then you can refer to a specific object from the HTML code using this id.
 \\\emph{Assignment 6:}
 Use a static instance counter and add the following to the \code{Salad} constructor:
 \begin{Code}
@@ -300,18 +306,18 @@ This will download the source code and place it in the directory \code{node\_mod
   const { v4: uuidv4 } = require('uuid');
   const uuid = uuidv4();  // use this in the constructor
 \end{Code}
-\emph{Assignment 7:} Add a UUID to the Salad class. Make sure the copy constructor still works. If you copy an object you want a new UUID so you do not end up with two different salads with the same uuid. When parsing a json representation of a salad, you can assume it comes from a persistent storage and you want to keep the UUID.
+\emph{Assignment 7:} Add a UUID to the Salad class. Make sure the copy constructor still works. If you copy an object you want a new UUID, so you do not end up with two different salads with the same UUID. However, when parsing a JSON representation of a salad, you can assume that it comes from a persistent storage, and you want to keep the UUID.
 
 \end{Assignments}
 
 \noindent Extra assignments, if you have time.
 \begin{Assignments}
 
-\item Create an object to manage an order, example of functions needed: create an empty shopping basket, add and remove a salad, calculate the total price for all salads in the shopping basket.
+\item Create an object to manage an order. Example of functions needed: create an empty shopping basket, add and remove a salad, calculate the total price for all salads in the shopping basket.
 
 \end{Assignments}
 
-\noindent There are all assignments for lab 1. In Lab 2 you will develop your first react application. Lab 2 will take significantly longer time compared to lab 1.
+\noindent This concludes all assignments for lab 1. In Lab 2 you will develop your first React application. Lab 2 will take significantly longer time compared to lab 1.
 
 \input{../prechapters/licence-contributors.tex}
 
