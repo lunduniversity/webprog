@@ -165,10 +165,11 @@ This is an example of function chaining. Each function in the chain returns a co
 \emph{Assignment 1:} Write a function that returns a string containing the HTML code for the options of a select box, that has all salad ingredients with a certain property. Example:
 \code{makeOptions(imported.inventory, 'foundation')} returns 
 \begin{Code}
-<option value="Pasta"> Pasta, 10 kr</option>
-<option value="Sallad"> Sallad, 10 kr</option> ...
+<option value="Pasta" key="Pasta"> Pasta, 10 kr</option>
+<option value="Sallad" key="Sallad"> Sallad, 10 kr</option> ...
 \end{Code}
 \emph{Hint:} Use the functions \code{Array.prototype.filter()}, \code{Array.prototype.map()} and \\\code{Array.prototype.reduce()}.
+\\ \emph{Note:} The \code{key} attribute is not standard HTML. It is needed by React for tracking changes in the DOM.
 
 \item We need a representation for a salad. Create a JavaScript class named \code{Salad} for that. You need to store the \code{foundation}, \code{protein}, \code{extras}, and \code{dressing}. Later on, salad objects will be passed to different components in the web app and to avoid having to pass along the inventory to all components, the salad object should itself also store copies of the properties of the ingredients in the salad. Use one object as a dictionary to store the ingredients, see the printout bellow.
 
