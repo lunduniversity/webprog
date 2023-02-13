@@ -90,26 +90,26 @@ The server should now be running and waiting for requests. Test it using \texttt
 
 %\noindent \emph{Option:} You can also access the salad bar REST service on codesandbox: \url{https://wkqy6rpw25.sse.codesandbox.io/foundations} IMPORTANT: you must load the page in a web browser before you start your application. Codesandbox first send a html page containing the compilation process before it jumps to the \code{server.js} response. This will most likely give problems for your application.
 
-\item We need to store the fetched data somewhere in your application. Since it will affect the rendering of your application it must be stores in a component state (remember, \code{render()} must be a pure function of \code{this.state} and \code{this.props}. The GUI will not be updated if you change \code{inventory} in lab 2 and 3). In wich component should you store the fetched data? The data will be used in several components and of course should only be fetched once. To share data between components, we must pass the data from a parent to its children (\code{props}). Therefore shared data must be stored in a common ancestor of all components using the data. In our case this is \code{App}. Please read more about dynamically fetching data in react applications here \url{https://www.robinwieruch.de/react-fetching-data/}.
+\item We need to store the fetched data somewhere in your application. Since it will affect the rendering of your application it must be stores in a component state (remember, render must be a pure function of \code{props} and the component state (\code{useState} hook). The GUI will not be updated if you change \code{inventory} in lab 2 and 3). In which component should you store the fetched data? The data will be used in several components and of course should only be fetched once. To share data between components, we must pass the data from a parent to its children (\code{props}). Therefore shared data must be stored in a common ancestor of all components using the data. In our case this is \code{App}. Please read more about dynamically fetching data in react applications here \url{https://www.robinwieruch.de/react-fetching-data/}.
 
 To minimise the changes to the application we will recreate the inventory object from \texttt{inventory.ES6.js}. You have already written the code for passing the data from \code{App} to the children, so now we only need to recreate the inventory object and add it to \code{this.state}. First, open \texttt{App.js} and remove the import line:
 \begin{Code}
 // import inventory from './inventory.ES6';
 \end{Code}
-This leads to some errors since \code{inventory} is removed from the global name space. A good practice is to always have a valid data structure for dynamically fetched data in your app. In the constructor of \code{App}, add an empty inventory to the state:
+This leads to some errors since \code{inventory} is removed from the global name space. A good practice is to always have a valid data structure for dynamically fetched data in your app. In \code{App()}, add an empty inventory to the state:
 \begin{Code}
-this.state = {shoppingBasket: [], inventory: {}};
+const [inventory, setInventory] = useState({});
 \end{Code}
-Update the rest of the code in \code{App} so it works with this change, e.g. replace \code{inventory} with \code{this.state.inventory}. \emph{Note:} make sure your components can handle an empty inventory object, for example in \code{ViewOrder} or in \code{ComposeSalad}, you might have something like:
+Now the app should work again, at least if your components can handle an empty inventory object. For example in \code{ViewOrder} or in \code{ComposeSalad}, you might have something like:
 \begin{Code}
-let selected = 'Tomat';
+const selected = 'Tomat';
 const price = this.state.inventory[selected].price;
 \end{Code}
-\noindent It will throw an \code{TypeError} when inventory is an empty object.
+\noindent It will throw an \code{TypeError} when inventory is an empty object. The above code is not a problem now since 'Tomat' can not be selected in the first place, but later in the lab you will load a salad from local storage befor inventory is populated.
 
-\item Next we will update \code{this.state.inventory} by fetch data from the salad bar REST server. When should the app fetch the inventory data? You could fetch the data when needed, but in this case i suggests you fetch all data when the app launches. Check out the lifecycle of a React component to get some suggestions on where to place the fetch code, see \url{https://reactjs.org/docs/state-and-lifecycle.html}.
+\item Next we will update \code{this.state.inventory} by fetch data from the salad bar REST server. When should the app fetch the inventory data? You could fetch the data when needed, but in this case i suggests you fetch all data when the app launches. Check out the lifecycle of a React component to get some suggestions on where to place the fetch code, see \url{https://beta.reactjs.org/learn/synchronizing-with-effects}. The effect hook is only available in function components. Class based components should instead override \code{componentDidMount()}, see \url{https://reactjs.org/docs/react-component.html}. 
 
-Use the \code{fetch(url, [options])} function to send a request. It might be easiest to build the url using string concatenation, but you can also check out the \code{URL(url, [base])} class. Browse the documentation for \code{fetch()}. It returns a \code{Promise} that resolves to a \code{Response} object. To get the body you can use \code{Response.json()}, which returns yet another \code{Promise}. When you have the ingredient name, the next step is to fetch its properties from the server, e.g. \code{fetch(‘http://localhost:8080/extras/Tomat’)}. Fetching the properties for all ingredients are independent actions and must be carried out in parallel. Important! \code{fetch()} throws an error in some situations, but not all. If the server response code is 404, \code{fetch()} will ignore this. For proper error handling you need handle this:
+Use the \code{fetch(url, [options])} function to send a http request to the inventory server. It might be easiest to build the url using string concatenation, but you can also check out the \code{URL(url, [base])} class. Browse the documentation for \code{fetch()}. It returns a \code{Promise} that resolves to a \code{Response} object. To get the body you can use \code{Response.json()}, which returns yet another \code{Promise}. First fetch the list of foundations, the for each foundation fetch its properties from the server, e.g. \code{fetch(‘http://localhost:8080/extras/Tomat’)}. Fetching the properties of the ingredients are independent actions and to reduce loading time, you must fetch them concurrently. Important! \code{fetch()} throws an error in some situations, but not all. If the server response code is 404, \code{fetch()} will treat this as a valid response. To catch tis you need to check the response.ok flag:
 \begin{Code}
 function safeFetchJson(url) {
   return fetch(url)
@@ -121,38 +121,19 @@ function safeFetchJson(url) {
   });
 }
 \end{Code}
-Every time you call \code{setState()} the render functions are potentially called and the DOM is updated. This is a costly operation and we do not want to do this for each inventory (it can make the UI slow). We want to wait until all, or a sufficient subset for example all foundations, of the \code{fetch} operations finish. This is a perfect use case for \code{Promise.all()}. It takes an array of \code{Promise} objects, which will run in parallel, and returns a \code{Promise} that settles when all inner promises are settled. Use this to avoid to frequent updates of the state.
+Every time you call \code{setState()} the render functions are potentially called and the DOM is updated. This is a costly operation and we do not want to do this for each inventory (it can make the UI slow). Also, we do not want to show the user a subset of the options, either none or all foundations options are shown. It is however ok to show the foundation options while still waiting for the protein options. This is a perfect use case for \code{Promise.all()}. It takes an array of \code{Promise} objects, which will run in parallel, and returns a \code{Promise} that settles when all inner promises are settled. You should use four calls to \code{Promise.all()}, one for each for foundations, proteins, extras, and dressings.
 
-Having nested calls to \code{fetch()} becomes complicated if you try to write a singel chain of \code{.then()}. Divide this task into small steps:
+Mixing sequential and parallell actions in a singe \code{Promise.all()} chain can be hard to write and confusing to read. Use functions to organise and structure your code. Place sequence of actions you want to run in parallel in a function. Then the parallel actions becomes a singe chain in the outer promise chain, making the code easier write and read. 
 \begin{enumerate}
-\item Write a function for fetching a single ingredient. It should return a \code{Promise}.
-\item Write the code to fetch the list of foundations.
-\item Foreach ingredient, use \code{fetchIngredient()} to get the ingredient properties from the server.
-\item Use \code{Promise.all} to wait for all promises from 1 to settle.
-\item If needed, merge the data to a singel object
-\item Use \code{setState} with this object to update the component state.
+\item Write an \code{async} function for fetching a single ingredient. Example:\\ \code{fetchIngredient('extras', 'Bacon')} should return \code{\{price: 10, extra: true\}}, or\\ \code{\{Bacon: \{price: 10, extra: true\}\}}.
+\item Write the code to fetch the list of foundations. This will give you an array of ingredient names.
+\item Foreach ingredient, use \code{fetchIngredient()} to get the ingredient properties from the server. \emph{Hint:} \code{Array.prototype.map()}.
+\item Wait for all ingredient properties to be fetched. Use \code{Promise.all}.
+\item Update the component state: \code{setInventory (oldInventory => merge(oldInventory, fetchedIngredients))}.
 \end{enumerate}
-\emph{Hint:} the task might be simpler if you leverage on closure. In the example bellow, \code{inventory}, is visible in all \code{.then} blocks:
-\begin{Code}
-const inventory = {};
-fetch(...)
-.then(x => {...})
-.then(y => {...})
-.then(z => {...})
-.catch(error => {
-  console.error(error);
-});
-\end{Code}
-\noindent Or, you wrap all data needed down the chain in an object:
-\begin{Code}
-fetch(...)
-.then(x => ({x, step1: foo(x)}))
-.then(y => (...)) // x is not in the scope, but y contains both x and foo(x)
-.catch(error => {
-  console.error(error);
-});
-\end{Code}
-\emph{Note}: For security reasons, JavaScript code is only allow to send http requests to the server it was downloaded from, its origin. The reason is to protect the user from cross site scripting attacks, which will be covered in the last lecture. The origin is both the IP-address and the port. The salad bar REST server is running on a different port than the react development server, so the servers have different origins and, by default, the browser prevents your app from communicating with the salad bar REST server. Luckily there is a way to relax this constraint. A server can allow communication with scripts from other origins using the Access-Control-Allow-Origin header. If you look at the headers returned by the salad bar REST server, see the output in the terminal from the \code{curl} commands in assignment 1. In the headers you see that the server allows access from *, meaning any server. The browser still do not trust this communication, and hides most http headers. Do not bother looking for the header information in your app. In the lab you may assume that the body contains json data, however do check the status code to make sure your request was successful.
+\emph{Hint:} Look at the slides from lecture 6, ``chaining'', for examples on how to pass data down the promise chain.
+
+\emph{Note}: For security reasons, JavaScript code is only allow to send http requests to the server it was downloaded from, its origin. The reason is to protect the user from cross site scripting attacks, which will be covered in the last lecture. The origin is both the IP-address and the port. The salad bar REST server is running on a different port than the react development server, so the servers have different origins and, by default, the browser prevents your app from communicating with the salad bar REST server. Luckily there is a way to relax this constraint. A server can allow communication with scripts from other origins using the Access-Control-Allow-Origin header. If you look at the headers returned by the salad bar REST server, see the output in the terminal from the \code{curl} commands in assignment 1. In the headers you see that the server allows access from *, meaning JavaScript code from any server. The browser still do not trust this communication, and hides most http headers. Do not bother looking for the header information in your app. In the lab you may assume that the body contains json data, however do check the status code to make sure your request was successful.
 
 \item There is one more functionality involving a REST call missing in your app, placing an order. Add an order button in the \code{ViewOrder} component. To place an order, you need to send a \texttt{POST} request containing the details. The REST api for this can be tested using:
 \\ \noindent \begin{verbatim}
@@ -172,28 +153,9 @@ curl -isX POST -H "Content-Type: application/json"
 \\\emph{Note:} if you want to use a toast, you need to initialise it: \url{https://stackoverflow.com/questions/67946016/how-to-show-bootstrap-5-toast-in-react-js}. 
 \\\emph{Optional assignment:} Store the order confirmations in \code{App} and view them in a new component.
 
-\item I have one more assignment for you. Store the order in local store, and load it when the app starts. This is done using the \code{window.localStorage}. There are two functions: \code{setItem(key, value)} and \code{getItem(key)}. All values are stored in localestore as text, so use \code{JSON.stringify()}, and \code{JSON.parse()}. Note, \code{parse} gives you a JavaScript object with the right structure, but it is not an instance of the \code{Salad} class. The \code{getPrice()} method et.c. are missing. There ar several solutions to this:
-\begin{itemize}
-\item \code{const salad = new Salad(text)} if your salad class support it. (in this app you need a factory since text is a JSON array of salad objects)
-\item Use \code{Object.setPrototypeOf()} so set up the right prototype chain for the objects returned from \code{JSON.parse()}
-\item Do not use \code{Salad} objects for storing the data. Instead create static functions that takes \code{Object} instances as a parameter. The functions assumes that the argument have the same structure as a \code{Salad} class instance. For example: \code{Salad.getPrice(mySalad)} instead of \code{mySalad.getPrice()}.
-\item Set \code{this} when calling \code{getPrice()}: \code{Salad.prototype.getPrice.call(mySalad)}, instead of \code{mySalad.getPrice()}.
-\end{itemize}
-\emph{Reflection question:} Which alternative do you prefer? Due to the problem with \code{JSON.parse} mentioned above, the convenience of object literals, and the need to copy objects for \code{setState}, the third option is common i React apps. 
+\item I have one more assignment for you. Store the order in local store, and load it when the app starts. This is done using the \code{window.localStorage}. There are two functions: \code{setItem(key, value)} and \code{getItem(key)}. All values are stored in localestore as text, so use \code{JSON.stringify()} and \code{JSON.parse()}. Note that \code{new Salad(text)} only handles a singel salad object, but localstore contains the order, an array of salad objects. Place the code for parsing the array of salads in the Salad class instead of the React component.
 
-After reading salads stored in localstore and creating new ones you should note that the uid of the salads are not unique. It would be better if \code{Salad} used Universally Unique IDentifier (UUID). RFC4122 details how these can be created. You do not need to implement this since it has already been done and is available at npm, \url{https://www.npmjs.com/package/uuid}. In the terminal (\code{ctrl-c} if the development server is running):
-\begin{Code}
-npm i uuid
-\end{Code}
-\noindent And in \code{Salad.js}:
-\begin{Code}
-import { v4 as uuidv4 } from 'uuid';
-constructor(){ 
-  ...
-  this.uuid = uuidv4();
-}
-\end{Code}
-
+After reading salads stored in localstore, new salads created in the \code{ComposeSalad} component might not get a unique \code{id}. This can happen since the static instance counter is reset to 0 when the app is reloaded. The solution is to use the \code{uuid} property.
 \end{Assignments}
 \input{../prechapters/licence-contributors.tex}
 

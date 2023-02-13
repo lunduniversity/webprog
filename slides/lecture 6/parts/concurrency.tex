@@ -155,12 +155,12 @@ Common in web frameworks, e.g. react component state
   \item but:
   \begin{itemize}
     \item any longer computations blocks the entire application and GUI
-    \item asynchronous events can cause race conditions (read/write data from server)
+    \item you should break down your app into small functions
     \item \code{alert()} is blocking.
+    \item asynchronous events can cause race conditions (read/write data from server)
   \end{itemize}
 \end{itemize}
 \vspace{5mm}
-You should break down your app into small functions
 \end{frame}
 
 %--- Call Back Functions------------------------------------------------------------------------------
@@ -205,17 +205,20 @@ You can add your own functions to the execution queue:
 %--- SetTimeout------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{SetTimeout}
 \begin{CodeBox}{}
-const myArray = ['zero', 'one', 'two'];
-myArray.foo = function (index) {
-  console.log(this[index]);
-};
-setTimeout(myArray.foo, 0.5*1000, 1);
+class MyTimer {
+  counter = 0;
+  tick() {
+    console.log(this.counter++);
+  }
+}
+const obj = new MyTimer();
+setTimeout(obj.tick, 1000);
 \end{CodeBox}
 \vspace{4mm}
 Use \code{bind} if you use \code{this}
 \vspace{4mm}
 \begin{CodeBox}{}
-myArray.foo = myArray.foo.bind(myArray);
+setInterval(obj.tick.bind(obj), 1000);
 \end{CodeBox}
 
 \end{frame}
@@ -225,12 +228,11 @@ myArray.foo = myArray.foo.bind(myArray);
 Using callback functions, it can be hard to follow the order of execution.
 \vspace{5mm}
 \begin{CodeBox}{}
-const print = txt => console.log(txt);
-setTimeout(print, 1000, 'three');
-setTimeout(print, 1100, 'four');
-setTimeout(print, 1200, 'five');
-setTimeout(print, 0, 'two');
-print('one');
+setTimeout(console.log, 1193, 'three');
+setTimeout(console.log, 1058, 'four');
+setTimeout(console.log, 1234, 'five');
+setTimeout(console.log, 0, 'two');
+console.log('one');
 \end{CodeBox}
 \end{frame}
 
@@ -239,20 +241,19 @@ print('one');
 Nesting callbacks are common, but leads to callback hell
 \vspace{5mm}
 \begin{CodeBox}{}
-loadScript('1.js', function(error, script) {
-
+fetchFile(url, function(error, file1) {
   if (error) {
     handleError(error);
   } else {
-    loadScript('2.js', function(error, script) {
+    fetchUrl(file1.nextUrl, function(error, file2) {
       if (error) {
         handleError(error);
       } else {
-        loadScript('3.js', function(error, script) {
+        fetchFile(file2.nextUrl, function(error, file3) {
           if (error) {
             handleError(error);
           } else {
-            // ...continue after all scripts are loaded (*)
+            // ...continue after all files are loaded
           }
         });
       }
@@ -270,11 +271,17 @@ loadScript('1.js', function(error, script) {
   \item can have the states: \emph{pending}, \emph{fulfilled}, or \emph{rejected}
   \item a promise is \emph{settled} when  \emph{fulfilled} or \emph{rejected}
   \item can have exactly one result or error
-  \item you can not read the state, or the result directly
-  \item the resolution function is executed directly
-  \item commonly have asynchronous calls, \code{resolve()} will be called later
-  \item replace callback functions in modern APIs
 \end{itemize}
+\begin{CodeBox}{}
+const promise1 = new Promise(resolutionFunction);
+function resolutionFunction(resolve, reject) {
+   ... when settled ...
+   resolve(fulfilledValue);
+       or
+   reject(rejectedValue);
+}
+);
+\end{CodeBox}
 \end{frame}
 
 %---Example------------------------------------------------------------------------------
@@ -285,9 +292,14 @@ const promise1 = new Promise(
   (resolve, reject) => setTimeout(resolve, 10*1000, 1))
 );
 const promise2 = new Promise(
-  (resolve, reject) => reject(new Error('failed'))
+  (resolve, reject) => reject('things went bad')
 );
 \end{CodeBox}
+\begin{itemize}
+  \item the resolution function is executed directly
+  \item commonly have asynchronous calls, \code{resolve()} will be called later
+  \item replace callback functions in modern APIs
+\end{itemize}
 \end{frame}
 
 %--- Reject------------------------------------------------------------------------------
@@ -302,10 +314,10 @@ const promise2 = new Promise(
 const promise1 = new Promise(
   (resolve, reject) => {
     const ref = undefined;
-    const a = ref.bellyUp;
+    resolve(ref.field);
 });
 const promise2 = new Promise(
-  (resolve, reject) => reject(new Error('belly up'))
+  (resolve, reject) => reject('things went bad')
 );
 \end{CodeBox}
 \end{frame}
@@ -313,6 +325,7 @@ const promise2 = new Promise(
 %--- .then------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{.then}
 \begin{itemize}
+  \item you can not read the state, or the result directly
   \item \code{.then()} gives your the result when a promise is settled
   \item parameters are two callback functions:
   \begin{itemize}
@@ -324,14 +337,14 @@ const promise2 = new Promise(
 \vspace{5mm}
 \begin{CodeBox}{}
 myPromise.then(
-  (value) => handleSuccess(value),
-  (errorValue) => handleFailure(errorValue),
+  value => handleSuccess(value),
+  errorValue => handleFailure(errorValue),
 );
 \end{CodeBox}
 \end{frame}
 
 %--- chaining------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{chanining}
+\begin{frame}[fragile] \frametitle{chaining}
 \begin{itemize}
   \item \code{.then()} always returns a promise
   \item the promise wraps the return value of \code{then} handler:
@@ -341,17 +354,57 @@ myPromise.then(
     \item don not return anything, a resolved promise with the value \code{undefined}
     \item throws an exception: the exception is wrapped into a rejected promise
   \end{itemize}
-  \item if a handler is missing, te input is passed on
+  \item if a handler is missing, the promise passed down the chain
 \end{itemize}
 \vspace{1mm}
 \begin{CodeBox}{}
-myPromise.then(
-  (values) => myMapFunction(values)
+fetchFile(url).then(
+  file1 => fetchFile(file1.nextUrl)
 ).then(
- (values) => myFilterFunction(values)
+  file2 => fetchFile(file2.nextUrl)
 ).then(
- (values) => moreProcessing(values),
- (error) => somethingWentBad(error)
+  console.log,
+  error => failedToLoadFiles(error)
+);
+\end{CodeBox}
+\end{frame}
+
+%--- chaining 2 ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{chaining --- closure}
+\begin{CodeBox}{}
+const allFiles = {};
+fetchFile("one").then(
+  file1 => {
+    allFiles.file1 = file1;
+    return fetchFile(file1.nextUrl);
+  }
+).then(
+  file2 => {
+    allFiles.file2 = file2;
+    return fetchFile(file2.nextUrl)
+  }
+).then(
+  file3 => {
+    allFiles.file3 = file3;
+    console.log(JSON.stringify(allFiles));
+  },
+  error => failedToLoadFiles(error)
+);
+\end{CodeBox}
+\end{frame}
+
+%--- chaining 3 ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{chaining --- pass on}
+\begin{CodeBox}{}
+fetchFile("one").then(
+  file1 => fetchFile(file1.nextUrl)
+                .then(file2 => ({file1, file2}))
+).then(
+  ({file1, file2}) => fetchFile(file2.nextUrl)
+                            .then(file3 => ({file1, file2, file3}))
+).then(
+  allFiles => console.log(JSON.stringify(allFiles)),
+  error => failedToLoadFiles(error)
 );
 \end{CodeBox}
 \end{frame}
@@ -369,13 +422,13 @@ myPromise.then(
 \vspace{5mm}
 \begin{CodeBox}{}
 myPromise.finally(
-  () => { done = true; }
+  _ => { done = true; }
 ).catch(
- (error) => {
+ error => {
    bellyUp(error);
-   return [];
+   return "default value";
  }
-);
+).then(console.log);
 \end{CodeBox}
 \end{frame}
 
@@ -386,20 +439,19 @@ myPromise.finally(
 \begin{itemize}
   \item takes an iterable of promises as parameter 
   \item return a promise that will settle when the input promises settles
+  \item will contain all values of the fulfilled promises
   \item will be rejected as soon as any of the input promises is rejected
 \end{itemize}
 \vspace{5mm}
-\begin{CodeBox}{}
-const p1 = Promise.resolve(3);
-const p2 = 1337;
-const p3 = new Promise((resolve, reject) => {
-  setTimeout(() => {
-    resolve("foo");
-  }, 100);
-}); 
-Promise.all([p1, p2, p3]).then(values => { 
-  console.log(values); // [3, 1337, "foo"] 
-});
+\begin{CodeBox}{Parallell fetch}
+const promises = [
+  fetchFile("one"),
+  fetchFile("two"),
+  fetchFile("three")
+];
+Promise.all(promises).then(
+  console.log
+)
 \end{CodeBox}
 \end{frame}
 
@@ -408,9 +460,8 @@ Promise.all([p1, p2, p3]).then(values => {
 \begin{frame}[fragile] \frametitle{Asynchronous Functions}
 \code{async function foo() \{ /* body */ \}}
 \begin{itemize}
-  \item the body is added to the event loop
-  \item returns a \code{Promise} object, wrapping the future return vale
-  \item in the future, when the body is executed, the promise will settle to the return value
+  \item the body starts to execute directly
+  \item returns a \code{Promise} object, same semantic as \code{.then()}
   \item the execution continues with the code after the function call
 \end{itemize}
 \vspace{5mm}
@@ -420,9 +471,9 @@ async function one() {
 }
 const inc = async x => x=1;
 
-one().then(
-  x => inc(x)
-);
+one()
+.then(inc)
+.then(console.log);
 \end{CodeBox}
 \end{frame}
 
@@ -430,19 +481,20 @@ one().then(
 \begin{frame}[fragile] \frametitle{await}
 \begin{itemize}
   \item can only be used inside \code{async} functions
-  \item waits for the promise returned by the \code{async} function to settle
+  \item waits for a promise to settle
   \item returns the resolved value
   \item If the promise is rejected, the await expression throws the rejected value.
 \end{itemize}
 \vspace{5mm}
 \begin{CodeBox}{}
-const inc = async x => x=1;
-
-async function foo(x) {
-  x = await inc(x);
-  x = x*32;
-  return inc(x);
+async function fetchAll(url) {
+  file1 = await fetchFile(url),
+  file2 = await fetchFile(file1.nextUrl),
+  file3 = await fetchFile(file2.nextUrl)
+  return {file1, file2, file3};
 }
+fetchAll("one")
+.then(console.log);
 \end{CodeBox}
 \end{frame}
 

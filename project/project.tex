@@ -64,11 +64,10 @@
 \noindent Mandatory parts for all projects:
 \begin{itemize}\firmlist
 \item You are to develop a single page web application.
-\item Use the angular framework, \url{https://angular.io}.
-\item The application should be slightly larger than the salad bar app from the labs. At least one angular reactive or template form and 4-6 components depending on their complexity.
-\item Styling must be done using an angular package, for example angular material \url{https://material.angular.io}, or ng-bootstrap \url{https://ng-bootstrap.github.io/}. This is different compared to the labs, where css classes were used to style the app. In the project, you are to get hands on experience with using angular components and directives for styling.
-\item Fetch data using http requests and store the data in an angular service. You write an app that gather data from one or several external sources and present them to the user. Use the angular \code{http} object for fetching data. There are plenty of open data sources, for example: \url{https://www.dataportal.se}, \url{http://www.omdbapi.com}, \url{https://openlibrary.org/dev/docs/api/books}, \url{https://www.openstreetmap.org}
-\item The data must be passed from your service to the components using streams (rxjs observable).
+\item Use a component based framework that is not based on React. I can give support for angular framework, \url{https://angular.io} so this is my recommendation. It is possible to use other frameworks, for example Vue, but then I can not give support.
+\item The application should be slightly larger than the salad bar app from the labs. At least one HTML form and 3-6 components where at least one parent pass data to a child, and one child pass data to the parent. If you are using global state, redux or angular services, the communication can go trough the global state.
+\item Styling must be done using a package, prebuilt GUI components rather than using native HTML and CSS. In angular you can use material \url{https://material.angular.io}, or ng-bootstrap \url{https://ng-bootstrap.github.io/}. This is different compared to the labs, where CSS classes were used to style the app. In the project, you are to get hands on experience with using prebuilt components and angular directives for styling.
+\item You must fetch data for your app from an external server. There are plenty of open data sources, for example: \url{https://www.dataportal.se}, \url{http://www.omdbapi.com}, \url{https://openlibrary.org/dev/docs/api/books}, \url{https://www.openstreetmap.org}. For angular you must use an angular service for this. For other frameworks you should use the recommended design pattern for that framework.
 \end{itemize}
 
 \subsection*{Timeframe and deliverables}
