@@ -35,11 +35,11 @@ source.addEventListener('error', function(e) {
 \begin{frame}[fragile] \frametitle{Limitations of Singe Page Web Applications}
 Drawbacks of single page web applications
 \begin{itemize}
-  \item initial loading time can be long
-  \item links to the page from facebook, forums et.c. do not show the content 
-           \\their preview engine only show the html in index.html, no javascript
-  \item search engines do not index the content 
-           \\exception: google's web crawler runs JavaScript
+  \item Initial loading time can be long
+  \item No preview when linked from forums and social media. 
+           \\The preview engine only show the html in index.html, no javascript.
+  \item Search engines do not index the content .
+           \\Exception: google's web crawler runs JavaScript.
 \end{itemize}
 \end{frame}
 
@@ -49,7 +49,7 @@ Server Side Rendering
 \begin{itemize}
   \item renders a static web page at build time
   \item this pre-rendered html file is sent to the web browser
-  \item it shows the initial view of the application with basic features
+  \item it shows snapshot of the application, viewed by all preview engines
   \item it is small, so users experience a quick application start up
   \item it continues to load the rest of the application
   \item it hands over control to the application when it is loaded

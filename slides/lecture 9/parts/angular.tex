@@ -64,7 +64,8 @@ Angular:
   \item conditions and loops --- use \emph{directives}
   \item can embed ''TypeScript`` code
   \item context/namespace is the component object
-  \item \emph{pipes}
+  \item \emph{pipes} --- operation chanining
+  \item \emph{directives} --- custom element attributes
   \item angular template compiler - just in time, or ahead of time compilation
 \end{itemize}
 \end{frame}
@@ -156,7 +157,10 @@ React
   \begin{itemize}
     \item parent pass values as html attributes
     \item values are placed in the \code{props} object
-    \item child $\rightarrow$ parent, parent must pass a \emph{call back function}
+  \end{itemize}
+  \item child $\rightarrow$ parent
+  \begin{itemize}
+    \item parent must pass a \emph{call back function}
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -305,7 +309,7 @@ const appRoutes: Routes = [
 React
 \begin{itemize}
   \item \code{npx create-react-app my-app}
-  \item code{rct gc <ComponentName>}
+  \item \code{rct gc <ComponentName>}
   \item \code{npm serve}
 \end{itemize}
 \vspace{5mm}
@@ -314,7 +318,7 @@ Angular
   \item \tt{ng new my-app}
   \item \code{ng generate <schematic>}
   \item \code{ng build --prod}
-  \item \code{ng serve}
+  \item \code{ng serve --watch}
 \end{itemize}
 \end{frame}
 
