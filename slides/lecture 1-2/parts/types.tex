@@ -10,10 +10,10 @@ Six data types that are primitives (immutable):
   \item  \verb|string|
   \item  \verb|symbol| - unique and immutable
 \end{itemize}
-Structural types:
+Structural type:
 \begin{itemize}
   \item  \verb|object|
-  \item  \verb|function|
+%  \item  \verb|function|
 \end{itemize}
 Structural root:
 \begin{itemize}
@@ -27,6 +27,7 @@ Structural root:
 The \verb|typeof| operator returns a string indicating the type of the operand.
 \\ \vspace{5 mm}
 \code{typeof null === "object"}
+\\\code{typeof  function()\{\} === "function"}
 \\ \vspace{5 mm}
 Wrapper objects:
 \begin{itemize}
@@ -42,8 +43,12 @@ Wrapper objects:
 \begin{frame}[fragile]
   \frametitle{Dynamically Typed Language}
   JavaScript is dynamically typed.\\
-  A variable have a value and a type. Both can change.\\
-  This includes objects. You can add and remove properties.\\
+  \begin{itemize}
+    \item A declaration introduce a name.
+    \item An assignment associate the name with a new \code{<value, type>} tuple.
+    \item Type conversion only when values are used, never when assigned.
+    \item This includes objects. You can add and remove properties.
+  \end{itemize}
   \vspace{5mm}
   \begin{columns}[onlytextwidth]
     \begin{column}{0.4\textwidth}
@@ -68,13 +73,15 @@ typeof undefined = 'undefined';
 \verb|typeof| returns a string. 8 possible values, all types except \code{null}.
 \end{frame}
 
-%---Automatic Type Conversion ---------------------------------------------------
+%---Type coercion ---------------------------------------------------
 \begin{frame}[fragile]
-  \frametitle{Automatic Type Conversion}
-  JavaScript will automatically convert values when needed.\\
-  There is a strong preference to convert to \verb|string|.\\
-  The type conversion algorithm have some non intuitive side effect. This is the root of some of the \emph{bad parts}
-   of JavaScript.
+  \frametitle{Type coercion}
+  \begin{itemize}
+    \item JavaScript will automatically convert values when needed.
+    \item The type conversion algorithm have some non intuitive consequences.
+    \item There is a strong preference to convert to \verb|string|.
+    \item This is the root of some of the \emph{bad parts} of JavaScript.
+ \end{itemize}
 \vspace{5mm}
   \begin{CodeBox}{ automatic type conversion}
 3 + '42';      // '342'
@@ -106,8 +113,8 @@ typeof String(42) // 'string'
 \begin{frame}[fragile]
   \frametitle{Parameter Types}
   \begin{itemize}
-  \item variable and parameter declarations are untyped\\
-  \item they get a type when assigned
+  \item variable and parameter declarations are untyped
+  \item names get a \code{<value, type>} when assigned
   \item can not enforce argument types
   \item hard to write functions that can handle any value
   \item \code{typeof} can handle som cases
@@ -129,8 +136,8 @@ Operations
 \begin{itemize}
   \item \verb|'Per'+ ' ' + 'Andersson'|
   \item \verb|'Per'.lenght|
-  \item \verb|'Per'.toUpperCase()|
-  \item \verb|'Per'[0]|
+  \item \verb|'Per'.toUpperCase()| -  return a new \code{string}
+  \item \verb|'Per'[0]| - read only
 \end{itemize}
 \begin{columns}[onlytextwidth]
   \begin{column}{0.3\textwidth}  \end{column}

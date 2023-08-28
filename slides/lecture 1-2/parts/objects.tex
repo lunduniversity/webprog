@@ -195,6 +195,7 @@ setInterval(per.birthday, 1000);
     \item \code{Object.getPrototypeOf(object)}
     \item \code{Object.setPrototypeOf(object, chain)}
   \end{itemize}
+  \item the prototype chain is initialised by \code{new} when the object is created
 \end{itemize}
 \end{frame}
 
@@ -212,23 +213,20 @@ Every functions is stored in a function object:
 \begin{itemize}
   \item Function object:
   \begin{itemize}
-    \item stores the function body
-    \item the value of function expression: \code{function()\{  \}}
     \item is callable, left hand side of ()
-    \item store static properties
-    \item inherits from \code{Function.prototype}
+	\item is an object, a \code{string} $\rightarrow$ \code{value} dictionary
     \item constructor functions must have the property \code{prototype}
       \begin{itemize}
-      \item all functions except: methods, arrow functions, or async functions
+        \item all functions except: methods, arrow functions, or async functions
       \end{itemize}
-  \end{itemize}
+      \item store static properties in the object/dictionary
+    \end{itemize}
 \end{itemize}
 \begin{itemize}
   \item Prototype object:
   \begin{itemize}
     \item added to the \emph{prototype chain} by \code{new}
     \item store inherited properties
-    \item \code{constructor} refers to the function object
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -444,7 +442,7 @@ Object properties have descriptors (metadata)
 \begin{frame}[fragile] \frametitle{Iteration}
 Iterating over object property names and values
 \begin{itemize}
-  \item \code{for ... in} --- all enumerable string properties (include inherited)
+  \item \code{for ... in} --- all enumerable string properties (all keys, include inherited)
   \item \code{Object.keys()} --- own enumerable
   \item \code{Object.values()} --- own enumerable
   \item \code{Object.entries()} --- own enumerable

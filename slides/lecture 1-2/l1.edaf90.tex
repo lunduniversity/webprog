@@ -102,11 +102,11 @@
   \frametitle{Interpreted}
 
 \begin{itemize}
-\item no compilation $\rightarrow$ no compilation errors
+\item no compilation $\rightarrow$ no compilation errors $\rightarrow$ you need to test more
 \item JS language design leads to:
   \begin{itemize}
   \item many silent errors
-  \item weird and unexpected behaviour
+  \item weird and unexpected behaviour in some contexts
   \item for example a miss spelled  property name
   \end{itemize}
 \item the programmer have more responsibility
@@ -145,7 +145,8 @@
 %--- Automatic Semicolon Insertion ---------------------------------------------------
 \begin{frame}[fragile]
   \frametitle{Automatic Semicolon Insertion}
-  If needed, a semicolon is added at the end of a line.
+  Some JavaScript statements' syntax definitions require semicolons (;) at the end.
+  \\If missing, a semicolon is added at the end of a line.
 \begin{CodeBox}{returns undefined}
   function() { return
   1; }

@@ -12,7 +12,7 @@
     \item \verb|NaN|
   \end{itemize}
 \begin{CodeBox}{no need for}
-if (name == null || name.length == 0){
+if (name === null || name.length === 0){
   name = 'anonymous';
 }
 \end{CodeBox}
@@ -21,7 +21,8 @@ if (name == null || name.length == 0){
 %---Short Circuit ---------------------------------------------------
 \begin{frame}[fragile]
   \frametitle{Short Circuit}
-  Logic operations return the value of one operand.
+  Logic operations return the value of one operand.\\
+  Nullish coalescing operator (??), right hand side iff LHS is \code{null} or \code{undefined}
 \begin{columns}[onlytextwidth]
   \begin{column}{0.51\textwidth}
 \begin{CodeBox}{ some expressions}
@@ -33,8 +34,9 @@ if (name == null || name.length == 0){
   e = 'Per' && 'Andersson';
   f = undefined && 'Andersson';
   g = 'Per' && NaN;
-  h = null && 0;
-  i = ref && ref.value;
+  h = ref && ref.value;
+
+  i = '' ?? 'default value';
 \end{CodeBox}
   \end{column}
   \begin{column}{0.05\textwidth}  \end{column}
@@ -48,8 +50,9 @@ if (name == null || name.length == 0){
   e = 'Andersson';
   f = undefined;
   g = NaN;
-  h = null;
-  i = ref ? ref.value : ref;
+  h = ref ? ref.value : ref;
+
+  i = '';
 \end{CodeBox}
   \end{column}
 \end{columns}%
@@ -63,8 +66,8 @@ if (name == null || name.length == 0){
     \item access a property or calls a function
     \item short-circuit and return \code{undefined} if:
     \begin{itemize}
-      \item \code{property} is not a property of \code{object}, or
-      \item \code{object} is \code{null} or \code{undefined}
+      \item \code{object} is \code{null} or \code{undefined}, or
+      \item \code{property} is not a property of \code{object}
     \end{itemize}
   \end{itemize}
 \begin{CodeBox}{throws no exceptions}
@@ -73,7 +76,8 @@ if (name == null || name.length == 0){
     console.log( obj.?[1]);
     console.log( obj.func.?());
     obj.func = 3;
-    console.log( obj.func.?()); // Uncaught TypeError:
+    console.log( obj.func.?());
+    // Uncaught TypeError: obj.func is not a function
     obj?.a?.b?.[0]?.()?.c;
   }
 \end{CodeBox}
@@ -88,11 +92,13 @@ if (name == null || name.length == 0){
   \begin{itemize}
     \item Abstract/Loose Equality: \verb|==|, \verb|!=|
     \begin{itemize}
-      \item not symmetric  $a==b \centernot \implies b==a$
+      \item triggers type conversion leading to unexpected behaviour
     \end{itemize}
-    \item Strict Equality: \verb|===|, \verb|!==| (\verb|Object.is|)
-    \item conform to IEEE 754 (so \code{NaN != NaN}, and \code{-0 == +0)}
-    \item === and Object.is() only differs when comparing {NaN, -0,} and \code{+0}
+    \item Strict Equality: \verb|===|, \verb|!==|, compare type and value
+    \begin{itemize}
+      \item conform to IEEE 754 (so \code{NaN != NaN}, and \code{-0 == +0)}
+    \end{itemize}
+    \item \verb|Object.is()|: Same Value, as strict equality except for {NaN, -0,} and \code{+0}
   \end{itemize}
 \begin{columns}[onlytextwidth]
   \begin{column}{0.45\textwidth}
@@ -105,7 +111,7 @@ if (name == null || name.length == 0){
   \end{column}
   \begin{column}{0.45\textwidth}
 \begin{CodeBox}{evaluates to true}
-  -0 == +0;
+  -0 === +0;
   0 == false
   1 !== '1';
   null == undefined;

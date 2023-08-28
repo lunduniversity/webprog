@@ -2,10 +2,12 @@
 \begin{frame}[fragile] \frametitle{Functions}
 
 \begin{itemize}
-  \item functions are values - \code{Function} objects
+  \item functions are values
   \begin{itemize}
+    \item \code{Function} objects
     \item assign functions to variables
     \item use functions as arguments to other functions
+    \item return functions form other functions
   \end{itemize}
   \item call by value - like in Java (objects are references)
   \item default return value:
@@ -17,7 +19,7 @@
   \begin{itemize}
     \item function declaration
     \item function expression
-    \item \code{Function} constructor (not recommended)
+    \item \code{Function} constructor (not recommended for security reasons)
   \end{itemize}
 \end{itemize}
 
@@ -55,11 +57,8 @@ console.log(calcRectArea(5, 6));
   \item you must store the value to use the function
 \end{itemize}
 \begin{CodeBox}{function expression}
-let calcRectArea = function foo(width, height) {
-  return width * height;
-}
-
-console.log(calcRectArea(5, 6));
+const array1 = [1, 4, 9, 16];
+const map1 = array1.map(function myMul(x) => x * 2);
 \end{CodeBox}
 \end{frame}
 
@@ -68,7 +67,7 @@ console.log(calcRectArea(5, 6));
 \begin{itemize}
   \item function parameters default to \code{undefined}
   \item parameters can have other default values (ES2015)
-  \item parameters are available to later default parameters
+  \item parameter values are available to later default parameters
   \item default parameters are evaluated at call time
 \end{itemize}
 
@@ -131,7 +130,7 @@ foo(1, 2, 3);
 \begin{itemize}
   \item convenient syntax
   \item is an expression
-  \item creates an anonymous function
+  \item creates an anonymous function, can not use recursion
   \item without own bindings to the \code{this}, \code{arguments}, \code{super}, or \code{new.target}
   \item these values are retained from enclosing lexical context
   \item ill suited as methods, and they cannot be used as constructors
@@ -172,15 +171,15 @@ JavaScript have all features of a function oriented language.
 
 \begin{CodeBox}{function oriented programming}
 let list = [1, 2, 3, 4, 5];
-let a = list.map(x => x + 2);
-let b = a.filter((x) => x % 2 === 0);
+let a = list.filter((x) => x % 2 === 0);
+let b = a.map(x => x + 2);
 b.forEach(x => console.log(x));
 let c = b.reduce((sum, x) => sum + x, 0);
 \end{CodeBox}
 \begin{CodeBox}{chaining}
 let sum = [1, 2, 3, 4, 5];
-sum.map(x => x + 2)
-.filter((x) => x % 2 === 0)
+sum.filter((x) => x % 2 === 0)
+.map(x => x + 2)
 .reduce((sum, x) => sum + x, 0);
 \end{CodeBox}
 \end{frame}
@@ -217,7 +216,7 @@ console.log(name);
 \vspace{4mm}
 
 \begin{CodeBox}{closure}
-let foo = function() {
+function foo() {
   let cnt = 0;
   return _ => cnt++;
 }
