@@ -151,7 +151,7 @@ names.forEach(name => console.log(name));
 \emph{Note,} \code{forEach} passes three argument: (name, index, array), but we only use the name, so it is enough to declare one parameter in our callback function.
 \\In this case, you will get the same result with:
 \begin{Code}
-for (const name in inventory) {
+for (const name in names) {
   console.log(name);
 }
 \end{Code}
