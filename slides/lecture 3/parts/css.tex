@@ -62,7 +62,6 @@ Match patterns can be combined
 \begin{frame}[fragile]
 \frametitle{CSS - exempel}
 \color{structure}
-Example:
 \begin{lstlisting}[style=htmlcssjs]
 // element
 div { color: blue; border: 1px; }
@@ -72,9 +71,9 @@ div { color: blue; border: 1px; }
 .center { text-align: center; color: red; }
 // element och and, <p class="center">
 p.center { text-align: center; color: green; }
-// inside
+// inside, p is a decendant of div
 div p { text-align: center; color: green; }
-// all p with a parent div
+// p witch is a direct child of a div
 div > p { text-align: center; color: green; }
 // directly after
 div + p { text-align: center; color: green; }
