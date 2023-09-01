@@ -156,13 +156,13 @@ We have two states entities related to salads: 1, The compose salad form state, 
   \end{Code}
   \emph{Reflection question 3:} Should you move the foundation state to the \code{MySaladSelect} component above? To answer this you need to consider who is using this information.
 
-\item Implement the remaining part of the compose salad form. Protein and dressing should be straight forward using the \code{<MySaladSelect>} component. Add one more component containing the checkboxes for selecting extras.
+\item Implement the remaining part of the compose salad form. Protein and dressing should be straight forward using the \code{<MySaladSelect>} component. Add one more component containing the checkboxes for selecting extras. Doesn't the component re-render when you update the extras object. Read about updating objects in state in reacts documentation: \url{https://react.dev/learn/updating-objects-in-state}
 
 \item Requirements:
 \begin{itemize}
   \item The form should limit the selection to one foundation, one protein, zero or more extras, and one dressing. Use the html element \code{<select value=\{stateValue\}>} for foundation, protein, and dressing. Use one \code{<input type=checkbox name={nameOfExtra} checked=\{stateValue\}>} for each of the extras the customer can choose.
 
-For checkboxes, the state of the DOM-element is stored in the atribute \code{checked} (for other \code{<input>} types, the DOM state is stored in the property \code{value}). Do not assign \code{undefined} to it. To avoid this, you can use the JavaScript short circuit behaviour of \code{||} \code{<input checked=(extras['Tomat'] || false)>}, or do an explicit type conversion: \code{Boolean(extras['Tomat'])}.
+For checkboxes, the state of the DOM-element is stored in the attribute \code{checked} (for other \code{<input>} types, the DOM state is stored in the property \code{value}). Do not assign \code{undefined} to it. To avoid this, you can use the JavaScript short circuit behaviour of \code{||} \code{<input checked=(extras['Tomat'] || false)>}, or do an explicit type conversion: \code{Boolean(extras['Tomat'])}.
   \item \code{<imput>} elements have a \code{name} attribute. For checkboxes you can use it to store which ingredient it represents. In your callback function it is available in \code{event.target.name}.
 
   \item You do not need to support portion size (gourmet salad).
