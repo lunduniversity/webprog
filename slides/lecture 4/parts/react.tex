@@ -1,31 +1,33 @@
 %--- react------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{React}
+\begin{frame}[fragile] \frametitle{React render functions}
 \begin{CodeBox}{}
-const root = ReactDOM.createRoot(
-  document.getElementById('root')
-);
-root.render(<h1>Hello, world!</h1>);
+function HelloWorld() {
+  return (<h1>Hello, world!</h1>);
+}
 \end{CodeBox}
 
 \vspace{8mm}
+A render function:
 \begin{itemize}
-  \item templates are JSX expressions
-  \item JSX is embedded in the JavaScript code
-  \item babel translates JSX to JavaScript code - builds a tree of React objects
-  \item React injects the template object tree into the DOM
-  \item rebuilt when a change happens
+  \item returns a DOM like tree
+  \item easy to create instances
+  \begin{itemize}
+    \item uses JSX to describe the structure
+    \item babel translates JSX to JavaScript code - builds a tree of react elements
+  \end{itemize}
+  \item react injects the tree into the DOM
+  \item re-render when needed
 \end{itemize}
 
 \end{frame}
 
 %--- JSX ------------------------------------------------------------------------------
-\section{JSX}
+\section{JSX - Build the DOM with expressions}
 %--- JSX------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{JSX}
 \begin{itemize}
-  \item any ``html tag'' is a JSX expression
+  \item looks like html, built from ``html tags'' and react components
   \item all tags must be closed, xml syntax works: \code{<img />}
-  \item tags can be nested
   \item must be one root tag
   \item can use multiple lines
   \item use () to avoid automatic semicolon insertion!!!
@@ -73,30 +75,52 @@ JSX can contain embedded JavaScript
 \vspace{3mm}
 \begin{CodeBox}{}
 const name = 'Per';
-const imgSrc = 'picture.jpeg';
-function doSomeMagic(arg) { return <span>a frog</span> };
 const element1 = <h1>Hello {name}</h1>;
+
+const imgSrc = 'picture.jpeg';
 const element2 = <img src={imgSrc} />;
+
 const element3 = (<span>{element1}
   <p>You are transformed to {doSomeMagic(name)}</p></span>);
 \end{CodeBox}
 \end{frame}
 
+%--- Condition and iteration ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Condition and iteration}
+Use JavaScript for conditional rendering and iteration
+\begin{CodeBox}{}
+function MyWarning(props) {
+  return (<h1>  {props.message ? 
+             "Warning: " + props.message : "Well done" }
+           </h1>);
+}
+
+function TodoList({arrayOfTodos}) {
+  return (<ul>
+              {arrayOfTodos.map(todo => <li>{todo}</li>)};
+            </ul>);
+}
+\end{CodeBox}
+\end{frame}
+
 %--- React Components ------------------------------------------------------------------------------
-\section{React Components}
-%--- React Components------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Rect Components}
-react components
+\section{React Component}
+%--- React Component------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rect Component}
+react component:
 \begin{itemize}
-  \item JavaScript object:
+  \item JavaScript function
   \begin{itemize}
-    \item mechanism to render itself
-    \item state
-    \item function or class
+    \item called when the components need rendering
+    \item must return a react DOM (a JSX expression)
   \end{itemize}
-  \item a named template
-  \item used in JSX expressions
-  \item Model-View design pattern
+  \item instantiate it in JSX using the function name, example: \code{<HelloWorld />}
+  \item function name must start with capital letter
+  \item in JSX:
+  \begin{itemize}
+    \item lowercase tag name - standard html element
+    \item uppercase tag name - a react component
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -105,10 +129,10 @@ react components
 \begin{CodeBox}{}
   function HelloWorld(){
     return (
-      <span>
+      <>
         <h1>Hello</h1>
         <p>EDAF90 - web programming</p>
-      </span>
+      </>
     );
   }
 \end{CodeBox}
@@ -118,222 +142,46 @@ react components
 a parent can pass data to a child
 \begin{itemize}
   \item parent set the value using attributes in JSX
-  \item the values are passed as a \code{props}
+  \item the values are passed in a \code{props} object
+  \item you can use any JavaScript value, including arrays, objects and functions
 \end{itemize}
 \end{frame}
 
 %--- Properties Example ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Properties Example}
+\begin{frame}[fragile] \frametitle{Prop Example}
 
 \begin{CodeBox}{}
-function HelloWorld(props) {
+const element = (<Hello name="Per"/>);
+
+function Hello(props) {
   return (
     <span>
-      <h1>Hello World</h1>
-      <p>{props.message}</p>
+      <h1>Hello {props.name}</h1>
     </span>
   );
 }
-
-const element = (<HelloWorld message="web programming"/>);
 \end{CodeBox}
 \end{frame}
 
-%--- Child Parent Communication ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Child Parent Communication}
-\begin{itemize}
-  \item properties pass data down in the tree
-  \item can also be used to pass data up the tree
-  \begin{itemize}
-    \item parent have a call-back function to update its state
-    \item pass it as a property a child
-    \item the child calls the parent call-back function
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-%--- State ------------------------------------------------------------------------------
-\section{State}
-%--- React Components------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Rect Class Components}
-A React component can be a ES6 class:
-  \begin{itemize}
-    \item \code{extends React.Component}
-    \item two data properties:
-    \begin{itemize}
-      \item \code{this.props}
-      \item \code{this.state}
-      \item immutable data structure, React updates them
-    \end{itemize}
-    \item \code{constructor(props)} should assign to \code{this.state}
-    \item \code{render()} must be a pure function of \code{this.props} and \code{this.state}
-  \end{itemize}
-\end{frame}
-
-%--- State Example ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{State Example}
+%--- Properties children Example ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Prop children Example}
+\code{props} also contain the children of the component, an object or an array.
 \begin{CodeBox}{}
-class Hello extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {name: props.name + ' Andersson'};
-  }
-  render() {
-    return (
-      <span>
-        <h1>Hello {this.state.name}</h1>
-        <p>{this.props.message}</p>
-      </span>
-  }
-}
-const element = <Hello name="Per" />;
-\end{CodeBox}
-\end{frame}
+const element = 
+(<Hello name="Per">
+  I am a child <Button />
+</Hello>);
 
-%--- State in class components ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{State in Class Components}
-\begin{itemize}
-  \item the state must be an immutable data structure
-  \item use \code{setState()} to update state
-  \item state is updated asynchronously (at some time in the future)
-  \item state updates patches the old state:
-  \begin{itemize}
-    \item \code{nextState = \{ ...oldState, ...newState\}}
-    \item you can not remove properties
-    \item set undesired properties to \code{undefined}
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-%--- setState ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{setState}
-Two variants:\\
-new state is independent of old state
-\begin{CodeBox}{\code{setState} takes a value:}
-onReset() {
-  this.setState( {count: 0} );
-}
-\end{CodeBox}
-
-new state depends on old state
-\begin{CodeBox}{\code{setState} takes a function:}
-onClick() {
-  this.setState(
-    oldState => {count: oldState.count + 1}
-);}
-\end{CodeBox}
-
-\end{frame}
-
-%--- State in function components ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{State in Function Components}
-\begin{itemize}
-  \item must use hooks, introduced in 16.8.0
-  \item component state is a sequence of values
-  \item \code{useState} return the next value in the sequence
-  \item the state values are returned in the same order in each render run
-           \\do not call \code{useState} inside \code{if}, \code{while}
-  \item \code{const [value, setState] = useState(initialState);}
-  \item \code{setState} replace the state property value, no merge
-  \item new state should not affect any ongoing rendering
-\end{itemize}
-\end{frame}
-
-%--- State in function components ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{State in Function Components}
-\begin{CodeBox}{useState hook}
-function Example() {
-  const [count, setCount] = useState(0);
-
+function Hello(props) {
   return (
-    <div>
-      <p>You clicked {count} times</p>
-      <button onClick={() => setCount(n => n + 1)}>
-        Click me
-      </button>
-    </div>
+    <span>
+      <h1>Hello {props.name}</h1>
+      <p>{props.children}</p>
+    </span>
   );
-}\end{CodeBox}
-\end{frame}
-
-%--- function vs class ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Function vs Class Components}
-Class Component
-\begin{itemize}
-  \item leverage of the full powers of the JavaScript language
-  \item must understand:
-  \begin{itemize}
-    \item \code{this} --- how it gets a value
-    \item prototype based inheritance
-    \item use scopes/\code{bind()} for \code{this} in event handers
-  \end{itemize}
-\end{itemize}
-
-Function Component
-\begin{itemize}
-  \item easy to use and understand
-  \item everything is inside the scope of a function
-  \item potential for ahead of time compilation in future
-\end{itemize}
-
-\end{frame}
-
-%--- life cycle ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Component Life Cycle --- class}
-Mounting
-\begin{itemize}
-  \item \code{constructor()}
-  \item \code{static getDerivedStateFromProps()}
-  \item \code{render()}
-  \item \code{componentDidMount()}
-\end{itemize}
-Updating
-\begin{itemize}
-  \item \code{static getDerivedStateFromProps()}
-  \item \code{shouldComponentUpdate()}
-  \item \code{render()}
-  \item \code{getSnapshotBeforeUpdate()}
-  \item \code{componentDidUpdate()}
-\end{itemize}
-\end{frame}
-
-%--- life cycle ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Component Life Cycle --- class}
-Unmounting
-\begin{itemize}
-  \item \code{componentWillUnmount()}
-\end{itemize}
-
-Error Handling
-\begin{itemize}
-  \item \code{static getDerivedStateFromError()}
-  \item \code{componentDidCatch()}
-\end{itemize}
-
-\end{frame}
-
-%--- Render Elements------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Render Elements}
-\code{ReactDOM.render()}
-\begin{itemize}
-  \item updates the DOM
-  \item takes two parameters:
-  \begin{itemize}
-    \item a react element (JSX expression)
-    \item a DOM element
-  \end{itemize}
-  \item updates the DOM if the element already was part of the DOM
-  \item optimised, only updated the delta
-\end{itemize}
-\begin{CodeBox}{bootstrap the app}
-ReactDOM.render(
-   <App />,
-  document.getElementById('root')
-);
+}
 \end{CodeBox}
 \end{frame}
-
 %--- Event Handling ------------------------------------------------------------------------------
 \section{Event Handling}
 %--- Handling Events------------------------------------------------------------------------------
@@ -357,41 +205,145 @@ function ActionLink() {
 \end{CodeBox}
 \end{frame}
 
-%--- About this------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{About this}
-\begin{itemize}
-  \item by default \code{this} is \code{undefined} in a callback function
-  \item use \code{bind()} to bind it to the component object
-  \item or arrow function:
-\end{itemize}
+%--- State ------------------------------------------------------------------------------
+\section{State}
+%--- Component State------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Component State}
+State is a components memory:
+  \begin{itemize}
+    \item preserves data between renderings
+    \item managed by react
+    \item use state hook to get a snapshot of the state
+    \item update using a set function
+  \end{itemize}
+\end{frame}
+
+%--- State Example ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{useState hook}
 \begin{CodeBox}{}
-  constructor(props) {
-    super(props);
-    this.state = {count: 0};
-    this.handleClick = this.setState(
-      state => ({count: state.count + 1});
-  )};
+function MyButton() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Clicked {count} times
+    </button>
+  );
+}
 \end{CodeBox}
 \end{frame}
-%--- this example------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{this example}
+
+%--- Render Cycle ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Render Cycle}
+\begin{enumerate}
+  \item render - root element and all children
+  \item commit - update the DOM
+  \item wait for external event
+  \item call all event handlers, queues all state updates
+  \item execute the state updates in the queue
+  \item the event handler updates the state
+  \item \code{if (Object.is(oldState, newState) goto 1 else goto 3}
+\end{enumerate}
+\vspace{5mm}The render function must be a pure function of state and \code{props}.
+\end{frame}
+
+%--- State over time ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{State over time}
+\begin{CodeBox}{use state at render time:}
+const [cnt, setCnt] = useHook(0);
+handleClick(){
+  setCnt(cnt+1);
+  setCnt(cnt+1);
+}
+\end{CodeBox}
+
+\begin{CodeBox}{use the latest state:}
+const [cnt, setCnt] = useHook(0);
+handleClick(){
+  setCnt(newCnt => newCnt+1);
+  setCnt(newCnt => newCnt+1);
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Object and Array in State ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Object and Array in State}
+\begin{itemize}
+  \item state must be immutable
+  \item a new value triggers re-render
+  \item compares using \code{Object.is}, must be a new object or array to trigger re-render
+  \item copy object: \code{newState = \{...oldState\}}
+  \item copy array:
+  \begin{itemize}
+    \item \code{newState = \[...oldState\]}
+    \item \code{newState = oldState.map(}\\
+                 \code{(e, index) => index===modifyIndex ? newElement : e)}
+  \end{itemize}
+  \item safe array functions: 
+  \begin{itemize} 
+    \item \code{concat, filter, slice, map}
+    \item or copy first \code{[...arr]}
+  \end{itemize}
+  \item deep structures, copy all modified objects: \code{ \{outer..., inner: \{ outer.inner, v: newValue \}\}}
+\end{itemize}
+\end{frame}
+
+%--- Rules for State ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules for State}
+\begin{itemize}
+  \item in render functions - treat state as read only
+  \item only update state in event handlers
+  \item event handlers are local functions in the render function
+  \begin{itemize}
+    \item \code{[state, setState] = useHook()} is in the closure
+    \item \code{setState} do not change the local snapshot
+    \item re-render $\rightarrow$ new closure and event handler functions
+    \item handlers always have the state viewed by the user
+  \end{itemize}
+  \item the state must be an immutable data structure, copy and modify
+  \item setting the state to a new value triggers a re-rendering of the react tree,
+           \\the root component and its children
+  \item react updates the state after all event handlers finish
+\end{itemize}
+\end{frame}
+
+%--- Lifting State Up ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Lifting State Up}
+Child $\rightarrow$ Parent communication
+\begin{itemize}
+  \item prop pass data down in the tree
+  \item data can be any JavaScript value, including functions
+  \item pass the \code{setState} function:
+  \begin{itemize}
+    \item children can update the parents state
+    \item only use in handlers, never during rendering
+  \end{itemize}
+\end{itemize}
+Sibling $\leftrightarrow$ Sibling communication
+\begin{itemize}
+  \item lift upp state - store the state in their nearest common ancestor
+  \item drill down props - pass the state trough all intermediate components
+\end{itemize}
+\end{frame}
+
+%--- Lifting State Up Example ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Lifting State Up}
 \begin{CodeBox}{}
-class Counter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {count: 0};
-    this.handleClick = this.handleClick.bind(this);
-  }
-  handleClick() {
-    this.setState(state => ({count: state.count + 1});
-  }
-  render() {
-    return (
-      <button onClick={this.handleClick}>
-        {this.state.count}
-      </button>
-    );
-  }
+function GreatestCommonAncestor() {
+  const [cnt, setCnt] = useState(0);
+  function handleClick() { setCnt(cnt + 1); }
+  return (<><MyView cnt={cnt} /><MyButton cnt={cnt} onClick={handleClick} /></>)
+}
+
+function MyView({ cnt }) {
+  return (<p>counter is {cnt}</p>);
+}
+function MyButton({ cnt, onClick: handleClick }) {
+  return (<button onClick={handleClick}>you have clicked me {cnt} times</button>);
 }
 \end{CodeBox}
 \end{frame}
@@ -401,14 +353,21 @@ class Counter extends React.Component {
 %--- Lists and key------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Lists and key}
 \begin{itemize}
-  \item embedded JavaScript may return a collection of react elements
-  \item added in sequence to the DOM
-  \item to help the render optimisation:
+  \item JavaScript embedded in JSX may return a collection of react elements
+  \item updating the DOM is expensive
+  \item react only update parts of the DOM that have been changed
+  \item you must help react how an array changes:
   \begin{itemize}
-    \item each element should have a \code{key} property
+    \item each element must have a \code{key} property
     \item unique among siblings
     \item the value must be preserved over time
     \item avoid array index as key (changes when elements are deleted)
+  \end{itemize}
+  \item using the key react can detect
+  \begin{itemize}
+    \item elements changed value
+    \item elements have been added to the list
+    \item elements have been deleted from the list
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -427,6 +386,444 @@ function MyList(props) { return (
   </ul>);
 }
 \end{CodeBox}
+\end{frame}
+
+%--- Hooks ------------------------------------------------------------------------------
+\section{Hooks ---\\Connecting to react internals}
+%--- React Basics ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{React Basics}
+Render code
+\begin{itemize}
+  \item computes the react DOM tree from \code{props} and state
+  \item must be pure
+  \item no control of when or how often it is called (console.log will be messy)
+\end{itemize}
+\vspace{5mm}
+Event handlers
+\begin{itemize}
+  \item call is triggered by external events like user actions or network trafic
+  \item changes steate
+\end{itemize}
+\end{frame}
+
+%--- Hooks ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Hooks}
+\begin{itemize}
+  \item react basics do not cover all needs
+  \item hooks into the internals of react
+  \item covers more use cases than react basics
+  \item named \code{useSomething()}
+  \item you have seen \code{useState()} which provides memory to the componets
+\end{itemize}
+\vspace{5mm}
+Rules of hooks:
+\begin{itemize}
+  \item called from render code directly, or other hooks
+  \item must be called in the same order every re-render
+  \item only call from top level (not insida conditions or loops)
+\end{itemize}
+\end{frame}
+
+%--- Effects ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Effects}
+``side effects that are caused by rendering itself, rather than by a particular event''
+\begin{itemize}
+  \item example: fetch data from a server when the component is viewed
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+import { useEffect } from 'react';
+
+function MyComponent() {
+  useEffect(() => {
+    // Code here will run after *every* render
+  });
+  return <div />;
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Effects ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Effects}
+\begin{CodeBox}{}
+useEffect(() => {
+  // initialisation_code
+  return 
+    () => {/* clean_up_code */}
+  }, [list of dependencies]);
+\end{CodeBox}
+\vspace{5mm}
+\begin{itemize}
+  \item \code{initialisation_code} is always followed by \code{clean_up_code}
+  \item \code{initialisation_code} is run after component is mounted in the DOM, and when a variable in the dependency list is updated
+  \item \code{clean_up_code} is run when the component is removed from the DOM and before \code{initialisation_code} is run due to a value change
+\end{itemize}
+\end{frame}
+
+%--- Effects - Ticker------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Effects in Ticker example}
+\begin{CodeBox}{}
+import { useEffect, useState } from 'react';
+
+function Ticker({delay}) {
+  const [cnt, setCnt] = useState(0);
+  
+  useEffect(() => {
+    const id = setInterval(_=> setCnt(cnt => cnt+1), delay);
+    return () => {clearInterval(id)}
+  }, [delay]);
+  
+  return (<p> ticks: {cnt} </p>);
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Effects - Ticker run------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Effects - Running Ticker}
+component mounts:
+\begin{itemize}
+  \item run \code{initialisation\_code} (closure 1)
+\end{itemize}
+\code{delay} is changed:
+\begin{itemize}
+  \item run \code{clean\_up\_code} (closure 1)
+  \item run \code{initialisation\_code} (closure 2)
+\end{itemize}
+\code{delay} is changed:
+\begin{itemize}
+  \item run \code{clean\_up\_code} (closure 2)
+  \item run \code{initialisation\_code} (closure 3)
+\end{itemize}
+\ldots
+component is deleted:
+\begin{itemize}
+  \item run \code{clean\_up\_code} (closure 3)
+\end{itemize}
+\end{frame}
+
+%--- Effects - Development mode ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Effects - Development mode}
+In development mode:
+\begin{itemize}
+  \item components are mounted twice (and deleted once)
+  \item stress test the clean up code in effects
+  \item will mess upp any \code{console.log}
+\end{itemize}
+\end{frame}
+
+%--- Context ------------------------------------------------------------------------------
+\section{Context ---\\broadcasting in a tree}
+
+%--- Context, broadcasting in a tree ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Context, broadcasting in a tree}
+\begin{itemize}
+  \item \code{props} are convenient when communication components are few and close
+  \item do not scale
+  \item context can broadcast a value to all components in a tree
+  \item three steps:
+  \begin{itemize}
+    \item create the context
+    \item provide the value for a subtree
+    \item us the value in a component
+   \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Context, create ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Context, create}
+
+\begin{CodeBox}{Create the context in a separate file: MyContext.js}
+import { createContext } from "react";
+
+export const MyContext = createContext('default value');
+\end{CodeBox}
+\end{frame}
+
+%--- Context, provide ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Context, provide a value}
+\begin{CodeBox}{Provide a value in a JSX expression}
+import { MyContext } from 'MyContext';
+
+function App() {
+  return (
+    <MyContext.Provider value={'top level'}>
+      <ViewMyContext />
+      <MyContext.Provider value={'subtree'}>
+        <ViewMyContext />
+      </MyContext.Provider>
+    </MyContext.Provider>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Context, use ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Context, use}
+
+\begin{CodeBox}{Use the context in a component}
+import { useContext } from 'react';
+import { MyContext } from './MyContext.js';
+
+export function ViewMyContext() {
+  const myValue = useContext(MyContext);
+  return <p>context is: {myValue}</p>
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Reducer ------------------------------------------------------------------------------
+\section{Reducers ---\\Separating state logic}
+
+\begin{frame}[fragile] \frametitle{Reducers}
+Using handelrs:
+\begin{itemize}
+  \item \code{nextState = handler(event, currentState)}
+  \item mixing UI code with state logic
+  \item hard to reuse state logic in different UI components
+\end{itemize}
+\vspace{5mm}
+Reducers
+\begin{itemize}
+  \item UI code emits actions
+  \item \code{nextState = reducer(action, currentState)}
+  \item easy to reuse state logic
+  \item clearer which operations are allowed on the state
+  \item easy to test state logic
+\end{itemize}
+\end{frame}
+
+%--- Action ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Action --- a plain JavaScript object}
+\begin{itemize}
+  \item \code{type} property, which action to execute on the state
+  \item contains all information needed to perform the action
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+{
+  type: "Added",
+  task: { id, text, moreData}
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Reducer ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Reducer --- a plain JavaScript function}
+\begin{CodeBox}{}
+function tasksReducer(tasks, action) {
+  switch (action.type) {
+    case 'deleted': {
+      return tasks.filter((t) => t.id !== action.id);
+    }
+    // more actions
+    default: {
+      throw Error('Unknown action: ' + action.type);
+    }
+  }
+}
+\end{CodeBox}
+\end{frame}
+
+%--- useReducer ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{useReducer}
+\begin{CodeBox}{}
+function MyComponent() {
+  const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+
+  function handleChangeTask(task) {
+    dispatch({
+      type: 'changed',
+      task: task,
+    });
+  }
+  
+  return <button onChange={handleChangeTask}>update</button>}
+}
+\end{CodeBox}
+\end{frame}
+
+%--- TODO ------------------------------------------------------------------------------
+\section{Redux ---\\ combining context and reducers}
+\begin{frame}[fragile] \frametitle{Redux}
+\begin{itemize}
+  \item first introduced by facbook
+  \item soved the never ending message count bug
+  \item simplifies component dependencies
+  \item component $\rightarrow$ state $\rightarrow$ component
+\end{itemize}
+\end{frame}
+
+%--- Redux ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Redux --- TasksContext.js}
+\begin{CodeBox}{}
+const TasksContext = createContext(null);
+const TasksDispatchContext = createContext(null);
+
+export function useTasks() {
+  return useContext(TasksContext);
+}
+
+export function useTasksDispatch() {
+  return useContext(TasksDispatchContext);
+}
+
+function tasksReducer(tasks, action) {
+  // your code
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Redux ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Redux --- TasksContext.js}
+\begin{CodeBox}{}
+export function TasksProvider({ children }) {
+  const [tasks, dispatch] = useReducer(
+    tasksReducer,
+    initialTasks
+  );
+
+  return (
+    <TasksContext.Provider value={tasks}>
+      <TasksDispatchContext.Provider value={dispatch}>
+        {children}
+      </TasksDispatchContext.Provider>
+    </TasksContext.Provider>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Redux ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Redux --- App.js}
+\begin{CodeBox}{}
+function App() {
+  return (
+    <TasksProvider>
+      <MyAppComponents />
+    </TasksProvider>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Redux ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Redux --- MyComponent.js}
+\begin{CodeBox}{}
+function MyComponent() {
+  const tasks = useTasks();
+  const dispatch = useTasksDispatch();
+
+  function handleAdd(text){
+        dispatch({
+            type: 'added',
+            text: text,
+          });
+        }
+  }
+  return (
+    <MyUI onAdd={handleAdd} data={tasks} />
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Summary ------------------------------------------------------------------------------
+\section{Summary ---\\ Rules of React}
+%--- Summary ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of React}
+render code
+\begin{itemize}
+  \item called by react, when needed
+  \item must be pure function of \code{props} and state (\code{useState}, \code{useReducer})
+  \item no side effects, do not update state
+  \item may use hooks
+\end{itemize}
+\end{frame}
+%--- Summary ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of React}
+event handlers and callback passed to \code{useEffect}
+\begin{itemize}
+  \item called by the browser
+  \item update state to trigger re-render
+  \item declare inside component function
+  \begin{itemize}
+    \item operates on data viewed by the user
+    \item \code{setState} and \code{dispatch} in the closure
+    \item latest state: \code{setState(currentState => computeNewState)}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%--- Summary ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of React}
+state
+\begin{itemize}
+  \item owned by react
+  \item read by render code, get a snapshot
+  \begin{itemize}
+    \item \code{useState}
+    \item \code{useReducer}
+  \end{itemize}
+  \item update
+  \begin{itemize}
+    \item \code{setState} in event handlers and effect callbacks
+    \item reducers computes the next state
+  \end{itemize}
+  \item immutable data structure
+\end{itemize}
+\end{frame}
+%--- Summary ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of React}
+hooks
+\begin{itemize}
+  \item called by your render code and custom hooks
+  \item must be called in the same sequence every re-rener
+  \item call from top level, not in conditions or loops
+  \item may call other hooks
+  \item pure functions
+\end{itemize}
+\end{frame}
+%--- Summary ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of React}
+reducer
+\begin{itemize}
+  \item called by react, once for each a \code{dispath()}
+  \item pure function
+  \item remember, state is immutable
+\end{itemize}
+\end{frame}
+
+%--- Bootstrapping, React ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Bootstrapping React}
+\code{ReactDOM.render()}
+\begin{itemize}
+  \item updates the DOM
+  \item takes two parameters:
+  \begin{itemize}
+    \item a react element (JSX expression)
+    \item a DOM element
+  \end{itemize}
+  \item updates the DOM if the element already was part of the DOM
+  \item optimised, only updated the delta
+\end{itemize}
+\begin{CodeBox}{bootstrap the app}
+ReactDOM.render(
+   <App />,
+  document.getElementById('root')
+);
+\end{CodeBox}
+\end{frame}
+
+%--- TODO ------------------------------------------------------------------------------
+\section{TODO, The remaining slides needs updating}
+
+%--- life cycle ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Component Life Cycle}
+the life of a component
+\begin{itemize}
+  \item mount
+  \item update
+  \item unmount
+\end{itemize}
 \end{frame}
 
 %--- Forms------------------------------------------------------------------------------
@@ -571,3 +968,6 @@ handleInputChange(event) {
 %  </form>);
 %\end{CodeBox}
 %\end{frame}
+
+
+
