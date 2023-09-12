@@ -302,7 +302,7 @@ console.log('Med extra bacon kostar den '
 \\\emph{Assignment 6:}
 Use a static instance counter and add the following to the \code{Salad} constructor:
 \begin{Code}
-    this.id = 'salad_' + Salad.instanceCounter++;
+this.id = 'salad_' + Salad.instanceCounter++;
 \end{Code}
 Test it:
 \begin{Code}
@@ -323,8 +323,28 @@ This will download the source code and place it in the directory \code{node\_mod
   import { v4 as uuidv4 } from 'uuid';
   const uuid = uuidv4();  // use this in the constructor
 \end{Code}
-\emph{Assignment 7:} Add a UUID to the Salad class. Make sure the copy constructor still works. When you pars a JSON representation of a salad, you can assume that it comes from a persistent storage, and you want to keep the UUID. However, when copying from another salad object, you want a new UUID.
+\emph{Assignment 7:} Add a UUID to the Salad class. Make sure the copy constructor still works. A copy should have a new uuid, but when you create salad objects using the parse() function the uuid should be preserved. This is not a copy, just a change of representation.
 
+\noindent Use cases 1, different salads:
+\begin{Code}
+const salad1 = new Salad();
+// add ingredients to salad 1
+const salad2 = new Salad(salad2)
+// salad1.uuid !== salad2.uuid, they are different salads
+salad2.add(Bacon', inventory['Bacon']);
+order(salad1, salad2);
+\end{Code}
+Use cases 2, same salads, you want to update the salad in the database:
+\begin{Code}
+const salad1 = new Salad(); // add ingredients to salad 1
+storeInDatabase(salad1);
+// app is reloaded, all JavaScript objects are lost
+const text = fetchFromDatabase();
+const salad2 = Salad.parse(text);
+// salad1.uuid === salad2.uuid, they are the same salad
+salad2.add(Bacon', inventory['Bacon']);
+storeSaladInDatabase(salad2); // update the existing salad
+\end{Code}
 \end{Assignments}
 
 \noindent Extra assignments, if you have time.

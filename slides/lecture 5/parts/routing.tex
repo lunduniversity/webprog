@@ -27,7 +27,11 @@
   \item there is an API giving JavaScript direct access to the browser history
   \item using it manually is tedious and error prone
   \item let a router do the work for you
-  \item a router have two main features: link and route
+  \begin{itemize}
+    \item subscribing and manipulating the history stack
+    \item matching the URL to your routes
+    \item rendering a nested UI from the route matches
+  \end{itemize}
 \end{itemize}
 
 \vspace{10mm}
@@ -41,10 +45,14 @@
 \code{<Link to="/animals">animals</Link>}
 \\ \code{<Link to="animals/fish">fishs</Link>}
 \begin{itemize}
+    \item a react component
     \item let users navigate in your app
     \item clicking on it will add an entry to the browser history
+    \item page is not fetched (\code{preventDefaults} on \code<a href="...">)
     \item this will update the url field in the browser
-    \item no new page is fetched from the server
+    \begin{itemize}
+      \item \code{<Route>} triggers re-render
+    \end{itemize}
     \item your JavaScript objects are untouched (preserve the application state)
 \end{itemize}
 \end{frame}
@@ -53,20 +61,19 @@
 \begin{frame}[fragile] \frametitle{NavLink}
 Add styling of active link using:
 \begin{itemize}
-  \item adda a css class to the element
-  \item \code{<NavLink to="animals" />Animals</Link>}
-  \item \code{<NavLink to="animals/fish" className=\{styleFunction\} />}
+  \item knows if it is "active" or "pending"
+  \item use css class to highlight active links
+  \item \code{className} -- normal CSS, or a function returning the css class
+  \item by default, an \code{active} CSS class is added when active
 \end{itemize}
 
 \begin{CodeBox}{}
-function styleFunction(isActive) {
-  if(isActive) {
-    return "active";
-  } else {
-    return undefined;
+<NavLink
+  to="/messages"
+  className={({ isActive, isPending }) =>
+    isPending ? "pending" : isActive ? "active" : ""
   }
-}
-\end{CodeBox}
+>\end{CodeBox}
 \end{frame}
 
 %--- Link Example------------------------------------------------------------------------------
@@ -88,14 +95,123 @@ function Menu() {
 %--- Route ------------------------------------------------------------------------------
 \section{Route}
 %--- Route ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Route}
-\code{<Route path="/" component=\{<h1>Hello</h1>\} />}
+\begin{frame}[fragile] \frametitle{createBrowserRouter}
 \begin{itemize}
   \item renders components based on url matching
-  \item renders the \code{component} if \code{path} matches the current browser url
-  \item wildcard: * matches any url
-  \item \code{<Route>} must be direct child of \code{<Routes>} or \code{<Route>}
-  \item the user can bookmark or copy the url to any page in your application
+  \item routes are declared in a configuration object
+  \item add to your app using the \code{<RouterProvider>} component
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+const router = createBrowserRouter(config);
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);
+\end{CodeBox}
+\end{frame}
+
+%--- Route objects ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Route objects}
+\code{router} is an array of Route objects
+
+properties:
+\begin{itemize}
+  \item \code{path} -- string for match against the url
+  \item \code{element/Component}  -- rendered when path is matched
+  \begin{itemize}
+    \item \code{element} -- an object (JSX expression)
+    \item \code{Component} -- a react component (JavaScript function)
+    \item use one of them
+  \end{itemize}
+  \item \code{caseSensitive}  -- if pattern matching is case sensitive (default fale)
+  \item \code{children} -- nested routes
+  \item error handling
+  \begin{itemize}
+    \item \code{errorComponent} -- an object (JSX expression)
+    \item \code{ErrorBoundary} -- a react component (JavaScript function)
+  \end{itemize}
+  \item and more, covered later
+\end{itemize}
+\end{frame}
+
+%--- Route ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{createBrowserRouter}
+\begin{CodeBox}{}
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <h1>Welcome</h1>,
+  }, {
+    path: 'hello/world',
+    caseSensitive: true,
+    element: <h1>Hello World</h1>
+  }, {
+    path: 'about/*',
+    Component: {WildcardComponent}
+  },
+]);
+
+\end{CodeBox}
+\end{frame}
+
+%--- Path pattern ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Path}
+\begin{itemize}
+  \item only one match in the array
+  \item most constrained wins, order do not matter
+  \item a path is composed of segments: pattern between '/'
+  \begin{itemize}
+    \item exact match, letter by letter
+    \item case sensitivity is optional
+    \item path: \code{/first-segment/next-segment}
+    \item matches url: \code{/first-segment/next-segment}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- segments ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Segments}
+\begin{itemize}
+  \item dynamic segment: starts with ':'
+  \begin{itemize}
+    \item matches any characters, zero or more
+    \item the matched url text can be accessed in your component
+    \item path: \code{user/:id/lang/:lang}
+    \item matches url: \code{user/31/lang/se}
+  \end{itemize}
+  \item optional segment, ends with '?'
+  \begin{itemize}
+    \item path: \code{:lang?/categories}
+    \item matchs url: \code{categories}, and \code{en/categories}
+  \end{itemize}
+  \item splats, catchall, star: ends with '/*', matches any character following the /, including other /
+  \begin{itemize}
+    \item path: \code{files/*}
+    \item matchs url: \code{files/one/two/three}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Layout and index ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Layout and Index routes}
+\begin{itemize}
+  \item Layout route
+  \begin{itemize}
+    \item do not have a \code{path}
+    \item should not have siblings
+    \item the element/Component is always rendered, adds to the layout
+    \item do not consume url segments
+  \end{itemize}
+  \item Index routes
+  \begin{itemize}
+    \item selected if parent is matched but no siblings
+    \item do not have a \code{path}
+    \item matches an empty url segment
+    \item do have a \code{index} attribute
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -103,23 +219,154 @@ function Menu() {
 \begin{frame}[fragile] \frametitle{Nested Routs}
 Routs can be nested:
 \begin{itemize}
-  \item each level matches a part of the path
-  \item at most one sibling \code{Route} will be matched
-  \item all matched \code{Route element}s will be rendered
-  \item most specific match wins
-  \item wildcard have lowest priority
-  \item index route:\\ \code{<Route index element=\{<SelectAnimal />\} />}
-  \begin{itemize}
-    \item selected if parent is matched but no siblings
-    \item do not have any \code{path}
-    \item do have a \code{index} attribute
-  \end{itemize}
+  \item \code{children} attribute of a Route object -- an array of child routs
+  \item each level matches a part of the url
+  \item at most one \code{path} in the child array will be matched
+  \item the element/Component of the matched \code{path} will be rendered on each level
 \end{itemize}
 \end{frame}
 
 
-%--- Route example------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Route Example}
+%--- Nested Routs ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Nested Routs}
+\begin{CodeBox}{}
+const routerConfig= [{
+        path: "shop",
+        element: <ShopFrame />,
+        children: [
+          {
+            path: "item/:id",
+            element: <Item />,
+          }, {
+            index: true,
+            element: <ListItems />
+          }]
+      }, {
+        path: "admin",
+        element: <AdminFrame />,
+        children: [
+          {
+            path: "edit-item/:id",
+            element: <EditItem />,
+          }, {
+            index: true,
+            element: <EditListItems />
+          }]
+      }]
+\end{CodeBox}
+\end{frame}
+
+%--- Outlet ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{\code{Outlet}}
+The child element is rendered in the parents \code{Outlet}
+
+\vspace{5mm}
+\begin{CodeBox}{}
+import { Outlet } from 'react-router-dom';
+
+function ShopFrame() {
+  return (
+    <div>
+      <h1>The Shop</h1>
+      <ShopMenu />
+      <Outlet />
+    </div>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Path Parameters ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Path Parameters}
+the router pass data from the path to the component
+\begin{itemize}
+  \item specify parameters in the \code{path} using the syntax\code{:name}
+  \item use the \code{useParams()}  hook to get an object with the values
+\end{itemize}
+
+\vspace{5mm}
+\begin{CodeBox}{}
+import { useParams } from "react-router-dom";
+
+const config = {
+    path="/item/:itemId", 
+    element={<Item />}
+};
+
+function Item() {
+  let params = useParams();
+  return <h2>item: {params.itemId}</h2>;
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Hooks ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Hooks}
+\begin{itemize}
+  \item can be used in any child of \code{Route}
+  \item \code{useParams()} - returns an object with the URL path parameters
+  \item \code{useLocation()} - returns the browser location
+  \item \code{useSearchParams()} - interact with query string in the URL
+  \item \code{useNavigate()} - navigate programatically
+\end{itemize}
+\end{frame}
+
+%--- Error handling ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Error handling}
+When exceptions are thrown in loaders, actions, or component rendering:
+\begin{itemize}
+  \item the \code{element/Component} is not rendered
+  \item instead the \code{errorComponent/ErrorBoundary} is
+  \begin{itemize}
+    \item \code{errorComponent} -- an object (JSX expression)
+    \item \code{ErrorBoundary} -- a react component (JavaScript function)
+    \item use one of them
+  \end{itemize}
+  \item exceptions will bubble up the router tree 
+\end{itemize}
+\end{frame}
+%--- Error handling ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Error handling}
+\begin{CodeBox}{}
+config = [{
+  path: "/invoices/:id",
+  element: <Invoice />,
+  errorElement: <ErrorBoundary />
+}];
+function ErrorBoundary() {
+  let error = useRouteError();
+  console.error(error);
+  return <div>Ooops! {error}</div>;
+}
+\end{CodeBox}
+\end{frame}
+
+
+
+%--- Picking a Router ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Picking a Router}
+
+For all urls belonging to the app:
+\begin{itemize}
+  \item the server must return the html file bootstrapping react, \code{index.html} 
+\end{itemize}
+
+\code{createBrowserRouter}
+\begin{itemize}
+  \item \code{http://domain.se/item/42}
+  \item node.js built in server do this for you
+  \item configure apache with rewrites
+\end{itemize}
+
+\code{createHashRouter}
+\begin{itemize}
+  \item \code{http://domain.se/#/item/42}
+  \item compatible with all servers
+\end{itemize}
+\end{frame}
+
+%--- React Router 6.4 example  ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{React Router pre 6.4 Example}
 \vspace{-3mm}
 \begin{CodeBox}{}
 import { Route, Routes } from 'react-router-dom';
@@ -140,97 +387,16 @@ function App() {
 \\/animal/cat $\rightarrow$ no match
 \end{frame}
 
-%--- Outlet ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{\code{<Outlet />}}
-The child element is rendered in the parents \code{<Outlet />}
-\vspace{5mm}
-\begin{CodeBox}{}
-import { Outlet } from 'react-router-dom';
-function Animal() {
-  return (
-    <div>
-      <h1>Animals</h1>
-      <Outlet />
-    </div>
-  );
-}
-\end{CodeBox}
-\end{frame}
 
-%--- Path Parameters ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Path Parameters}
-the router pass data from the path to the component
+%--- Data API ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Data API}
+
+We will return to react router data API:
 \begin{itemize}
-  \item specify parameters in the \code{path} using the syntax\code{:name}
-  \item use the \code{useParams()}  hook to get an object with the values
-\end{itemize}
-
-\vspace{5mm}
-\begin{CodeBox}{}
-import { useParams } from "react-router-dom";
-
-const elem = 
-  <Route path="/item/:itemId" element={<Item />} />;
-
-function Item() {
-  let params = useParams();
-  return <h2>item: {params.itemId}</h2>;
-}
-\end{CodeBox}
-\end{frame}
-
-%--- Route example again------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Route Example again}
-\begin{CodeBox}{}
-import { Route, Routes } from 'react-router-dom';
-function App() {
-  return (
-    <Routes>
-      <Route path="animal" element={<Animal />}>
-        <Route path=":animal"} element={<ShowAnimal />}/>
-        <Route index element={<SelectAnimal />}/>
-      </Route>
-    </Routes>
-  );
-}
-\end{CodeBox}
-/animal/fish $\rightarrow$ \code{<Animal><ShowAnimal /><Animal>}
-\\/animal/cat $\rightarrow$ \code{<Animal><ShowAnimal /><Animal>}
-\end{frame}
-
-%--- Hooks ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Hooks}
-\begin{itemize}
-  \item can be used in any child of \code{Route}
-  \item \code{useParams()} - returns an object with the URL path parameters
-  \item \code{useLocation()} - returns the browser location
-  \item \code{useSearchParams()} - interact with query string in the URL
-  \item \code{useNavigate()} - navigate programatically
+  \item actions
+  \item loaders
+  \item lazy
 \end{itemize}
 \vspace{5mm}
-Limitation: can only be used in functional components
+Based on \code{async} functions, so we need to cover that first.
 \end{frame}
-
-%--- Router ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Router}
-
-\begin{itemize}
-  \item any web application starts with a html file \code{index.html} 
-  \item the html file includes the react JavaScript code
-  \item to allow direct links: the server must return \code{index.html} for all URLs
-\end{itemize}
-
-\code{<BrowserRouter>}
-\begin{itemize}
-  \item \code{http://domain.se/item/42}
-  \item node.js built in server do this for you
-  \item apache can be configured with redirect
-\end{itemize}
-
-\code{<HashRouter>}
-\begin{itemize}
-  \item \code{http://domain.se/#/item/42}
-  \item compatible with all servers
-\end{itemize}
-\end{frame}
-

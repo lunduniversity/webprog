@@ -12,7 +12,7 @@
 
 %--- html 5 form validation------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{HTML 5 Form Validation}
-html form input attributes:
+html form fields attributes, for example \code{<input>}:
 \begin{itemize}
   \item \code{required}
   \item \code{minlength} and \code{maxlength}
@@ -48,7 +48,7 @@ input:invalid:required {
 adds read only properties to form input elements
 \begin{itemize}
   \item \code{validationMessage}
-  \item \code{validity} an object containing more info \code{rangeOverflow} and \code{valid}
+  \item \code{validity} a \code{ValidityState} object: properties \code{rangeOverflow}, \code{valid}, et.c.
   \item \code{checkValidity()}
   \item \code{setCustomValidity(message)} makes the field invalid
 \end{itemize}
@@ -104,7 +104,7 @@ Bootstrap have classes for styling forms and error messages:
 %--- Bootstrap example ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Bootstrap example}
 \begin{lstlisting}[style=htmlcssjs]
-<form class="needs-validation" novalidate>
+<form novalidate>
   <div>
     <label for="field1" class="form-label">First name</label>
     <input type="text" class="form-control" id="field1" required>
