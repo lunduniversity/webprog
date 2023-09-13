@@ -142,7 +142,8 @@ We have two states entities related to salads: 1, The compose salad form state, 
   
   \item Start with the foundation part of a salad. 
   \begin{itemize}
-    \item First view the component state for the foundation. Write the code to render a \code{<select>} and all \code{<option>} elements for the foundation. You wrote the code to render the \code{<option>} list in assignment 1 in lab 1. Use \code{<select value=\{...\}>} to enforce which option is selected. In React you set the \code{value} attribute in \code{<select>}. In vanilla html this is done by using the \code{selected} attribute in the \code{<option>} element (out of scope of the course).
+    \item First view the component state for the foundation. Write the code to render a \code{<select>} and all \code{<option>} elements for the foundation. You wrote the code to render the \code{<option>} list in assignment 1 in lab 1. Use \code{<select value=\{...\}>} and \code{<option value=\{...\}>Text to view</option>}. The option with a matching value will be selected.\\
+    \emph{Note for experienced HTML users:} In React you use the \code{value} attribute in \code{<select>} instead of using the \code{selected} attribute in the \code{<option selected>} element to pre-select one option. (out of scope of the course).
     \item Make sure the component state controls which option is selected ("Pasta" is the initial state in the code above and should be selected in the browser). The user can not change this yet, since it is locked to the component state.
     \item Add an event handler, \code{onChange}, to the \code{<select>} element. The call back function can update the component state when the user selects a different foundation. The easiest way to check that the state is updated correctly is by inspect it using the React Developer Tools browser plugin.
   \end{itemize}
