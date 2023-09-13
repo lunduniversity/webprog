@@ -130,7 +130,7 @@ properties:
   \item \code{children} -- nested routes
   \item error handling
   \begin{itemize}
-    \item \code{errorComponent} -- an object (JSX expression)
+    \item \code{errorElement} -- an object (JSX expression)
     \item \code{ErrorBoundary} -- a react component (JavaScript function)
   \end{itemize}
   \item and more, covered later
@@ -319,9 +319,9 @@ function Item() {
 When exceptions are thrown in loaders, actions, or component rendering:
 \begin{itemize}
   \item the \code{element/Component} is not rendered
-  \item instead the \code{errorComponent/ErrorBoundary} is
+  \item instead the \code{errorElement/ErrorBoundary} is
   \begin{itemize}
-    \item \code{errorComponent} -- an object (JSX expression)
+    \item \code{errorElement} -- an object (JSX expression)
     \item \code{ErrorBoundary} -- a react component (JavaScript function)
     \item use one of them
   \end{itemize}
