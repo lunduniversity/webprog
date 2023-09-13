@@ -163,11 +163,14 @@ const router = createBrowserRouter([
   \item only one match in the array
   \item most constrained wins, order do not matter
   \item a path is composed of segments: pattern between '/'
+  \item text segment
   \begin{itemize}
     \item exact match, letter by letter
     \item case sensitivity is optional
-    \item path: \code{/first-segment/next-segment}
-    \item matches url: \code{/first-segment/next-segment}
+    \item percent decoded text, do not use \code{\%nn}
+    \item use url safe characters
+    \item path: \texttt{/kebab-case/in-path/next-segment}
+    \item matches url: \texttt{kebab-case/in-path/next-segment}
   \end{itemize}
 \end{itemize}
 \end{frame}

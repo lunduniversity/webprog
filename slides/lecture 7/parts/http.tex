@@ -49,37 +49,6 @@ Domain Name System (DNS)
 \end{itemize}
 \end{frame}
 
-
-%--- URL and URI ------------------------------------------------------------------------------
-\begin{frame}[fragile]\frametitle{URI and URL}
-\color{structure}
-\begin{itemize}\color{structure}
-  \item URI --- identifies a resource
-  \item URL --- identifies a location
-  \item URL is a subset of URI
-  \item URI = scheme:[//authority]path[?query][\#fragment]
-  \item authority = [userinfo@]host[:port]
-\end{itemize}
-\vspace{5mm}
-\begin{CodeBox}{}
-<h2 id="url">URI and URL</h2>
-...
-<a href="https://cs.lth.se/edaf90/#url">
-\end{CodeBox}
-\end{frame}
-
-%--- URL encoding ------------------------------------------------------------------------------
-\begin{frame}[fragile]\frametitle{URL encoding}
-URL is based on 7 bit ASCII
-\begin{itemize}
-  \item safe characters: a-z, A-Z, 0-9, \texttt{- \_ . \textasciitilde}
-  \item all others must be percent-encoding
-  \item \texttt{\%nn}, nn is 8 bit hexadecimal value
-  \item percent-encoding uses utf-8
-  \item \texttt{https://cs.lth.se/edaf90/lecture\%20notes}
-\end{itemize}
-\end{frame}
-
 %--- HTTP ------------------------------------------------------------------------------
 \section{HTTP}
 %--- HTTP ------------------------------------------------------------------------------

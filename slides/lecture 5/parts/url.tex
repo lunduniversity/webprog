@@ -1,0 +1,34 @@
+%--- URL and URI ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{URI and URL}
+\color{structure}
+\begin{itemize}\color{structure}
+  \item URI --- identifies a resource
+  \item URL --- identifies a location
+  \item URL is a subset of URI
+  \item URI = scheme:[//authority]path[?parameters][\#anchor]
+  \item authority = [userinfo@]host[:port]
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+<h2 id="url">URI and URL</h2>
+...
+<a href="https://cs.lth.se/course/edaf90/?year=2023#url">
+\end{CodeBox}
+\end{frame}
+
+%--- URL encoding ------------------------------------------------------------------------------
+\begin{frame}[fragile]\frametitle{Percent encoding}
+URL is based on 7 bit ASCII
+\begin{itemize}
+  \item safe characters: a-z, A-Z, 0-9, \texttt{- \_ . \textasciitilde}
+  \item all others must be percent-encoded
+  \item \texttt{\%nn}, nn is 8 bit hexadecimal value
+  \item percent-encoding uses utf-8
+  \item hard to read: \texttt{https://cs.lth.se/edaf90/lecture\%20notes}
+  \item avoid non-safe characters in URL
+  \item use \texttt{-} instead of space
+  \item commonly not case sensitive, avoid camelCase and PascalCase
+  \item do use kebab-kase
+\end{itemize}
+\end{frame}
+
