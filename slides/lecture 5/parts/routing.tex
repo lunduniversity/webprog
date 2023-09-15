@@ -279,6 +279,26 @@ function ShopFrame() {
 \end{CodeBox}
 \end{frame}
 
+%--- Outlet, pass props ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{\code{Outlet} --- passing props}
+Use \code{useOutletContext()} to get data in child component
+\begin{CodeBox}{}
+function ShopFrame() {
+  const data = useState();
+  return (
+    <div>
+      <Outlet context = data/>
+    </div>
+  );
+}
+
+function ChildComponent() {
+    const { data } = useOutletContext();
+    return <p>{data}</p>
+}
+\end{CodeBox}
+\end{frame}
+
 %--- Path Parameters ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Path Parameters}
 the router pass data from the path to the component
