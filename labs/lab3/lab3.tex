@@ -56,72 +56,101 @@
 \begin{enumerate}\firmlist
 \item Understanding how a React application is loaded by the browser.
 \item Understanding how a web application can be split into different pages using the React router.
-\item Get experience with passing props between components and combining them with parameters from the url.
+\item Get some experience with url parameters.
 \item Get some experience with form validation and the html 5 form validation api.
 \end{enumerate}
 
 %\clearpage
 \subsection*{Background}
 
-The assignments here assumes you have a working solution for lab 2, i.e. a working react app with three components: \code{App}, \code{ComposeSalad}, and \code{ViewOrder}.
+The assignments here assumes you have a working solution for lab 2, i.e. a working react app with three components: \code{App}, \code{ComposeSalad}, and \code{ViewOrder}. The basic functionality is there, but the user experience is not so good. we will adress this by adding form validation and navigation in this lab.
 
 \subsection*{Assignments}
 
 \begin{Assignments}
 
-\item We are going to move the \code{ComposeSalad} and \code{ViewOrder} to separate pages in the application. First, make sure you know what a router is and the basics of the react router, for example by reading the official tutorial: 
-\\ \url{https://reactrouter.com/en/6.8.0/start/tutorial}
+\item Let's start with form validation and feedback. When a user orders a salad we want to make sure that:
+\begin{itemize}
+  \item one foundation is selected
+  \item one protein is selected
+  \item one dressing is selected
+\end{itemize}
+If these conditions are not met, an error message should be displayed and the form submission should stop. We will use html 5 form validation, which have a set of predefined constraints. One of them is \code{required}, which ensures that a value is provided for the form field. Html is text, and the default action is to send a http request, which is also text based, so in this context ``a value'' means anything but the empty string. Remember, the empty sting is falsy in JavaScript. First, add \code{required} to the \code{<select>} fields. To test error handling with select fields, make sure that there is an invalid option and that the component state is is initialised to an empty sting, \code{useState("")}.
+\begin{Code}
+<select required ...>
+  <option value=''>Gör ditt val</option>
+  ... more options
+</select>
+\end{Code}
+Now press the submit button. You should get an error message from your browser. Let's replace this with your own error message and style it with bootstrap. There are two css classes in bootstrap for this: \code{valid-feedback}, and \code{invalid-feedback}. They can be used on a text element, for example \code{<div>} to show messages. The \code{<div>} should be sibling to the form field (\code{<select>}). The bootstrap css class will hide the element until any of the pseudo classes \code{:valid} or \code{:invalid} is set for the form input field and the css class \code{was-validated} is set on any parent element. We do not want to show error messages for fields the user have not interacted with, so set the \code{was-validated} in your \code{handleChange} and/or \code{handleSubmit} functions:
+\begin{Code}
+handleChange(event) {
+  event.target.parentElement.classList.add("was-validated");
+  // ...
+}
+handleSubmit(event){
+  event.preventDefault();
+  event.target.classList.add("was-validated");
+  // ...
+}
+\end{Code}
+If you only want to show error messages when the form is submitted, do not set the class in \code{handleChange}. Note, in \code{handleChange}, \code{event} points to the \code{<select>} element, but we want to update the style for parent \code{<div>} element. Hence the \code{parentElement}. Next, add an error message to your \code{<select>} fields. This adds your custom error messages. There is one more thing you need to do, remove the browser error messages:
+\begin{Code}
+<form onSubmit={this.handleSubmit} noValidate>
+\end{Code}
+The attribute noValidate tells the browser not to show its own error message. The browser still does html 5 form validation and updates the pseudo classes \code{:valid/:invalid}. You can check if a form is valid by calling \code{formElement.checkValidity()} on the form element, in \code{handleSubmit}:
+\begin{Code}
+if(!event.target.checkValidity()){ ... }
+\end{Code}
 
-\item We will use the react router. Add it to your project using npm and start the development web server, in the terminal (press \code{ctrl-c} first, if you are running the development web server from lab 2):
+\noindent On a successful form submission, clear the form and remove all \code{was-vaildated} classes. You do not want to show error messages befor the user have interacted with the form. 
+
+\item \emph{Optional assignment 3}: Add validation of the following constraint:
+\begin{itemize}
+  \item at least three, but not more than nine extras are selected
+\end{itemize}
+This error is not related to a single input, but rather a group of checkboxes. It is not a good idea to write an error message on each checkbox, rater add an alert box below the group headline, see \url{https://getbootstrap.com/docs/5.3/components/alerts/}. Also, there are no html5 constraints that you can use to let the browser do the validation for you. Instead you need to check the form validity in your event handlers and manage the state manually.
+\begin{Code}
+const [showExtrasError, setExtrasError] = useState(false);
+\end{Code}
+Do not bother the user with an error when the first extra is selected. Wait until the form is submitted. After a failed submission, you want to clear the error as soon as the problem is fixed.
+
+\item Navigation is next. We are going to move the \code{ComposeSalad} and \code{ViewOrder} to separate pages in the application. First, make sure you know what a router is and the basics of the react router, for example by reading the beginning of the tutorial on react routers home page (until ``Loading Data''): 
+\\ \url{https://reactrouter.com/en/main/start/tutorial}
+
+\item We will use the react router. Add it to your project using npm and start the development web server, in the terminal (press \code{ctrl-c} first, if you are running the development web server):
 \begin{Code}
 > npm install react-router-dom
 > npm start
 \end{Code}
 
-\item All React router components, for example \code{<Link> and <Route>}, must be a child of a router, we will use \code{BrowserRouter} in this lab. To ensur that nothing ends up outside the router by mistake we can add the \code{BrowserRouter} to the top of the React component tree. But where is that? How is \code{<App>} instantiated? To answer these questions lets see what happens when the browser loads your app. It will fetch a file from the servers root, which by default on most servers is a file called  \code{index.html}. There is a \code{public/index.html} file in your project. When you open it, there is no mention of \code{<App>}, just a \code{<div id="root">}. Change the page title (\code{<title>React App</title>}), or add some html to the page, save it. Look in the browser and you see that the title in the tab changes, so we know that this is the file viewed. If you open "View Source", under view/development in the browser, it looks similar but with one important addition: \code{<script defer src="/static/js/bundle.js"></script></head>}. This is the works of the React tool chain and \code{bundle.js} contains all the JavaScript code from your project. Specifically, it will include \code{src/index.js}. Open it and you will find code that adds \code{App} to the DOM. Add a \code{<BrowserRouter>} here:
-
-\begin{Code}
-import { BrowserRouter } from "react-router-dom";
-ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-\end{Code}
-
-\noindent \emph{Reflection question 1:} How do you replace the application icon, \code{favicon.ico}?
-
-\item Next up is a navigation bar. Let's place it in \code{App}, between the header and the salad bar components. It is a good idea to clean up the render function before it gets too complex. The html/JSX code quickly becomes hard to read when it grows, especially when you add wrapping \code{<div>} elements for styling. It is a good idea to separate the different parts of the page to separate React function components. If there are many dependencies to the component state you can move the code to functions inside the function. The inner function the s sees all local variables in the outer function. When adding a new portion to a page, it is good practice to place that part in a separate render function. This is what i have after adding an empty placeholder for the navigation bar:
+\item We need a navigation bar so the user can jump between pages. Let's place it in \code{App}, between the header and the \code{ComposeSalad/ViewOrder} components. It is a good idea to clean up the render function before it gets too complex. The html/JSX code quickly becomes hard to read when it grows, especially when you add wrapping \code{<div>} elements for styling. It is a good idea to separate the different parts of the page to separate React components. This is what i have after adding an empty placeholder for the navigation bar:
 
 \begin{Code}
 function App (props) {
   // code to deal with state
-  function Header() {  return (
+  return (
+    <div className="container py-4">
+        <Header />
+        <Navbar />
+        <ViewOrder />
+        <ComposeSalad />
+        <Footer />
+    </div>
+  );
+}
+function Header() {  return (
     <header className="pb-3 mb-4 border-bottom">
       <span className="fs-4">Min egen salladsbar</span>
     </header>
-  )}
-  function NavBar(props) { return ... } 
-  function PageContent(props) { return ... } 
-  function Footer(props) { return ... } 
+)}
+function NavBar(props) { return <></> } 
+function Footer(props) { return ... } 
 
-  return (
-      <div className="container py-4">
-          <Header />
-          <Navbar />
-          <PageContent />
-          <Footer />
-      </div>
-  );}
-
-}
 \end{Code}
 
-\noindent When using the React router you use the \code{<Link to="my-path">} elements for the user to click on to navigate in your app, similar to native \code{<a href="my-path">} html elements in static web pages. What about universal design? Do not worry, all the right \code{aria-*} attributes et.c. are set so screen readers know these are navigation elements. Use bootstrap classes to style the links, see \url{https://getbootstrap.com/docs/5.2/components/navs-tabs/}. Bellow is the example code adapted for the react router:
-\\ \emph{Option:} If you want a responsive design where the menu collapse to an icon on small screens, use navbar \url{https://getbootstrap.com/docs/5.2/components/navbar/}.
+\noindent When using the React router you use the \code{<Link to="my-path">} elements for the user to click on to navigate in your app, instead of native \code{<a href="my-path">} html elements. What about universal design? Do not worry, all the relevant \code{aria-*} attributes et.c. are set so screen readers know these are navigation elements. Use bootstrap classes to style the links, see \url{https://getbootstrap.com/docs/5.3/components/navs-tabs/#tabs}. Bellow is the example code adapted for the react router:
+\\ \emph{Option:} If you want a responsive design where the menu collapse to an icon on small screens, use navbar \url{https://getbootstrap.com/docs/5.3/components/navbar/}.
 
 \begin{Code}
 function Navbar() {
@@ -136,89 +165,73 @@ function Navbar() {
   </ul>);
 }
 \end{Code}
-Did you notice that the paths are hyphen separated word ("compose-salad"), commonly referred to as kebab case. This is by tradition for urls, which we will discuss later in the course. Add a second link for the \code{ViewOrder} page. Go to your browser and klick on the links. The path in your browser changes (url), the selected page is highlighted in the menu, and you see the navigations in the browser history. However, all pages look the same.
+Did you notice that the paths are hyphen separated word ("compose-salad"), commonly referred to as kebab case. This avoids percentage encoding of the urls, making it much nicer for humans to read. Add a second link for the \code{ViewOrder} page. Go to your browser and klick on the links. The path in your browser changes (the url) and you see the navigations in the browser history. However, all pages look the same.
 
 \noindent \emph{Reflection Question 2:} If you use \code{nav-pills} instead of \code{nav-tabs} the selected page is no longer highlighted in the menu, why? \emph{Hint:} \code{<NavLink>} and the \code{active} css class.
 
-\item Let's render the page content based on the navigation bar selection, either the \code{ComposeSalad}, or the \code{ViewOrder} component. For this you use \code{<Routes>} and \code{<Route>}. If you followed my code clean up advice above you should only need to edit the \code{PageContent()} function. Your solution should handle four routs:
+\item To view different content based on the url we need a router. To use the features of a router all components needs to be a child of a \code{<RouterProvider>}. To ensur that nothing ends up outside the router by mistake we can add the \code{<RouterProvider>} to the top of the React component tree. But where is that? How is \code{<App>} instantiated? To answer these questions lets see what happens when the browser loads your app. When you enter \code{http://localhost:3000/} in the url field, it will ask a web server at the local machine for the content to show. The server will answer with a default content, normally called \code{index.html}. You could ask for this file directly: \code{http://localhost:3000/index.html}. There is a \code{public/index.html} file in your project. When you open it, there is no mention of \code{<App>}, just a \code{<div id="root">}. Change the page title (\code{<title>React App</title>}), or add some html to the page, save it. Look in the browser and you see that the title in the tab changes, so we know that this is the file viewed. If you open "View Source", under view/development in the browser, it looks similar but with one important addition: \code{<script defer src="/static/js/bundle.js"></script>}. This is the works of the React tool chain and \code{bundle.js} contains all the JavaScript code from your project. Specifically, it will include \code{src/index.js}. Open it and you will find code that adds \code{App} to the DOM. Replace \code{App} with a \code{<RouterProvider>} here:
+
+\begin{Code}
+import { RouterProvider } from 'react-router-dom';
+import router from './router.js';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);
+\end{Code}
+
+\noindent You will also need a router configuration. Place it in a new file, \code{router.js}
+\begin{Code}
+import { createBrowserRouter } from "react-router-dom";
+import App from './App';
+
+const router = createBrowserRouter([
+  {
+    element: <App />,
+    children: [
+      {
+        path: "compose-salad",
+        element: <p>replace with compose salad component</p>
+      }]
+  },
+]);
+export default router;
+\end{Code}
+\noindent \emph{Note}, \code{App} do not have a path. This is a layout route. It will always be rendered. Place content that should be rendered on all pages her, for example headers and menus.
+
+\noindent \emph{Reflection question 1:} How do you replace the application icon, \code{favicon.ico}?
+
+
+\item Let's render the page content based on the url. In the router configuration we already have a layout rout rendering \code{App} and a child for compose salad. The path \texttt{compose-salad} renders the text ``replace with compose salad component'', replace it with \code{<ComposeSalad />}. What about the props? \emph{Either follow this instructions here, or use a context and reducer to pass data to children as described in the optional assignment in \ref{opt:redux} bellow.} We do not have access to the state of \code{App} in the router configuration, so we can not pass \code{inventory} and the shopping cart to \code{ComposeSalad} here. Instead, pass the data as props to \code{<Outlet >} and use \code{useOutletContext} in the component where it is needed. \code{<Outlet />} declares where the child rout element is rendered in its parent, which is \code{App} in our program. The same props are passed to all children, so pass all data any of the children needs in one object. Replace \code{<ViewOrder/><ComposeSalad/>} with \code{<Outlet context=\{\{ shoppingBasket, handleAddSalad, inventory \}\} />} in the JSX returned by \code{App()}. Now \code{<ComposeSalad />} should render if you have the right url in the browser. Add more routs:
 \\ \code{http://localhost:3000/compose-salad} $\rightarrow$ render the \code{ComposeSalad} component
 \\ \code{http://localhost:3000/view-order} $\rightarrow$ render the \code{ViewOrder} component
-\\ \code{http://localhost:3000/} $\rightarrow$ This is the first page of your app, render a welcome message. (You can also add a home link in the menu) \emph{hint:} \code{index} attribute
-\\ \code{http://localhost:3000/other-stuff} $\rightarrow$ all other urls, render a ``page not found'' message. \emph{hint:} \code{path="*"}
+\\ \code{http://localhost:3000/} $\rightarrow$ This is the first page of your app, render a welcome message. \emph{hint:} \code{index} attribute
+\\You can also add a \emph{home} button in the menu for the welcome page.
 
-\item Now you should have a working app with two components. Try to order a salad and then switch to the view order page. This user experience is not so good. When the customer order a salad they only see an empty form, no confirmation. Fix this by jumping to the view order page on a successful form submit. Read about navigating programmatically at \url{https://reactrouter.com/en/6.8.0/hooks/use-navigate}. React router hooks can only be used in functional components, so if you have a class component you can not use \code{useNavigate()} directly in your \code{ComposeSalad} class. This can be solved using higher order components, see \url{https://reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component}. Here is a wrapper:
-\begin{Code}
-import { useNavigate } from "react-router-dom";
-import ComposeSalad from './ComposeSalad';
+\emph{Note:} Try this: Start to compose a salad by selecting a few ingredients, switch to the view order page, and the back to the compose salad page. What do you see? An empty form. When you navigate away from the compose salad component it is deleted. A new component is created when you return to the page. Consequently any earlier state is lost. To avoid this, you can lift the form state up in the component tree (bad design) or store the component state in a persistent storage, for example \code{localstorage}. You will get hands on experience with \code{localstorage} in lab 4. There are other tricks that can be used as well, for example keep \code{ComposeSalad} in the react component tree (move it from the rout configuration to App) and hide it using CSS (\code{display:none}) when the compose salad tab is not selected.
 
-function ComposeSaladWrapper(props){
-  const navigate = useNavigate();
-  return (
-    <ComposeSalad navigate={navigate} {...props}/>
-  );
-}
-export default ComposeSaladWrapper;
-\end{Code}
-\noindent Update \code{ComposeSalad} so it jumps to the view order page when a salad is ordered.
+\item \label{opt:redux} \emph{Optional assignment}. Create a reducer for the shopping basket and pass it to the component tree using context as described in \emph{Scaling Up with Reducer and Context} \url{https://react.dev/learn/scaling-up-with-reducer-and-context}. The \code{inventory} object never changes, so you do not need to pass it using props. Instead import it directly in any file where it is used. We will adress this in lab 4.
 
+\item If the user enters an invalid url the app will blow up with an error. This is not nice. Handle this by showing a ``page not found'' page. The heder, navbar and footer should still be shown. \emph{Hint} \url{https://reactrouter.com/en/main/route/route#splats}
 
-\item Create a component, \code{ViewIngredient}, that shows the information from the \code{inventory} object about an ingredient, i.e vegan, lactose et.c. You should be able to navigate to the \code{ViewIngredient} component by clicking on the extras in the \code{ComposeSalad} component. To solv this, you should:
+\item Now you should have a working app with three pages. What happens when you order a salad? The only thing you see is that the form is cleared. You need to switch to the view order page to see it in the shopping basket. This user experience is not so good. Fix this by jumping to the view order page on a successful form submit. Read about navigating programmatically at \url{https://reactrouter.com/en/main/hooks/use-navigate}. Update \code{ComposeSalad} so it jumps to the view order page and show a confirmation message when a salad is ordered. \emph{Hint:} add a child rout to \code{view-order}, example url: ``\code{/view-order/confirm/123e4567-e89b-12d3-a456-426614174000}''. This should show a confirmation for salad 123e4567-e89b-12d3-a456-426614174000 and the shopping basket. What happens if the user writes an invalid uuid in the url?
+
+\noindent \emph{Reflection Question 3:} What is the meaning of a leading / in a path, the difference between \code{<Link to="view-order/confirm/123e4567-e89b-12d3-a456-426614174000" />} and \code{<Link to="/view-order/confirm/123e4567-e89b-12d3-a456-426614174000" />}. Try it, look in the browser url field.
+
+\item \emph{Optional assignment:} Create a component, \code{ViewIngredient}, that shows the information from the \code{inventory} object about an ingredient, i.e vegan, lactose et.c. You should be able to navigate to the \code{ViewIngredient} component by clicking on the extras in the \code{ComposeSalad} component. To solv this, you should:
 
 \begin{itemize}
   \item Add a \code{<NavLink ...>} around each ingredient name in \code{ComposeSalad}.
-  \item Create a functional component: \code{ViewIngredient}. The ingredient name must be passed in the url path. Pass \code{inventory} to it as a prop, as you did with \code{ComposeSalad}.
-  \item Add \code{<Route path='/view-ingredient/:name' ...>} to your router.
+  \item Add one route with \code{path='/compose/salad/view-ingredient/:name' ...>} to your router configuration.
+  \item Add a \code{<Outlet />} to \code{ComposeSalad}
 \end{itemize}
 
-\noindent \emph{Reflection Question 3:} What is the meaning of a leading / in a path, the difference between \code{<Link to="/view-ingredient/:name" />} and \code{<Link to="view-ingredient/:name" />}. Try it, look in the browser url field.
+Add a "view info" button next to the select dropdown. When the user clicks on it, show the information for the selected ingredient.
 
-\emph{Oprional assignemnt:} Add a "view info" button next to the select dropdowns. When the user clicks on it, jump to the \code{view-ingredient} page for the selected ingredient.
-
-\emph{Note:} If you return to the \code{compose-salad} page after viewing the info about an ingredient the form will be empty. This is because React will create a new \code{ComposeSalad} object when you navigate to the page (even if you use the browser history). Consequently any earlier state is lost. Normally you would use pop-ups to show the ingredient info, but here I want you to get experience using router params.
-
-\item Now your app is split to different pages, where each page have a clear functionality. This is good, do not confuse the user by putting too many unrelated things on one page. Let's move on to another important part of the user experience, form validation and feedback. When a user orders a salad we want to make sure that:
-\begin{itemize}
-  \item one foundation is selected
-  \item one protein is selected
-  \item one dressing is selected
-\end{itemize}
-If these conditions are not met, an error message should be displayed and the form submission should stop. We will use html 5 form validation, which have a set of predefined constraints. One of them is \code{required}, which ensures that a value is provided for the form field. Html is text, and the default action is to send a http request, which is also text based, so in this context ``a value'' means anything but the empty string. Remember, the empty sting is falsy in JavaScript. First, add \code{required} to the \code{<select>} fields. To test error handling with select fields, make sure that there is an invalid selection (\code{<option value="">}) and that your component form state is set to an empty sting in the constructor and after form submission.
-\begin{Code}
-<select required ...>
-  <option value=''>make a choice...</option>
-  ... more options
-</select>
-\end{Code}
-Now press the submit button. You should get an error message from your browser. Let's replace this your own error message and style it with bootstrap. There are two css classes in bootstrap for this: \code{valid-feedback}, and \code{invalid-feedback}. They can be used on a text element, for example \code{<div>} to show messages. The \code{<div>} should be sibling to the form field (\code{<select>}). The bootstrap css class will hide the element until any of the pseudo classes \code{:valid} or \code{:invalid} is set for the form input field and the css class \code{was-validated} is set on any parent element. We do not want to show error messages for fields the user have not interacted with, so set the \code{was-validated} in your \code{handleChange} or \code{handleSubmit} functions:
-\begin{Code}
-handleChange(event) {
-  event.target.parentElement.classList.add("was-validated");
-  // ...
-}
-handleSubmit(event){
-  event.preventDefault();
-  event.target.classList.add("was-validated");
-  // ...
-}
-\end{Code}
-If you only want to show error messages when the form is submitted, you skip the part in \code{handleChange}. Note, in \code{handleChange}, \code{event} points to the \code{<select>} element, but we want to update the style for parent \code{<div>} element. Hence the \code{parentElement}. Next, add an error message to your \code{<select>} fields. This adds your custom error messages. There is one more thing you need to do, remove the browser error messages:
-\begin{Code}
-<form onSubmit={this.handleSubmit} noValidate>
-\end{Code}
-The attribute noValidate tells the browser not to show its own error message. The browser still does html 5 form validation and updates the pseudo classes \code{:valid/:invalid}. You can check if a form is valid by calling \code{formElement.checkValidity()} on the form element, in \code{handleSubmit}:
-\begin{Code}
-if(!event.target.checkValidity()){ ... }
-\end{Code}
-
-\item \emph{Optional assignment 3}: Add validation of the following constraint:
-\begin{itemize}
-  \item at least three, but not more than nine extras are selected
-\end{itemize}
-This error is not related to a single input, but rather a group of checkboxes. It is not a good idea to write an error message on each checkbox, rater add an alert box below the group headline, see \url{https://getbootstrap.com/docs/5.2/components/alerts/}. Also, there are no html5 constraints that you can use to let the browser do the validation for you. Instead you need to check the form validity in your event handlers and manage the state manually.
-\begin{Code}
-const [showExtrasError, setExtrasError] = useState(false);
-\end{Code}
-Do not bother the user with an error when the first extra is selected. Wait until the form is submitted. After a failed submission, you want to clear the error as soon as the problem is fixed.
+\item This is all for lab 3. Now your app is split to different pages, where each page have a clear functionality. This is good, do not confuse the user by putting too many unrelated things on one page. The user gets relevant feedback when the form is not correctly filled. This covers the basic features and user experience in the app. In lab 4 we will add persistent storage to preserve state when the app is reloaded, and add communication to a server for fetching ingredient data and placing orders.
 
 \end{Assignments}
 
