@@ -219,7 +219,9 @@ export default router;
 
 \item Now you should have a working app with three pages. What happens when you order a salad? The only thing you see is that the form is cleared. You need to switch to the view order page to see it in the shopping basket. This user experience is not so good. Fix this by jumping to the view order page on a successful form submit. Read about navigating programmatically at \url{https://reactrouter.com/en/main/hooks/use-navigate}. Update \code{ComposeSalad} so it jumps to the view order page and show a confirmation message when a salad is ordered. \emph{Hint:} add a child rout to \code{view-order}, example url: ``\code{/view-order/confirm/123e4567-e89b-12d3-a456-426614174000}''. This should show a confirmation for salad 123e4567-e89b-12d3-a456-426614174000 and the shopping basket. What happens if the user writes an invalid uuid in the url?
 
-\noindent \emph{Reflection Question 3:} What is the meaning of a leading / in a path, the difference between \code{<Link to="view-order/confirm/123e4567-e89b-12d3-a456-426614174000" />} and \code{<Link to="/view-order/confirm/123e4567-e89b-12d3-a456-426614174000" />}. Try it, look in the browser url field.
+\emph{Note}, you need to \code{import "bootstrap/dist/js/bootstrap.bundle.min"} for the dismiss button of bootstraps alerts to work. Place the import in \code{App}.
+
+\emph{Reflection Question 3:} What is the meaning of a leading / in a path, the difference between \code{<Link to="view-order/confirm/123e4567-e89b-12d3-a456-426614174000" />} and \\ \code{<Link to="/view-order/confirm/123e4567-e89b-12d3-a456-426614174000" />}. Try it, look in the browser url field.
 
 \item \emph{Optional assignment:} Create a component, \code{ViewIngredient}, that shows the information from the \code{inventory} object about an ingredient, i.e vegan, lactose et.c. You should be able to navigate to the \code{ViewIngredient} component by clicking on the extras in the \code{ComposeSalad} component. To solv this, you should:
 
