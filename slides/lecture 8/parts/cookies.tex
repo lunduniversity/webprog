@@ -70,8 +70,9 @@ Cookies
   \item \texttt{setItem(), getItem(), removeItem(), clear()}
   \item associated with the current origin (server and port)
   \item 2-10 MB per origin
-  \item never sends data to the server
-  \item supported, but may not be available
+  \item data stored in browser, never sends data to the server
+  \item data may be lost, cleared by user or browser
+  \item supported by all browsers, but may not be available (private browsing)
 %  \item \texttt{StorageEvent}
 %  \begin{itemize}
 %    \item do not work for the same page
@@ -100,9 +101,9 @@ Cookies
 \begin{frame}[fragile]\frametitle{Service Worker}
 \color{structure}
 \begin{itemize}\color{structure}
-  \item sits between browser, app and network
+  \item between the app and network
+  \item can intercept incoming/outgoing network traffic
   \item bound to an origin and a path
-  \item can intercept incoming trafic
   \item only https
   \item limitations in incognito/private browsing mode
   \item combine with IndexDB for a rich offline experience
@@ -113,8 +114,9 @@ Cookies
 %--- Service Worker ------------------------------------------------------------------------------
 \begin{frame}[fragile]\frametitle{Service Worker}
 \begin{itemize}\color{structure}
+  \item no shared data with the app
   \item event driven
-  \item full asynch
+  \item full async
   \begin{itemize}
     \item no access to synchronous APIs, i.e. Web Storage
   \end{itemize}
