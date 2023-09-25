@@ -19,15 +19,13 @@
 \begin{frame}[fragile] \frametitle{SSE, Example}
 \begin{CodeBox}{Header and Payload}
 const source = new EventSource('server-resource-url');
-source.addEventListener('message', function(e) {
-  console.log(e.data); }, false);
-source.addEventListener('open', function(e) {
-}, false);
-source.addEventListener('error', function(e) {
+source.addEventListener('message', handleMessage);
+source.addEventListener('open', handleOpen);
+source.addEventListener('error', (e) => {
  if (e.readyState == EventSource.CLOSED) {
     // Connection was closed.
   }
-}, false);
+});
 }\end{CodeBox}
 \end{frame}
 
