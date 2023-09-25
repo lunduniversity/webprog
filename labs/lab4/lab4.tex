@@ -90,26 +90,33 @@ The server should now be running and waiting for requests. Test it using \texttt
 
 %\noindent \emph{Option:} You can also access the salad bar REST service on codesandbox: \url{https://wkqy6rpw25.sse.codesandbox.io/foundations} IMPORTANT: you must load the page in a web browser before you start your application. Codesandbox first send a html page containing the compilation process before it jumps to the \code{server.js} response. This will most likely give problems for your application.
 
-\item We need to store the fetched data somewhere in your application. Since it will affect the rendering of your application it must be stores in a component state (remember, render must be a pure function of \code{props} and the component state (\code{useState} hook). The GUI will not be updated if you change \code{inventory} in lab 2 and 3). In which component should you store the fetched data? The data will be used in several components and of course should only be fetched once. To share data between components, we must pass the data from a parent to its children (\code{props}). Therefore shared data must be stored in a common ancestor of all components using the data. In our case this is \code{App}. Please read more about dynamically fetching data in react applications here \url{https://www.robinwieruch.de/react-fetching-data/}.
-
-To minimise the changes to the application we will recreate the inventory object from \texttt{inventory.ES6.js}. You have already written the code for passing the data from \code{App} to the children, so now we only need to recreate the inventory object and add it to \code{this.state}. First, open \texttt{App.js} and remove the import line:
+\item We will use react router data API for loading inventory. Each route can have a loader function which will be executed befor the associated component is rendered. Here is my rout for compose-salad:
 \begin{Code}
-// import inventory from './inventory.ES6';
+{
+  path: "compose-salad",
+  loader: inventoryLoader,
+  Component: ComposeSalad
+}
 \end{Code}
-This leads to some errors since \code{inventory} is removed from the global name space. A good practice is to always have a valid data structure for dynamically fetched data in your app. In \code{App()}, add an empty inventory to the state:
+You also need to implement the \code{inventoryLaoder} function. Start with this:
 \begin{Code}
-const [inventory, setInventory] = useState({});
+async function inventoryLoader() {
+  const inventory = { Sallad: { price: 10, foundation: true, vegan: true } };
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return inventory;
+}
 \end{Code}
-Now the app should work again, at least if your components can handle an empty inventory object. For example in \code{ViewOrder} or in \code{ComposeSalad}, you might have something like:
+There is a delay of 500 ms befor the component is rendered. Feel free to vary this during the lab. Most of the time you want it to be 0, but increase it when working on the spinner. You can get the data returned by the loader inside a component using a hook:
 \begin{Code}
-const selected = 'Tomat';
-const price = this.state.inventory[selected].price;
+import { useLoaderData } from 'react-router-dom';
+function ComposeSalad({ onOrder: handleOrder }) {
+  const inventory = useLoaderData();
+  \\ more code
+}
 \end{Code}
-\noindent It will throw an \code{TypeError} when inventory is an empty object. The above code is not a problem now since 'Tomat' can not be selected in the first place, but later in the lab you will load a salad from local storage befor inventory is populated.
+Load your app in a browser and test so the router and loader function works. Of curse there is only one ingredient to choose now.
 
-\item Next we will update \code{this.state.inventory} by fetch data from the salad bar REST server. When should the app fetch the inventory data? You could fetch the data when needed, but in this case i suggests you fetch all data when the app launches. Check out the lifecycle of a React component to get some suggestions on where to place the fetch code, see \url{https://beta.reactjs.org/learn/synchronizing-with-effects}. The effect hook is only available in function components. Class based components should instead override \code{componentDidMount()}, see \url{https://reactjs.org/docs/react-component.html}. 
-
-Use the \code{fetch(url, [options])} function to send a http request to the inventory server. It might be easiest to build the url using string concatenation, but you can also check out the \code{URL(url, [base])} class. Browse the documentation for \code{fetch()}. It returns a \code{Promise} that resolves to a \code{Response} object. To get the body you can use \code{Response.json()}, which returns yet another \code{Promise}. First fetch the list of foundations, the for each foundation fetch its properties from the server, e.g. \code{fetch(‘http://localhost:8080/extras/Tomat’)}. Fetching the properties of the ingredients are independent actions and to reduce loading time, you must fetch them concurrently. Important! \code{fetch()} throws an error in some situations, but not all. If the server response code is 404, \code{fetch()} will treat this as a valid response. To catch tis you need to check the response.ok flag:
+\item Next we will fetch data from the REAS-server. Use the \code{fetch(url, [options])} function to send a http request to the inventory server. It might be easiest to build the url using string concatenation, but you can also check out the \code{URL(url, [base])} class. Browse the documentation of \code{fetch()}. It returns a \code{Promise} that resolves to a \code{Response} object. To get the http body you can use \code{Response.json()}, which returns yet another \code{Promise}. First fetch the list of foundations, then for each foundation fetch its properties from the server, e.g. \code{fetch(‘http://localhost:8080/extras/Tomat’)}. Fetching the properties of the ingredients are independent actions and to reduce loading time, you must fetch them concurrently. \emph{Hint:} \code{fetch()} returns directly, so it is easy to start several concurrent requests. Use \code{Promise.all()} when you need to wait for several promises. Important! The \code{fetch()}  promise will only reject with a TypeError if a network error occurs. If the server response with an http code, for example 404, \code{fetch()} will treat this as a valid response. To catch http errors you need to check the response.ok flag:
 \begin{Code}
 function safeFetchJson(url) {
   return fetch(url)
@@ -121,19 +128,30 @@ function safeFetchJson(url) {
   });
 }
 \end{Code}
-Every time you call \code{setState()} the render functions are potentially called and the DOM is updated. This is a costly operation and we do not want to do this for each inventory (it can make the UI slow). Also, we do not want to show the user a subset of the options, either none or all foundations options are shown. It is however ok to show the foundation options while still waiting for the protein options. This is a perfect use case for \code{Promise.all()}. It takes an array of \code{Promise} objects, which will run in parallel, and returns a \code{Promise} that settles when all inner promises are settled. You should use four calls to \code{Promise.all()}, one for each for foundations, proteins, extras, and dressings.
-
-Mixing sequential and parallell actions in a singe \code{Promise.all()} chain can be hard to write and confusing to read. Use functions to organise and structure your code. Place sequence of actions you want to run in parallel in a function. Then the parallel actions becomes a singe chain in the outer promise chain, making the code easier write and read. 
+Mixing sequential and parallell actions in a singe \code{Promise.all()} chain can be hard to write and confusing to read. Use functions to organise and structure your code. Place sequence of actions you want to run in parallel in a function. Then the parallel actions becomes a singe link in the outer promise chain, making the code easier write and read. 
 \begin{enumerate}
-\item Write an \code{async} function for fetching a single ingredient. Example:\\ \code{fetchIngredient('extras', 'Bacon')} should return \code{\{price: 10, extra: true\}}, or\\ \code{\{Bacon: \{price: 10, extra: true\}\}}.
-\item Write the code to fetch the list of foundations. This will give you an array of ingredient names.
-\item Foreach ingredient, use \code{fetchIngredient()} to get the ingredient properties from the server. \emph{Hint:} \code{Array.prototype.map()}.
-\item Wait for all ingredient properties to be fetched. Use \code{Promise.all}.
-\item Update the component state: \code{setInventory (oldInventory => merge(oldInventory, fetchedIngredients))}.
+\item \label{fetch:list-of-names}Write the code to fetch the list of foundations. This will give you an array of ingredient names.
+\item Write an \code{async} function for fetching a single ingredient. Example:\\ \code{fetchIngredient('extras', 'Bacon')} should return \code{\{price: 10, extra: true\}}, \code{\{Bacon: \{price: 10, extra: true\}\}}, or similar.
+\item \label{fetch:build-category} For each ingredient in the list returned in step \ref{fetch:list-of-names}, use \code{fetchIngredient()} to get the ingredient properties from the server. Now you have both the name and property of each ingredient. Add them to the inventory.
+\item \label{fetch:await-build-category} Wait until all foundations have been added to the inventory. Use \code{Promise.all}.
+\item You need to repeat the step above for proteins, extras, and dressing. This is easier if step \ref{fetch:build-category} and \ref{fetch:await-build-category} is in a function.
+\item \code{inventoryLoader()} should return a promise containing the inventory that will settle when it is complete.
 \end{enumerate}
 \emph{Hint:} Look at the slides from lecture 6, ``chaining'', for examples on how to pass data down the promise chain.
 
 \emph{Note}: For security reasons, JavaScript code is only allow to send http requests to the server it was downloaded from, its origin. The reason is to protect the user from cross site scripting attacks, which will be covered in the last lecture. The origin is both the IP-address and the port. The salad bar REST server is running on a different port than the react development server, so the servers have different origins and, by default, the browser prevents your app from communicating with the salad bar REST server. Luckily there is a way to relax this constraint. A server can allow communication with scripts from other origins using the Access-Control-Allow-Origin header. If you look at the headers returned by the salad bar REST server, see the output in the terminal from the \code{curl} commands in assignment 1. In the headers you see that the server allows access from *, meaning JavaScript code from any server. The browser still do not trust this communication, and hides most http headers. Do not bother looking for the header information in your app. In the lab you may assume that the body contains json data, however do check the status code to make sure your request was successful.
+
+\item Fetching the inventory might take some time and the user will get annoyed if there is no direct response when navigating to the \code{view-order} page. To solve this we will display a spinner while the inventory is loading. The \code{ComposeSalad} is not rendered until after the inventory is fetched, so we can not place the spinner there. Instead it must be in a component that is already rendered when the navigation starts, either in \code{App} or a new \code{Spinner} component. Change the render code in \code{App}/\code{Spinner} to either show a spinner, or its child in the router tree (\code{<Outlet />}). This will display a spinner when any child loads data. Use the navigation hook to detect when data is loading. It will return an object containing information of any ongoing navigation. Its \code{state} property will be one of \code{idle}, \code{loading}, or \code{submitting}. You can also look at the \code{location} property. It will be \code{undefined} when there is no ongoing navigation, see \url{https://reactrouter.com/en/main/hooks/use-navigation}. Feel free to use a bootstrap spinner \url{https://getbootstrap.com/docs/5.3/components/spinners/}.
+\begin{Code}
+function BootstrapSpinner() {
+  return <div className="d-flex justify-content-center">
+    <div className="spinner-border" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </div>
+  </div>
+}
+\end{Code}
+\emph{Reflection question:} What is the difference between \code{<BootstrapSpinner />} and \code{\{BootstrapSpinner()\}} when using the bootstrap spinner component in a JSX expression?
 
 \item There is one more functionality involving a REST call missing in your app, placing an order. Add an order button in the \code{ViewOrder} component. To place an order, you need to send a \texttt{POST} request containing the details. The REST api for this can be tested using:
 \\ \noindent \begin{verbatim}
@@ -141,7 +159,7 @@ curl -isX POST -H "Content-Type: application/json"
    --data '[["Sallad", "Norsk fjordlax", "Tomat", "Gurka", "Dillmayo"]]'
    http://localhost:8080/orders/
 \end{verbatim}
-\noindent The body of the request contains an array of salads. Each salad is an array with the selection for the salad (array of strings). \emph{Hint:} \code{Object.keys(mySalad.ingredients)}. The response is an order confirmation:
+\noindent The body of the request contains an array with the ordered salads. Each salad is an array with the selected ingredients (array of strings). \emph{Hint:} \code{Object.keys(mySalad.ingredients)}. The response is an order confirmation:
 \begin{verbatim}
 {"status":"confirmed",
 "timestamp":"2022-02-06T13:36:50.506Z",
@@ -149,13 +167,12 @@ curl -isX POST -H "Content-Type: application/json"
 "price":55,
 "order":[["Sallad","Norsk fjordlax","Tomat","Gurka","Dillmayo"]]}
 \end{verbatim}
-\noindent View an order confirmation to the user.
-\\\emph{Note:} if you want to use a toast, you need to initialise it: \url{https://stackoverflow.com/questions/67946016/how-to-show-bootstrap-5-toast-in-react-js}. 
+\noindent View an order confirmation to the user, for example using a toaster \url{https://getbootstrap.com/docs/5.3/components/toasts/}. You need to strore the order confirmation in the component state.
 \\\emph{Optional assignment:} Store the order confirmations in \code{App} and view them in a new component.
 
-\item I have one more assignment for you. Store the order in local store, and load it when the app starts. This is done using the \code{window.localStorage}. There are two functions: \code{setItem(key, value)} and \code{getItem(key)}. All values are stored in localestore as text, so use \code{JSON.stringify()} and \code{JSON.parse()}. Note that \code{new Salad(text)} only handles a singel salad object, but localstore contains the order, an array of salad objects. Place the code for parsing the array of salads in the Salad class instead of the React component.
+\item I have one more assignment for you. Store the shopping basket in the browsers local storage, and load it when the app starts. This is done using the \code{window.localStorage}. There are two functions: \code{setItem(key, value)} and \code{getItem(key)}. All values are stored in localestore as text, so use \code{Salad.parse()} from lab 1.
 
-After reading salads stored in localstore, new salads created in the \code{ComposeSalad} component might not get a unique \code{id}. This can happen since the static instance counter is reset to 0 when the app is reloaded. The solution is to use the \code{uuid} property.
+After reading salads stored in localstorege, new salads created in the \code{ComposeSalad} component might not get a unique \code{id} when using a static instance counter. This can happen since the counter is reset to 0 when the app is reloaded. The solution is to use the \code{uuid} property.
 \end{Assignments}
 \input{../prechapters/licence-contributors.tex}
 
