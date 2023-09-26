@@ -54,8 +54,8 @@
 
 \begin{itemize}\firmlist
 \item You are to report the time spent on the project, so remember to keep a log of working hours.
-\item The project is to be carried out in groups of 4 students. Enroll for the groups at \url{https://sam.cs.lth.se/LabsSelectSession?occasionId=743}. You can enroll on your own, the system will form groups automatically. If two or more students  enroll at the same time, you will end up in the same group (the system will not split groups, but will add more students to existing groups)
-\item Divide the work into smaller parts and let the individual group members take responsibility of the different parts. Work in small increments and use continuous integration. I encourage pair programming and continuous discussions among the group members. Having responsibility of a component does not mean you have to do all the work. Help your group members, and they help you.
+\item The project is to be carried out in groups of 4 students. Enroll for the groups at \url{https://sam.cs.lth.se/LabsEnrollSession?sessionId=37002&occasionId=834}. You can enroll on your own, the system will form groups automatically. If two or more students  enroll at the same time, you will end up in the same group (the system will not split groups, but will add more students to existing groups)
+\item I leave the planing and organisation for the project work to you. I encourage pair programming and continuous discussions among the group members. Having responsibility of a component does not mean you have to do all the work. Help your group members, and they help you.
 \end{itemize}
 
 \section*{Project description}
@@ -64,28 +64,35 @@
 \noindent Mandatory parts for all projects:
 \begin{itemize}\firmlist
 \item You are to develop a single page web application.
-\item Use a component based framework that is not based on React. I can give support for angular framework, \url{https://angular.io} so this is my recommendation. It is possible to use other frameworks, for example Vue, but then I can not give support.
-\item The application should be slightly larger than the salad bar app from the labs. At least one HTML form and 3-6 components where at least one parent pass data to a child, and one child pass data to the parent. If you are using global state, redux or angular services, the communication can go trough the global state.
-\item Styling must be done using a package, prebuilt GUI components rather than using native HTML and CSS. In angular you can use material \url{https://material.angular.io}, or ng-bootstrap \url{https://ng-bootstrap.github.io/}. This is different compared to the labs, where CSS classes were used to style the app. In the project, you are to get hands on experience with using prebuilt components and angular directives for styling.
+\item Use a component based framework that renders the app at the client side. I can give support for react and angular, \url{https://angular.io} so this is my recommendation. It is possible to use other frameworks, for example Vue, but then I can not give support.
+\item The application should be slightly larger than the salad bar app from the labs and contain at least one HTML form.
+\item You must use a global state: context and reducer for react, a service for angular.
+\item Styling must be done using a package, prebuilt GUI components rather than using native HTML and CSS. In angular you can use material \url{https://material.angular.io}, or ng-bootstrap \url{https://ng-bootstrap.github.io/}. In react you can use \url{https://react-bootstrap.netlify.app}. 
+
+This is different compared to the labs, where CSS classes were used to style the app. In the project, you are to get hands on experience with using prebuilt components and angular directives for styling.
 \item You must fetch data for your app from an external server. There are plenty of open data sources, for example: \url{https://www.dataportal.se}, \url{http://www.omdbapi.com}, \url{https://openlibrary.org/dev/docs/api/books}, \url{https://www.openstreetmap.org}. For angular you must use an angular service for this. For other frameworks you should use the recommended design pattern for that framework.
 \end{itemize}
 
 \subsection*{Timeframe and deliverables}
 
 \begin{itemize}
-\item 26/2 --- hand-in of a project proposal. The hand-in is done in canvas. Only one in the group needs to hand in the proposal. Describe the functionality of your app and what packages you plan to use. The proposal can be half an A4 page, and definitely less than 2 A4 pages. I will give you feedback on the coverage of your proposal (to little/much work, to simple/complex task).
-\item 8/3 --- deadline for final report. Hand-in is done in canvas. I believe in running code. I prefer codeSandbox, but a git repo also works. Hint, if you use github.com, you can create a codeSandbox that is synced with your repo, see \url{https://codesandbox.io/docs/git}. In addition to running code, you are to hand-in a written report, see bellow for details.
+\item 4/9 --- hand-in of a project proposal. The hand-in is done in canvas. Only one in the group needs to hand in the proposal. Describe the functionality of your app and what packages you plan to use. The proposal can be half an A4 page, and definitely less than 2 A4 pages. I will give you feedback on the coverage of your proposal (to little/much work, to simple/complex task).
+\item 20/9 --- deadline for final report. Hand-in is done in canvas. I believe in running code. I prefer codeSandbox, but a git repo also works. Hint, if you use github.com, you can create a codeSandbox that is synced with your repo, see \url{https://codesandbox.io/docs/git}. In addition to running code, you are to hand-in a written report, see bellow for details.
 \end{itemize}
 
 \subsection*{The final report}
 \noindent The report should cover the following topics:
 \begin{itemize}
 \item Success ratio and lessons learned. Describe how much of your initial idea was actually implemented. You do not need to be detailed about what you got running, I see this from the running code. Rather, the focus should be on the parts that did not work out as intended.
-\item Main obstacles during the project. This can be anything, from group dynamics to getting a piece of code to run. (primarily so I can adjust the topics for coming years)
+\item Main obstacles during the project. This can be anything, from group dynamics to getting a piece of code to run. (primarily so I can give advice and adjust the topics for coming years)
 \item A short reflection on which knowledges and skills you acquired in other courses that was most useful during your project.
 \item Individual statement of contributions. Here I expect that several group members have been involved in most parts of the project. Please also report the amount of time spent on the project. The reported time can be anonymous, i.e. student 1, student 2..., and will only be used to adjust the topics for coming years.
-\item The report is probably 1-5 A4 pages.
+\item The report is probably 1-3 A4 pages.
+\end{itemize}
+
+\subsection*{Hints}
+\begin{itemize}
+\item if you need a REST server you can use \url{https://www.npmjs.com/package/json-server}.
 \end{itemize}
 \input{../labs/prechapters/licence-contributors.tex}
-
 \end{document}
