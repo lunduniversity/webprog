@@ -16,32 +16,20 @@ React is the minimalistic approach
 \begin{frame}[fragile] \frametitle{Common Features}
 
 The application is built from a tree of components.
-\\A component have:
+\\A component:
 \begin{itemize}
-  \item a ''template`` for layout
-  \item an object with:
-  \begin{itemize} 
-    \item properties for state
-    \item functions for behaviour
-  \end{itemize}
-\end{itemize}
-
-\vspace{5mm}
-The framework:
-\begin{itemize}
-  \item maintain the application component tree (instantiates components)
-  \item a mechanism for parent $\leftrightarrow$ child communication
-  \item change detection: update the DOM when the application objects change
-  \item life cycle hooks
+  \item may have state
+  \item communicate with its children
+  \item is rendered
 \end{itemize}
 \end{frame}
 
 %--- Templates - react ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Templates - React}
+\begin{frame}[fragile] \frametitle{React --- render code}
 
 React:
 \begin{itemize}
-  \item \code{render()} --- a pure function generating a tree of react elements
+  \item render code --- a pure function generating a tree of react elements
   \item JSX makes it look like html
   \item but uses camelCase for some names
   \item assumption:
@@ -56,13 +44,13 @@ React:
 \end{frame}
 
 %--- Templates - angular ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Templates - Angular}
+\begin{frame}[fragile] \frametitle{Angular --- Templates}
 Angular:
 \begin{itemize}
   \item is html (text in a separate file, or string template)
   \item components can have any legal XML tag name
   \item conditions and loops --- use \emph{directives}
-  \item can embed ''TypeScript`` code
+  \item can embed ''TypeScript`` expressions, no side effects allowed
   \item context/namespace is the component object
   \item \emph{pipes} --- operation chanining
   \item \emph{directives} --- custom element attributes
@@ -128,13 +116,6 @@ Angular
 
 %--- Defining Components ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Defining Components}
-React
-\begin{itemize}
-  \item render function: \code{function MyComponent(props)\{ return ... \}}
-  \item \code{class MyComponent extends React.Component}\\
-    \hspace{3mm} \code{render() \{ return ... \}}
-\end{itemize}
-\vspace{1mm}
 Angular
 \begin{CodeBox}{child}
 
@@ -142,28 +123,14 @@ Angular
   selector: 'app-my-component',
   templateUrl: './my.component.html',
   styleUrls: ['./my.component.css']
+
+  standalone: true,
+  imports: [CommonModule, TodoViewComponent],
 })
 export class MyComponent { }
 \end{CodeBox}
 \end{frame}
 
-
-%--- Parent-Child Communication ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Parent-Child Communication}
-React
-\begin{itemize}
-  \item no syntax for declaring an component interface
-  \item parent $\rightarrow$ child:
-  \begin{itemize}
-    \item parent pass values as html attributes
-    \item values are placed in the \code{props} object
-  \end{itemize}
-  \item child $\rightarrow$ parent
-  \begin{itemize}
-    \item parent must pass a \emph{call back function}
-  \end{itemize}
-\end{itemize}
-\end{frame}
 
 %--- Parent-Child Communication ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Parent-Child Communication}
@@ -189,33 +156,19 @@ export class MyComponent {
 
 %--- Change Detection ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Change Detection}
-React
-\begin{itemize}
-  \item the render function:
-  \begin{itemize}
-    \item must be a pure function of \code{this.state, this.props}
-  \end{itemize}
-  \item any state change must be done using \code{setState(newState)}
-\end{itemize}
-\vspace{5mm}
 Angular
 \begin{itemize}
   \item must use data bindings in the template
   \item you do not need to tell angular when the state changes
   \item angular detects any change in your objects and updates the DOM
+  \item optimise using RxJS streams
 \end{itemize}
 \end{frame}
 
 %--- Services ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Services}
-React
 \begin{itemize}
-  \item not supported: use the global name space
-\end{itemize}
-\vspace{5mm}
-Angular
-\begin{itemize}
-  \item \emph{Dependency Injection}: parameters in the component constructor
+  \item \emph{Dependency Injection}
   \item singleton objects accessible by any component
   \item service: a TypeScript class
 \end{itemize}
@@ -226,15 +179,15 @@ Angular
 export class MyService {
 }
 \end{CodeBox}
+
+\begin{CodeBox}{}
+  // component using a service
+  readonly todoService = inject(TodoService);
+\end{CodeBox}
 \end{frame}
 
 %--- Modules ------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Modules}
-React
-\begin{itemize}
-  \item use JavaScript modules
-\end{itemize}
-
 \vspace{5mm}
 Angular
 \begin{itemize}
@@ -242,7 +195,7 @@ Angular
   \item exports the public parts
   \item can be lazy loaded
   \item modules can import other modules
-  \item an application is always a \emph{root module}
+  \item support for stand alone components
 \end{itemize}
 \end{frame}
 
