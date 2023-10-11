@@ -88,6 +88,8 @@ The server should now be running and waiting for requests. Test it using \texttt
 > curl -i http://localhost:8080/dressings/Dillmayo
 \end{Code}
 
+In powershell, use \code{Invoke-WebRequest -Uri http://localhost:8080/proteins/}.
+
 %\noindent \emph{Option:} You can also access the salad bar REST service on codesandbox: \url{https://wkqy6rpw25.sse.codesandbox.io/foundations} IMPORTANT: you must load the page in a web browser before you start your application. Codesandbox first send a html page containing the compilation process before it jumps to the \code{server.js} response. This will most likely give problems for your application.
 
 \item We will use react router data API for loading inventory. Each route can have a loader function which will be executed befor the associated component is rendered. Here is my rout for compose-salad:
