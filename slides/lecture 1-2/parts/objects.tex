@@ -176,7 +176,7 @@ function Person() {
   this.birthday = function() { self.age++; };
   this.birthday2 = _ =>  this.age++;
 }
-let per = new Person();
+const per = new Person();
 setInterval(per.birthday, 1000);
 \end{CodeBox}
 \end{frame}
@@ -202,6 +202,14 @@ setInterval(per.birthday, 1000);
 %---------------------------------------------------------------------------------
 \begin{frame}[fragile]
 \frametitle{Prototype Chain}
+\begin{CodeBox}{}
+function Person(name) {
+  this.age = 0;
+  this.name = name;
+  this.birthday = () =>  this.age++;
+}
+const per = new Person('Per');
+\end{CodeBox}
   \centering
   \includegraphics[width=14cm]{img/prototype_chain}
 
@@ -241,11 +249,12 @@ Every functions is stored in a function object:
 %--- Person Example 1 ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{prototype}
 \begin{CodeBox}{}
-function Person() {
+function Person(name) {
   this.age = 0;
+  this.name = name;
 }
 Person.prototype.birtday = function() { this.age++; };
-let per = new Person();
+const per = new Person();
 \end{CodeBox}
   \centering
   \includegraphics[width=14cm]{img/prototype_chain3}
@@ -290,7 +299,7 @@ Property write:
 %--- Person Example 2 ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{prototype}
 \begin{CodeBox}{}
-let cat = new Person();
+let cat = new Person("KisseKatt");
 cat.birtday = function() { this.age += 7; }
 \end{CodeBox}
   \centering
@@ -306,8 +315,8 @@ cat.birtday = function() { this.age += 7; }
 \end{itemize}
 \vspace{2mm}
 \begin{CodeBox}{Cat extends Person}
-function Cat() {
-  this = Person.call(this);
+function Cat(name) {
+  return Person.call(this, name);
 }
 Cat.prototype = Object.create(Person.prototype);
 Cat.prototype.birthday = function() { this.age += 7; }
@@ -353,7 +362,8 @@ a "Java class" corresponds to two objects in JavaScript
 class Person {
   static #count = 0;
 
-  constructor(age) {
+  constructor(name, age) {
+    this.name = name || "Anonymous";
     this.age = age || 0;
     Person.#count = Person.#count + 1;
   }
@@ -367,6 +377,9 @@ class Person {
 
 %--- Class Picture  ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{prototype}
+\begin{CodeBox}{}
+  const per = new Person("Per", 5);
+\end{CodeBox}
   \centering
   \includegraphics[width=14cm]{img/prototype_chain6}
 \end{frame}
