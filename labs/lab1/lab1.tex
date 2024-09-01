@@ -103,9 +103,9 @@ In this lab you will use Node.js as execution environment. The tool is installed
   node lab1.mjs
 \end{Code}
 
-\noindent \emph{Note on file extensions.} Javascript files normally have the file extension .js. For a long time Node only supported CommonJS modules, but now it also supports ECMAscript modules. However, you can not import a ECMAscript module in a CommonJS module, so both \code{lab1.mjs} and \code{inventory.mjs} must be ECMAscript modules. Node defaults to CommonJS modules but treats all files with extension .mjs as ECMAscript modules. Use the .mjs file extension in lab 1 and .js for the rest of the labs.
+\noindent \emph{Note on file extensions.} Javascript files normally have the file extension .js. For a long time Node only supported CommonJS modules, but now it also supports ECMAscript modules. However, you cannot import a ECMAscript module in a CommonJS module, so both \code{lab1.mjs} and \code{inventory.mjs} must be ECMAscript modules. Node defaults to CommonJS modules but treats all files with extension .mjs as ECMAscript modules. Use the .mjs file extension in lab 1 and .js for the rest of the labs.
  
-For this lab, please add additional printouts, to make it clear which text belongs to which task. There is a template file, \code{lab1.mjs}, in Canvas that contains a skeleton program, so you do not need to copy code from this pdf.Try the following code (you need to download ./inventory.mjs from Canvas or GitHub first):
+For this lab, please add additional printouts, to make it clear which text belongs to which task. There is a template file, \code{lab1.mjs}, in Canvas that contains a skeleton program, so you do not need to copy code from this pdf. Try the following code (you need to download ./inventory.mjs from Canvas or GitHub first):
 \begin{Code}
 import inventory from './inventory.mjs';
 console.log('\n=== beginning of printout ================================')
@@ -116,7 +116,7 @@ console.log('inventory:', inventory);
 
 \subsubsection*{IDE}
 
-\noindent Do you want to use an IDE when writing code? I recommend Visual Studio Code, see \url{https://code.visualstudio.com}. Check out their tutorial on running and debugging JavaScript programs using node.js (skip the "An Express application" part), see \url{https://code.visualstudio.com/docs/nodejs/nodejs-tutorial}. There is also a video showing how to debug JavaScript code here \url{https://www.youtube.com/watch?v=2oFKNL7vYV8}. VS code has great support for JavaScript and TypeScript. We will use TypeScript later in the course which Eclipse has poor support for. TypeScript is JavaScript extended with optional typing.
+\noindent Do you want to use an IDE when writing code? I recommend Visual Studio Code, see \url{https://code.visualstudio.com}. Check out their tutorial on running and debugging JavaScript programs using node.js (skip the "An Express application" part), see \url{https://code.visualstudio.com/docs/nodejs/nodejs-tutorial}. VS code has great support for JavaScript and TypeScript. You may use TypeScript later in the course.
 
 \subsection*{Assignments}
 
@@ -128,7 +128,7 @@ console.log('inventory:', inventory);
 
 \item %To get started you can either set the project up yourself or use the starter code from GitHub. 
 %\subsubsection{Set up the project yourself}
-Set up the project: Create a directory and download the files \code{lab1.mjs} and \code{inventory.mjs} from Canvas to this directory. Run the code from VS code or a terminal:
+Set up the project: Create a directory and download the files \code{lab1.mjs} and \code{inventory.mjs} from Canvas to this directory. Run the code from VS code or a terminal (or run it from VS code):
 \begin{Code}
 node lab1.mjs
 \end{Code}
@@ -148,7 +148,7 @@ node lab1.mjs
 const names = Object.keys(inventory);
 names.forEach(name => console.log(name));
 \end{Code}
-\emph{Note,} \code{forEach} passes three argument: (name, index, array), but we only use the name, so it is enough to declare one parameter in our callback function.
+\emph{Note,} \code{forEach} passes three argument: (name, index, array), but we only want to print the name, so we use an arrow function instead of passing \code{console.log} to \code{forEach}.
 \\In this case, you will get the same result with:
 \begin{Code}
 for (const name in inventory) {
@@ -163,26 +163,26 @@ names
 .sort((a, b) => a.localeCompare(b, "sv", {sensitivity: 'case'}))
 .forEach(name => console.log(name));
 \end{Code}
-This is an example of function chaining. Each function in the chain returns a collection, and you can easily add additional functions to the chain without storing the intermediate result in a local variable. This is the same principle as used with streams, which we will use later in this course. This is very convenient when generating data-dependent content of web pages. Another advantage is that this that a function call is an expression, so you can do this inline, for example:
+This is an example of function chaining. Each function in the chain returns a collection, and you can easily add additional functions to the chain without storing the intermediate result in a local variable. This is very convenient when generating data-dependent content of web pages. Another advantage is that a function call is an expression, so you can do this inline, for example:
 \begin{Code}
-const myString = 'choose one of: ' + JSON.stringify(
-names
-.sort((a, b) => a.localeCompare(b, "sv", {sensitivity: 'case'}))
-.forEach(name => console.log(name))
-) + '. This is all options we offer';
+const myString = 'choose one of: ' +
+  names
+    .sort((a, b) => a.localeCompare(b, "sv", { sensitivity: 'case' }))
+    .join(", ")
+  + '. This is all options we offer';
 \end{Code}
-\noindent This is extremely common in the render function of a web app. Your life as a programmer gets a lot easier when you get familiar with function chaining.
+\noindent This is extremely common in the render function of a web app. Your life as a web programmer gets a lot easier when you get familiar with higher order functions and function chaining.
 
-\newpage \noindent \emph{Assignment 1:} Write a function that returns a string containing the HTML \code{<option>} elements for a select box, that has all salad ingredients with a certain property. Example:
+\newpage \noindent \emph{Assignment 1:} Write a function that returns an array of strings containing the HTML \code{<option>} elements for a select box, that has all salad ingredients with a certain property. Example:
 \code{makeOptions(inventory, 'foundation')} should return 
 \begin{Code}
-<option value="Pasta" key="Pasta"> Pasta, 10 kr</option>
-<option value="Sallad" key="Sallad"> Sallad, 10 kr</option> ...
+['<option value="Pasta" key="Pasta"> Pasta, 10 kr</option>', 
+ '<option value="Sallad" key="Sallad"> Sallad, 10 kr</option>',  ...]
 \end{Code}
-\emph{Hint:} Use the functions \code{Array.prototype.filter()}, \code{Array.prototype.map()} and \\\code{Array.prototype.reduce()}.
+\emph{Hint:} Use the functions \code{Array.prototype.filter()} and \code{Array.prototype.map()}.
 \\ \emph{Note:} The \code{key} attribute is not standard HTML. It is needed by React for tracking changes in the DOM.
 
-\item We need a representation for a salad. Create a JavaScript class named \code{Salad} for that. You need to store the selected \code{foundation}, \code{protein}, \code{extras}, and \code{dressing}. Later on, salad objects will be passed to different components in the web app and to avoid having to pass along the inventory to all components, the salad object should itself also store copies of the properties of the ingredients in the salad. Use one object as a dictionary to store the selected ingredients, see the printout bellow.
+\item We need a representation for a salad. Create a JavaScript class named \code{Salad} for that. You need to store the selected \code{foundation}, \code{protein}, \code{extras}, and \code{dressing}. Later on, salad objects will be passed to different components in the web app and to avoid having to pass along the inventory to all components, the salad object should be self contained, it should store the properties of the ingredients in the salad. Use one object as a dictionary to store the selected ingredients, see the printout bellow.
 
 \emph{Assignment 2:} Create a Salad class. You may use the ECMAScript 2015 \code{class} syntax, or the backwards compatible constructor function for this and the remaining assignments (except in assignment 3). The class must contain the following methods:
 \begin{Code}
@@ -276,8 +276,8 @@ console.log('kopian med gurka kostar ' + singleCopy.getPrice() + ' kr');
 
 \item One limitation with the Salad class is that you can only have a fixed amount of each ingredient. What happens if a customer wants extra Parmesan?
 \\\emph{Assignment 5:} 
-Create a new class, \code{GourmetSalad}, which extends Salad to support this. In a \code{GourmetSalad} the customer can specify the size of each ingredient when adding it to the salad as an optional third parameter, that defaults to 1. You can add the same ingredient several times to the same salad. For each call to add, the size should increase (newSize = oldSize + addedSize). The size should be stored among the other properties of the ingredient, for example\code{\{{ price: 10, protein: true, size: 1.5 }\}}. The price should be the unit price, so \code{getPrice()} will compute $prize*size$.
-It is always good to rely on the implementation of the superclass extending a class. \code{GourmetSalad.prototype.add} should call \code{Salad.prototype.add} (\code{super.add(name, propertiesWithSize)}).
+Create a new class, \code{GourmetSalad}, which extends Salad to support this. In a \code{GourmetSalad} the customer can specify the size of each ingredient when adding it to the salad as an optional third parameter, that defaults to 1. You can add the same ingredient several times to the same salad. For each call to add, the size should increase (newSize = oldSize + addedSize). The size should be stored among the other properties of the ingredient, for example\code{\{{ price: 10, protein: true, size: 1.5 }\}}. The price is the unit price, so \code{getPrice()} will compute $prize*size$ for each ingredient.
+It is always good to rely on the implementation of the superclass when extending a class. \code{GourmetSalad.prototype.add} should call \code{Salad.prototype.add} (\code{super.add(name, propertiesWithSize)}).
 \\\emph{Note}: Some objects are shared between \code{inventory} and among salad objects. You must not modify these. Instead make a copy. If you forget this you will get a run-time error since inventory is read only, see deepFreeze() at the bottom of \code{inventory.mjs}.
 \\ Here is a test case:
 \begin{Code}
