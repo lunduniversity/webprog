@@ -4,10 +4,15 @@
 \begin{itemize}
   \item functions are values
   \begin{itemize}
-    \item \code{Function} objects
-    \item assign functions to variables
-    \item use functions as arguments to other functions
-    \item return functions form other functions
+    \item \code{Function} objects 
+    \item normal object, with the addition of being callable
+    \item \code{object} in the typesystem
+    \item \code{typeof} returns {function}
+    \item higher order functions
+    \begin{itemize}
+      \item a function can be passed as argument
+      \item a function  can return another function
+    \end{itemize}
   \end{itemize}
   \item call by value - like in Java (objects are references)
   \item default return value:
@@ -54,11 +59,11 @@ console.log(calcRectArea(5, 6));
   \item creates a \code{Function} object
   \item the function name is optional, omitting it creates an anonymous function
   \item the name is stored in the \code{Function} object, can only be used inside the function
-  \item you must store the value to use the function
+  \item you must store the value, pas it as argument, to use the function
 \end{itemize}
 \begin{CodeBox}{function expression}
 const array1 = [1, 4, 9, 16];
-const map1 = array1.map(function myMul(x) => x * 2);
+const map1 = array1.map(function(x) { return  x * 2});
 \end{CodeBox}
 \end{frame}
 
@@ -218,7 +223,7 @@ console.log(name);
 \begin{CodeBox}{closure}
 function foo() {
   let cnt = 0;
-  return _ => cnt++;
+  return (_ => cnt++);
 }
 
 let idGenerator = foo();

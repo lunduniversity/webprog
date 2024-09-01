@@ -2,14 +2,13 @@
 \begin{frame}[fragile] \frametitle{Objects}
 \begin{itemize}
   \item an object is a dictionary: string $\rightarrow$ any value
-  \item objects have properties - a (string, value) par in the dictionary (attributes, methods)
+  \item attributes and methods are also called properties
   \item properties can have any name, including reserved words and operations
   \item access properties using:
   \begin{itemize}
     \item dot notation: \code{myObj.prop}
     \item array index notation: \code{myObj['prop']}
   \end{itemize}
-  \item properties are not in scope of methods, must use \code{this}
   \item \code{typeof objRef === 'object'}
   \item add properties by writing to them \code{myObj.newProp = 'adding stuff';}
   \item remove properties by: \code{delete myObj.newProp}
@@ -32,7 +31,7 @@
   \item a property is defined by:
   \begin{itemize}
     \item \code{property-name : value}
-    \item \code{method(parameters) \{ statements \}}
+    \item \code{method-name(parameters) \{ statements \}}
   \end{itemize}
   \item name in plain text, quotes if needed 
   \item value is any JavaScript expression
@@ -69,11 +68,12 @@ const myObject = {
 \begin{CodeBox}{object literals}
 let myPoints = [{x: 0, y: 0}, {x:10, y:15}];
 
-function foo(x, y, a, b, c, d) {
- console.log('b = '+ b);
-}
 function bar(x, y, options) {
  console.log('b = '+ options?.b);
+}
+
+function foo(x, y, a, b, c, d) {
+ console.log('d = '+ d);
 }
 \end{CodeBox}
 \end{frame}
@@ -84,11 +84,11 @@ Remember, \code{foo} and \code{bar} prints option \code{b}.
 \vspace{5mm}
 \begin{CodeBox}{What is printed?}
 foo(0, 0, 0, 0, 1, undefined, 1);
-bar(0, 0, {a: 0, b: 1, d:1});
+bar(0, 0, {a: 0, b: 0, c:1, e: 1});
 \end{CodeBox}
 \vspace{10mm}
-Did you notice thet foo have one extra parameter compared to the arguments list?
-\\ Too few, or extra parameters do not raise errors in JavaScript. 
+Did you notice thet foo have one extra argument compared to the parameter list?
+\\ Too few, or extra parameters are silent in JavaScript. 
 \end{frame}
 
 %--- Constructor Functions ---------------------------------------------------
@@ -102,15 +102,16 @@ Did you notice thet foo have one extra parameter compared to the arguments list?
   \item are	 function, intended use differs
   \begin{itemize}
     \item \code{function ConstructorFunction(args) \{ ... \}}
-    \item by convention: use leading capital letter
+    \item by convention: use Pascal Case
   \end{itemize}
+  \item arrow functions can not be used as constructor functions
   \item \code{new ConstructorFunction(args)} will:
   \begin{enumerate}
     \item creates an empty object
     \item set up inheritance
     \item calls \code{ConstructorFunction(args)} with the new object as \code{this}
     \item the constructor function adds properties to \code{this} and assign them values
-    \item the result of \code{new} is the value returned by the \emph{constructor function}\\
+    \item the result of \code{new} is the object returned by the \emph{constructor function}\\
              remember: the default return value of functions called by \code{new} is \code{this}
   \end{enumerate}
 \end{itemize}
@@ -146,6 +147,7 @@ let point3 =
 %--- this---------------------------------------------------
 \begin{frame}[fragile] \frametitle{this}
 \begin{itemize}
+  \item properties are not in the scope of methods, must use \code{this}
   \item \code{this} is defined in all functions
   \item its value depends on how the function is called:
   \begin{itemize}
@@ -196,6 +198,7 @@ setInterval(per.birthday, 1000);
     \item \code{Object.setPrototypeOf(object, chain)}
   \end{itemize}
   \item the prototype chain is initialised by \code{new} when the object is created
+  \item the \code{prototype} property of the constructor function  is used as the first link
 \end{itemize}
 \end{frame}
 
@@ -344,7 +347,7 @@ a "Java class" corresponds to two objects in JavaScript
   \item a prototype object
   \begin{itemize}
     \item the object to add to the prototype chain
-    \item place any stuff to be inherited by the instances here
+    \item methods are placed here
   \end{itemize}
 \end{itemize}
 \vspace{5mm}
@@ -352,8 +355,10 @@ a "Java class" corresponds to two objects in JavaScript
 \code{Class} was introduced in ECMAScript 2015
 \begin{itemize}
   \item syntactical sugar, set up the prototype chin as outlined above
+  \item access is \code{public} or \code{#private}
   \item \code{static} will add the property to the constructor function object
-  \item \code{public} or \code{#private}
+  \item methods are place int he prototype of the constructor function
+  \item attributes are place in the created object
 \end{itemize}
 \end{frame}
 %--- Class Example ---------------------------------------------------

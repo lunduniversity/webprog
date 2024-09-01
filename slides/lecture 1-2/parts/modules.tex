@@ -7,8 +7,9 @@
 function cube(x) {
   return x * x * x;
 }
-export { cube, foo };
 const foo = Math.PI + Math.SQRT2;
+const text = "private in module";
+export { cube, foo };
 \end{CodeBox}
 \begin{CodeBox}{some-code.js}
 import { cube, foo } from './my-module.js';
