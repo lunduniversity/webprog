@@ -168,17 +168,17 @@ let foo = (width, height) => { width * height };
 \end{CodeBox}
 \end{frame}
 
-%--- Function Oriented Programming ---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Function Oriented Programming}
+%--- Higher order functions ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Higher order functions}
 
-JavaScript have all features of a function oriented language.
+JavaScript has all features of a function oriented language.
 %\vspace{8mm}
 
 \begin{CodeBox}{function oriented programming}
 let list = [1, 2, 3, 4, 5];
 let a = list.filter((x) => x % 2 === 0);
 let b = a.map(x => x + 2);
-b.forEach(x => console.log(x));
+b.forEach(console.log);
 let c = b.reduce((sum, x) => sum + x, 0);
 \end{CodeBox}
 \begin{CodeBox}{chaining}

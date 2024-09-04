@@ -91,6 +91,23 @@ Did you notice thet foo have one extra argument compared to the parameter list?
 \\ Too few, or extra parameters are silent in JavaScript. 
 \end{frame}
 
+%---Undefined Names ---------------------------------------------------
+\begin{frame}[fragile] \frametitle{Access to Undefined Names}
+Variables and properties have distinct name spaces.
+\\ \vspace{4mm}
+Name Scope: Variables and Parameters
+\begin{itemize}
+  \item read: throws ReferenceError
+  \item write: creates a variable in the global scope
+\end{itemize}
+\vspace{5mm}
+Objects: Properties
+\begin{itemize}
+  \item read: evaluates to \code{undefined}
+  \item write: adds the property to the object
+\end{itemize}
+\end{frame}
+
 %--- Constructor Functions ---------------------------------------------------
 \begin{frame}[fragile] \frametitle{Constructor Functions}
 
@@ -365,12 +382,13 @@ a "Java class" corresponds to two objects in JavaScript
 \begin{frame}[fragile] \frametitle{Class Example}
 \begin{CodeBox}{}
 class Person {
-  static #count = 0;
+  static count = 0;
+  static #defaultName = "Anonymous";
 
   constructor(name, age) {
-    this.name = name || "Anonymous";
+    this.name = name || Person.#defaultName;
     this.age = age || 0;
-    Person.#count = Person.#count + 1;
+    Person.count = Person.count + 1;
   }
 
   birthday() {
@@ -410,23 +428,6 @@ class Cat extends Person {
   }
 }
 \end{CodeBox}
-\end{frame}
-
-%---Undefined Names ---------------------------------------------------
-\begin{frame}[fragile] \frametitle{Access to Undefined Names}
-Variables and properties have distinct name spaces.
-\\ \vspace{4mm}
-Name Scope: Variables and Parameters
-\begin{itemize}
-  \item read: throws ReferenceError
-  \item write: creates a variable in the global scope
-\end{itemize}
-\vspace{5mm}
-Objects: Properties
-\begin{itemize}
-  \item read: evaluates to \code{undefined}
-  \item write: adds the property to the object
-\end{itemize}
 \end{frame}
 
 %--- Standard Classes---------------------------------------------------
