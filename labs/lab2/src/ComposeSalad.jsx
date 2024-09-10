@@ -8,8 +8,15 @@ function ComposeSalad(props) {
   return (
     <div className="continer col-12">
       <div className="row h-200 p-5 bg-light border rounded-3">
-        <h2>Välj bas</h2>
-        {foundationList.map(name => <div key={name} className="col-4">{name}</div>)}
+        <h2>Välj innehållet i din sallad</h2>
+        <fieldset className="col-md-12">
+          <label htmlFor="foundation" className="form-label">Välj bas</label>
+          <select value="Sallad" className="form-select" id="foundation">
+            <option key="Sallad" value="Sallad">Salad</option>
+            <option key="Pasta" value="Pasta">Pasta</option>
+          </select>
+        </fieldset>
+
       </div>
     </div>
   );

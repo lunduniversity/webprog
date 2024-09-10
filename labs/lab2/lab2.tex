@@ -66,7 +66,7 @@ Open the bootstrap documentation to get an overview of the different bootstrap c
 %\clearpage
 \subsection*{Set up}
 
-In the first lab you created JavaScript code to manage custom made salads. In this lab you will create a web page where a user can compose and order salads. On the course canvas page you find the instructions for creating a new react project. Follow this and replace \code{App.js} with the one in canvas. You should now have an app with a headline, a container box listing the extras, and a footer.
+In the first lab you created JavaScript code to manage custom made salads. In this lab you will create a web page where a user can compose and order salads. On the course canvas page you find the instructions for creating a new react project. Follow this and replace \code{App.jsx} with the one in canvas. You should now have an app with a headline, a container box listing the extras, and a footer.
 
 \subsection*{Assignments}
 
@@ -74,97 +74,128 @@ In the first lab you created JavaScript code to manage custom made salads. In th
 
 \item Study the relevant material for lecture 3 and 4.
 
-\item You will create React components during the lab. You should use function components with the \code{useState} hook.
+\item You will create React components during the lab. You must use function components with the \code{useState} hook.
 
-\item Create a component for composing salads (download the template file from Canvas). All source files are stored in \code{./src} directory of your project:
+\item Download the template component for composing salads (download from Canvas). All source files are stored in \code{./src} directory of your project:
 \begin{Code}
 import { useState } from 'react';
 
 function ComposeSalad(props) {
-  let foundations = Object.keys(props.inventory)
-                    .filter(name => props.inventory[name].foundation);
-  const [foundation, setFoundation] = useState('Pasta'); 
-  const [extra, setExtra] = useState({Bacon: true, Fetaost: true}); 
+  const foundationList = Object.keys(props.inventory).filter(name => props.inventory[name].foundation);
+  const [foundation, setFoundation] = useState('Pasta');
+  const [extras, setExtra] = useState({ Bacon: true, Fetaost: true });
 
   return (
-    <div className="container col-12">
+    <div className="continer col-12">
       <div className="row h-200 p-5 bg-light border rounded-3">
-        <h2>Välj bas</h2>
-        {foundations.map(name => <div key={name} className="col-4">{name}</div>)}
+        <h2>Välj innehållet i din sallad</h2>
+        <fieldset class="col-md-12">
+          <label for="foundation" class="form-label">Välj bas</label>
+          <select value="Sallad" class="form-select" id="foundation">
+            <option key="Sallad" value="Sallad">Salad</option>
+            <option key="Pasta" value="Pasta">Pasta</option>
+          </select>
+        </fieldset>
+
       </div>
     </div>
   );
 }
-export default ComposeSalad;\end{Code}
+export default ComposeSalad;
+\end{Code}
+\noindent Add it to your App:
+\begin{Code}
+import ComposeSalad from './ComposeSalad';
 
+function App() {
+  ...
+  return (
+      ...
+      <ComposeSalad inventory={inventory}></ComposeSalad>
+      ...
+);}
+\end{Code}
 \noindent A few observations:
 \begin{itemize}
   \item Remember to export the component name, otherwise you can't instantiate it outside the file.
   \item Note the JSX code in the function, it looks like HTML with embedded JavaScript.
-   \item \code{key=\{name\}} helps react track witch part of the DOM to render when data changes, read about it in the react documentation (Quick Start/Rendering lists).
-   \item \code{className="container"} is a bootstrap class that adds some styling to the page so it looks nicer. Style other html elements using bootstrap css classes.
+  \item \code{key=\{name\}} helps react track witch part of the DOM to render when data changes, read about it in the react documentation (Quick Start/Rendering lists).
+   \item \code{className="container"} is a bootstrap class that adds some styling to the page so it looks nicer. Style other html elements using bootstrap css classes, see the bootstrap docs: \url{https://getbootstrap.com/docs/5.3/layout/containers/}. You fond more relevant examples under ``Forms'' in the left menu.
    \item JSX does not have comments, but you can use embedded JavaScript for that:
 \begin{Code}
 <span>  {/* this part won't do anything right now */}  </span>
 \end{Code}
 \end{itemize}
 
-\noindent Next we will instantiate ComposeSalad in App. Make sure \code{src/App.js} imports everything you will use. These are my imports:
-\begin{Code}
-import 'bootstrap/dist/css/bootstrap.css';
-import { useState } from 'react';
-import inventory from './inventory.mjs';
-import ComposeSalad from './ComposeSalad'
-\end{Code}
+\item You should now have a template app running with a html form for choosing the foundation. Open the app in a browser and try to select a different foundation. You can't since it's bound to ``Sallad'': \code{<select value="Sallad">}. Update the code so the select instead is bound to the component state, see line 5: \code{const [foundation, setFoundation] = useState('Pasta')}. Change the the state and see that the selection in the app changes. Chang the state either in the source code, or using the ``React developer tools'' browser plugin (Components tab in the browser developers tools).
 
-\noindent Add a \code{ComposeSalad} component in App, in the returned JSX expression add:
-\begin{Code}
-<ComposeSalad inventory={inventory} />
-\end{Code}
+\emph{Note for students with prior HTML experience:} In React you use the \code{value} attribute in \code{<select>} instead of using the \code{selected} attribute in the \code{<option selected>} element to pre-select one option. (out of scope of the course).
 
-\noindent Open the java script console in the web browser and to check for output. Varnings are printed here when React finds some problems. Always have the java script console open to see messages from react. Test this by removing the \code{key=\{name\}} attribute. There should not be any warnings or errors when you have finished the lab.You need to reload the page to clear the console after fixing the problem.
+You have created a read only select element and React warns about this. Open the java script console in the web browser to see the message. Warnings are printed here when React finds some problem. Always have the java script console open to see messages from react. Let's follow Reacts suggestion. Add an event handler to handle change events: \code{<select onChange=\{handelFoundation\}>} and add the function (inside the body of \code{ComposeSalad()} since it uses \code{setFoundation}):
+\begin{Code}
+function handelFoundation(event) {
+  setFoundation(event.target.value);
+}
+\end{Code}
+\noindent Now you have a controlled react component. The browser renders the state of the component and the state is updated when the user interacts with the form.
+
+There is one more thing you need to do for the foundation. The list of options is not complete. Generate the \code{<option>} elements from inventory, see lab 1 assignment 1. You need to modify your code slightly since we use JSX instead of generating strings.
 
 \emph{Reflection question 1:} The render function must be a pure function of \code{props} and the component state, the values returned by \code{useState()}. What happens if the output of the render function is depending on other data that changes over time?
 
 \emph{Reflection question 2:} In the code above, the \code{foundations} array is computed every time the component is rendered. The inventory changes very infrequent so you might think this is inefficient. Can you cache \code{foundations} so it is only computed when \code{props.inventory} changes? Hint, read about the second parameter to \code{useEffect}, ``Learn React''/``Escape Hatches''/``Synchronizing with Effects'', \url{https://react.dev/learn/synchronizing-with-effects}. Is it a good idea? Read You Might Not Need an Effect: \url{https://react.dev/learn/you-might-not-need-an-effect}
 
-\item In your \code{ComposeSalad} react component, add a HTML form for composing a salad. This requires a fair amount of code and knowledge. Divide the work to small incremental steps, for example:
+\item Complete the form in \code{ComposeSalad} for the protein, extras and dressing. The initial state of the extras has selected Bacon and Fetaost. Make sure these are pre-selected in the html form (feel free to change the initial state when this works). Read all requirements and hints bellow.
 \begin{enumerate}
-  \item Read and understand what should be stored in the component state, see \url{https://react.dev/learn/thinking-in-react#step-3-find-the-minimal-but-complete-representation-of-ui-state}.
-  \item Read all requirements and hints bellow.
-  \item The user must select: one foundation, one protein, two or more extras, and one dressing. The \code{Salad} class from lab 1 is not suitable to work with here. Instead use a state variable for each of the selections, as indicated by the provided \code{ComposeSalad} skeleton.
-  
-We have two states entities related to salads: 1, The compose salad form state, which changes while the user is composing a salad. This state should be local to \code{ComposeSalad}. 2, The list of salads in the shopping basket. This state is created and modified by \code{ComposeSalad} and viewed by \code{ViewOrder} which we will write later. This state belongs to a common ancestor of the producer/viewer, the \code{App} component.
-  
-  \item You will use a html form with select and check boxes to compose the salad. The html form must view the \code{ComposeSalad} state. Not the other way around (never read the form state from the DOM). The React state is the ``single source of truth''
-  
-  \item We need to decide on how the html form fields should be stored in the component state. The \code{Salad} class is not suitable for holding the form state since it mixes the values from different form fields. Instead we use one state variable for each of the parts of the salad. Use strings for foundation, protein and dressing and an object containing the selected extras (or you can use the \code{Set} class from JavaScript standard library). Object property names are the names of the selected extras. Add and delete the properties as the user checks/unchecks the boxes).
-  
-  \item Start with the foundation part of a salad. 
-  \begin{itemize}
-    \item First view the component state for the foundation. Write the code to render a \code{<select>} and all \code{<option>} elements for the foundation. You wrote the code to render the \code{<option>} list in assignment 1 in lab 1. Use \code{<select value=\{...\}>} and \code{<option value=\{...\}>Text to view</option>}. The option with a matching value will be selected.\\
-    \emph{Note for experienced HTML users:} In React you use the \code{value} attribute in \code{<select>} instead of using the \code{selected} attribute in the \code{<option selected>} element to pre-select one option. (out of scope of the course).
-    \item Make sure the component state controls which option is selected ("Pasta" is the initial state in the code above and should be selected in the browser). The user can not change this yet, since it is locked to the component state.
-    \item Add an event handler, \code{onChange}, to the \code{<select>} element. The call back function can update the component state when the user selects a different foundation. The easiest way to check that the state is updated correctly is by inspect it using the React Developer Tools browser plugin.
-  \end{itemize}
-  \item When this works it is time to add some structure your code. You will use a similar \code{<select>} for foundation, protein, and dressing and it would be nice to reuse the code. Also, having many \code{<div>}, \code{<select>}, and \code{<option>} elements in the same render funktion makes it really hard to see what belongs to which part of the GUI. It is good to divide large components to several smal, and use components for structures that are repeated, for example the selects for foundation, protein and dressing. This is what I introduced in my solution:
-  \begin{Code}
-  <MySaladSelect
-      options={foundations}
-      value={foundation}
-      onChange={onFoundationChange}
-  />
-  \end{Code}
-  \emph{Reflection question 3:} Should you move the foundation state to the \code{MySaladSelect} component above? To answer this you need to consider who is using this information.
+  \item Read and understand what should be stored in the component state, see \\\url{https://react.dev/learn/thinking-in-react#step-3-find-the-minimal-but-complete-representation-of-ui-state}.
 
-\item Implement the remaining part of the compose salad form. Protein and dressing should be straight forward using the \code{<MySaladSelect>} component. Add one more component containing the checkboxes for selecting extras. Doesn't the component re-render when you update the extras object. Read about updating objects in state in reacts documentation: \url{https://react.dev/learn/updating-objects-in-state}
+  \item We have two states entities related to salads:
+  \begin{enumerate}
+    \item The compose salad form state, which changes while the user is composing a salad. This state should be local to \code{ComposeSalad}. 
+    \item The list of salads in the shopping basket. This state is created and modified by \code{ComposeSalad} when the user submits the form, and viewed by \code{ViewOrder} which we will write later. This state belongs to a common ancestor of the producer/viewer, the \code{App} component.
+  \end{enumerate}
+  
+  \item You will use a html form with select and check boxes to compose the salad. Use the controlled component pattern. The html form must view the \code{ComposeSalad} state. Not the other way around (never read the form state from the DOM). Instead, add listeners and update the state based on user actions. The React state is the ``single source of truth''. (Follow the pattern from the foundation \code{<select>}, state and event handler above)
+  
+  \item The user must select: one foundation, one protein, two or more extras, and one dressing. The \code{Salad} class from lab 1 is not suitable to work with here. Instead use a state variable containing a string for each of foundation, protein and dressing. Use a state variable containing an object for the extras, as indicated by the initial state of \code{extras}. Add and remove properties from the object as the user selects and removes the extras from the salad.
+
+  \item Remember that state must be immutable. Do not modify the extras object, make a copy for each change. See \url{https://react.dev/learn/updating-objects-in-state}
+
+  \item For checkboxes, the state of the DOM-element is stored in the attribute \code{checked} (for other \code{<input>} types, the DOM state is stored in the property \code{value}).
+  
+  \item Do not assign \code{undefined} to a html attribute. It might be converted to the string \code{"undefined"}, which is \code{true}. To avoid this, you can use the JavaScript short circuit behaviour of \code{||} \code{<input checked=(extras['Tomat'] || false)>}, or do an explicit type conversion: \code{Boolean(extras['Tomat'])}, or \code{!!extras['Tomat']}.
+
+  \item \code{<input>} elements have a \code{name} attribute. Use this to pass additional information to your event handlers:
+  \code{<input type=checkbox name='Tomat' checked=!!extras['Tomat']>}. Read the name  attribute from the event object: \code{event.target.name}.
+
+  \item Feel free to use this code, but only if you understand it: \\\code{const newExtra = \{ ...extra, [event.target.name]: event.target.checked\}}
+  
+  \item You might get a long an hard to read render function as you add more parts to the form. Having many \code{<div>}, \code{<select>}, and \code{<option>} elements in the same render funktion makes it really hard to see what belongs to which part of the GUI. Also, parts of the form is very similar, for example \code{<select>} for foundation, protein, and dressing. It is good to divide large components to smaller, and use components for repeated code, for example the selects for foundation, protein and dressing. This is what I introduced in my solution:
+  \begin{Code}
+      <Select label="Välj innehållet i din sallad"
+        onChange={handelFoundation}
+        value={foundation}
+        options={foundationList}>
+      </Select>
+  \end{Code}
+  \emph{Reflection question 3:} Should you move the foundation state to the \code{Select} component above? To answer this you need to consider what happens when the user submits the form.
+
+  \item Remember that the \code{id} of each HTML element must be unique on a page. You will have three instances of the \code{<Select>} component and each of the inner \code{<select>} HTML elements must have different ids. The react hook \code{useId()} generates id that are unique and persistent over renderings:
+\begin{Code}
+function Select({ label, onChange, value, options }) {
+  const id = useId();
+  return (
+    ...
+    <label forhtml={id} className="form-label">{label}</label>
+    <select onChange={onChange} value={value} className="form-select" id={id}>
+  ...
+  );
+}
+\end{Code}
+
 
 \item Requirements:
 \begin{itemize}
-  \item The form should limit the selection to one foundation, one protein, zero or more extras, and one dressing. Use the html element \code{<select value=\{stateValue\}>} for foundation, protein, and dressing. Use one \code{<input type=checkbox name={nameOfExtra} checked=\{stateValue\}>} for each of the extras the customer can choose.
-
-For checkboxes, the state of the DOM-element is stored in the attribute \code{checked} (for other \code{<input>} types, the DOM state is stored in the property \code{value}). Do not assign \code{undefined} to it. To avoid this, you can use the JavaScript short circuit behaviour of \code{||} \code{<input checked=(extras['Tomat'] || false)>}, or do an explicit type conversion: \code{Boolean(extras['Tomat'])}.
-  \item \code{<imput>} elements have a \code{name} attribute. For checkboxes you can use it to store which ingredient it represents. In your callback function it is available in \code{event.target.name}.
 
   \item You do not need to support portion size (gourmet salad).
 
