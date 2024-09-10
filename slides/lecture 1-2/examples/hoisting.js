@@ -13,3 +13,4 @@ function hoistedFun() {
   return 'function declaration';
 }
 console.log(hoistedFun());
+
