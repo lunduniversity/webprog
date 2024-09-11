@@ -8,7 +8,7 @@ Document Object Model\\
 \begin{itemize}\color{structure}
   \item a web page/html is a tree
   \item the nodes are the HTML elements
-  \item HTML attriburtes are attributes in the nodes
+  \item HTML attributes are attributes in the nodes
   \item \html{<html>} is the root of the tree
 \end{itemize}
 \end{frame}
@@ -39,7 +39,7 @@ Document Object Model\\
 (not part of the course)\\
 \begin{itemize}\color{structure}
 \item jQuery is an old library for simple access to and modification of the DOM
-\item deprecated use react, vju, angular, or any modern framework
+\item deprecated, use react, vju, angular, or any modern framework
 \item common to find references in examples and on Stack Overflow et.c.
 \item all functions are place under \$ in the global namespace
 \item now you can guess what \code{$(".test").hide()} does\\ \emph{Hint:} jQuery use the same pattern matching syntax as css
@@ -84,7 +84,7 @@ Document Object Model\\
 \color{structure}
 
 \begin{itemize}\color{structure}
-\item not all events propagate, \code{focus} do not.
+\item most, but not all events propagate, \code{focus} do not.
 \item \code{this}===\code{event.currentTarget}, the DOM element containing the handler
 \item \code{event.target} the source of the event, a DOM element
 \item event propagates trough the DOMen, three phases:
@@ -101,22 +101,23 @@ Document Object Model\\
 
 %---------------------------------------------------------------------------------
 \begin{frame}[fragile]
-\frametitle{Forms}
+\frametitle{Default Actions}
 \color{structure}
-
-\begin{lstlisting}[style=htmlcssjs]
-<form onsubmit="myFunction(event)">
-  <label for="id-checkbox">Checkbox:</label>
-  <input type="checkbox" id="id-checkbox"/>
-  <input type="submit" value="Send Request">
-</form>
-\end{lstlisting}
-
-Form submission is default behaviour for many events (click on submit button, enter in input field)
 \begin{itemize}
-  \item submit the form using HTTP
-  \item the server responds with a new html-page
-  \item the browser renders the new page
+  \item some events have default actions
+  \item managed by the browser after the bubble phanse
+  \item example: navigation and form submission
+  \item A \code{submit} event is created when the form is submitted
+\begin{itemize}
+  \item created by other events (click on submit button, enter in input field)
+  \item do not intercept the underlying event, subscribe to \code{submit}
+  \item default behaviour:
+  \begin{enumerate}
+    \item send form data to a server using HTTP
+    \item the server responds with a new html-page
+    \item the browser renders the new page
+  \end{enumerate}
+\end{itemize}
 \end{itemize}
 
 \end{frame}

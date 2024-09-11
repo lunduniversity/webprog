@@ -16,7 +16,7 @@
 
   <body>
     <h1>Hello World</h1>
-    <p id="my-blue-box">My awsome page.
+    <p>This is my page. It is awesome.
   </body>
 </html>
 \end{lstlisting}
@@ -47,29 +47,47 @@ Learn more about HTML tags \url{https://developer.mozilla.org/en-US/docs/Web/HTM
 \begin{frame}[fragile]
 \frametitle{HTML - elements}
 \color{structure}
-Data:
 \begin{itemize}\color{structure}
-\item between the tags: \html{<h1>My Headline</h1>}
-  \begin{itemize}\color{structure}
-  \item is rendered
-  \item text 
-  \item may include other html-elements 
+  \item syntax:
+  \begin{itemize} 
+    \item \html{<tag-name attr1="v1" attr2="v2">content</tag-name>}
   \end{itemize}
+  \item \html{</end-tag>}
+  \begin{itemize} 
+    \item optional for some tags
+    \item required for some tags
+  \end{itemize}
+  \item content:
+  \begin{itemize} 
+    \item sequence of text and HTML-elements
+    \item rendered on the page
+  \end{itemize}
+  \item proper nesting among elements is required
 \end{itemize}
 
+\end{frame}
+
+%---------------------------------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{HTML - attributes}
+\color{structure}
+
+\html{<a href="http://cs.lth.se">my link</a>} 
+
 \begin{itemize}\color{structure}
-\item attributes: \html{<a href="http://cs.lth.se">my link</a>} 
+  \item always text, use double quotation marks
+  \item semantics depends on tag-name
+  \item common/special attributes:
   \begin{itemize}\color{structure}
-    \item text is not shown on screen
-    \item only text
+    \item \html{id} - optional attribute, unique on a page\\ can be used to find/refer to an element
+    \item \html{for} - refer to another element, uses the \html{id}
+    \item \html{name} - reference in some context, for example in \html{<form>}
+    \item \html{tabindex} - makes the element focusable
+    \item \html{aria-*} - accessibility, aid for screen readers, when no other textual representation exists
+    \item \html{style} - used for styling
+    \item \html{class} - used for styling (do not relate to JavaScript classes)
   \end{itemize}
-  \item \html{id} - optional attribute, unique for each element\\ can be used to find/refer to an element
-  \item \html{class} - used for styling (do not relate to JavaScript classes)
-  \item \html{name} - reference in some context, for example in \html{<form>}
-  \item \html{aria-label} - aid for screen readers, when no other textual representation exists
 \end{itemize}
-\bigskip
-tag + content $\approx$ element
 \end{frame}
 
 %---------------------------------------------------------------------------------
@@ -78,17 +96,17 @@ tag + content $\approx$ element
 \begin{lstlisting}[style=htmlcssjs]
 <form>
   <div>
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" id="exampleInputEmail1" placeholder="name@example.com" aria-describedby="emailHelp">
-    <div id="emailHelp">We'll never share your email with anyone else.</div>
+    <label for="email-id">Email address</label>
+    <input type="email"  name="email-name" id="email-id" placeholder="name@example.com">
+    <p>We'll never share your email with anyone else.
   </div>
   <div>
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" id="exampleInputPassword1">
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password">
   </div>
   <div>
-    <input type="checkbox" id="exampleCheck1">
-    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+    <input type="checkbox" id="check">
+    <label for="check">remember me</label>
   </div>
   <button type="submit">Submit</button>
 </form>
