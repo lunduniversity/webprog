@@ -89,9 +89,9 @@ function ComposeSalad(props) {
     <div className="continer col-12">
       <div className="row h-200 p-5 bg-light border rounded-3">
         <h2>Välj innehållet i din sallad</h2>
-        <fieldset class="col-md-12">
-          <label for="foundation" class="form-label">Välj bas</label>
-          <select value="Sallad" class="form-select" id="foundation">
+        <fieldset className="col-md-12">
+          <label htmlFor="foundation" className="form-label">Välj bas</label>
+          <select value="Sallad" className="form-select" id="foundation">
             <option key="Sallad" value="Sallad">Salad</option>
             <option key="Pasta" value="Pasta">Pasta</option>
           </select>
@@ -103,6 +103,7 @@ function ComposeSalad(props) {
 }
 export default ComposeSalad;
 \end{Code}
+
 \noindent Add it to your App:
 \begin{Code}
 import ComposeSalad from './ComposeSalad';
@@ -186,7 +187,7 @@ function Select({ label, onChange, value, options }) {
   const id = useId();
   return (
     ...
-    <label forhtml={id} className="form-label">{label}</label>
+    <label htmlFor={id} className="form-label">{label}</label>
     <select onChange={onChange} value={value} className="form-select" id={id}>
   ...
   );
