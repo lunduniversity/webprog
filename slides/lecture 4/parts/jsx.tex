@@ -1,0 +1,83 @@
+%--- JSX ------------------------------------------------------------------------------
+\section{JSX - Build the DOM with expressions}
+%--- JSX------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{JSX}
+\begin{itemize}
+  \item looks like html, built from ``html tags'' and react components
+  \item all tags must be closed, xml syntax works: \code{<img />}
+  \item one root element
+  \item children: a singel element, or an array of elements
+  \item use () to avoid automatic semicolon insertion!!!
+  \item Babel compiles JSX down to \code{React.createElement()} calls
+\end{itemize}
+
+\begin{CodeBox}{}
+const element = (
+<>
+  <h1>Hello, world!</h1>
+  <p>Some more text...</p>
+</>);
+\end{CodeBox}
+\end{frame}
+
+%--- JSX attributes------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{JSX attributes}
+\begin{itemize}
+  \item JSX elements can have attributes
+  \item React DOM uses camelCase
+  \item html: \code{class}, JSX: \code{className}
+  \item html: \code{for}, JSX: \code{htmlFor}
+  \item mapps to html attributes when injected to the DOM
+\end{itemize}
+
+\vspace{8mm}
+\begin{CodeBox}{}
+const element1 = <div tabIndex="0"></div>;
+const element2 = <img src="picture.jpeg" />;
+\end{CodeBox}
+\end{frame}
+
+%--- Embedded JavaScript ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Embedded JavaScript}
+JSX can contain embedded JavaScript
+\begin{itemize}
+  \item syntax: \{ \emph{JavaScript expression} \}
+  \item use in:
+  \begin{itemize}
+    \item attribute values
+    \item element content
+  \end{itemize}
+  \item the embedded JavaScript expression may evaluate to another JSX expression
+\end{itemize}
+\vspace{3mm}
+\begin{CodeBox}{}
+const name = 'Per';
+const element1 = <h1>Hello {name}</h1>;
+
+const imgSrc = 'picture.jpeg';
+const element2 = <img src={imgSrc} />;
+
+const element3 = (<span>{element1}
+  <p>You are transformed to {doSomeMagic(name)}</p></span>);
+\end{CodeBox}
+\end{frame}
+
+%--- Condition and iteration ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Condition and iteration}
+Use JavaScript for conditional rendering and iteration
+\begin{CodeBox}{}
+function MyWarning({msg}) {
+  return (<h1>
+               {msg ? msg : "Well done" }
+               {msg || "Well done" }
+           </h1>);
+}
+
+function TodoList({arrayOfTodos}) {
+  return (<ul>
+              {arrayOfTodos.map(todo => <li>{todo}</li>)};
+            </ul>);
+}
+\end{CodeBox}
+\end{frame}
+

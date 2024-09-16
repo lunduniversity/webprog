@@ -1,0 +1,348 @@
+%--- Hooks ------------------------------------------------------------------------------
+\section{Hooks ---\\escape hatches \\let you``step outside'' React}
+
+%--- React Basics ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{React Basics}
+Life of a component
+\begin{itemize}
+  \item mount
+  \item update
+  \item unmount
+\end{itemize}
+Update --- render function
+\begin{itemize}
+  \item computes the react DOM tree from \code{props} and state
+  \item must be pure
+  \item no control of when or how often it is called (console.log will be messy)
+\end{itemize}
+\vspace{5mm}
+Event handlers
+\begin{itemize}
+  \item call is triggered by user actions
+  \item may change state
+\end{itemize}
+\end{frame}
+
+%--- Hooks ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Hooks}
+\begin{itemize}
+  \item escapes the limitations of ``React basics''
+  \item hooks into the internals of react
+  \item covers more use cases than react basics
+  \item named \code{useSomething()}
+  \item you have seen \code{useState()} and \code{useRef()}
+  \item there are many more
+\end{itemize}
+\vspace{5mm}
+Rules of hooks:
+\begin{itemize}
+  \item called from render code directly, or other hooks
+  \item must be called in the same order every re-render
+  \item only call from top level code (not insida conditions or loops)
+\end{itemize}
+\end{frame}
+
+%--- Effects ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Effects}
+``side effects that are caused by rendering itself, rather than by a particular event''
+\begin{itemize}
+  \item example: fetch data from a server when the component is viewed
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+import { useEffect } from 'react';
+
+function MyComponent() {
+  useEffect(() => {
+    // Code here will run after *every* render
+  });
+  return <div />;
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Effects ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Effects}
+\begin{CodeBox}{}
+useEffect(() => {
+  // initialisation_code
+  return 
+    () => {/* clean_up_code */}
+  }, [list of dependencies]);
+\end{CodeBox}
+\vspace{5mm}
+\begin{itemize}
+  \item \code{initialisation_code} is always followed by \code{clean_up_code}
+  \item \code{initialisation_code} is run after component is mounted in the DOM, and when a variable in the dependency list is updated
+  \item \code{clean_up_code} is run when the component is removed from the DOM and before \code{initialisation_code} is run due to a value change
+  \item \code{list of dependencies} --- must be all \code{props}/state read
+\end{itemize}
+\end{frame}
+
+%--- Effects - Ticker------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Effects in Ticker example}
+\begin{CodeBox}{}
+import { useEffect, useState } from 'react';
+
+function Ticker({delay}) {
+  const [cnt, setCnt] = useState(0);
+  
+  useEffect(() => {
+    const id = setInterval(_=> setCnt(cnt => cnt+1), delay);
+    return () => {clearInterval(id)}
+  }, [delay]);
+  
+  return (<p> ticks: {cnt} </p>);
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Effects - Ticker run------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Effects - Running Ticker}
+component mounts:
+\begin{itemize}
+  \item run \code{initialisation\_code} (closure 1)
+\end{itemize}
+\code{delay} is changed:
+\begin{itemize}
+  \item run \code{clean\_up\_code} (closure 1)
+  \item run \code{initialisation\_code} (closure 2)
+\end{itemize}
+\code{delay} is changed:
+\begin{itemize}
+  \item run \code{clean\_up\_code} (closure 2)
+  \item run \code{initialisation\_code} (closure 3)
+\end{itemize}
+\ldots
+component is deleted:
+\begin{itemize}
+  \item run \code{clean\_up\_code} (closure 3)
+\end{itemize}
+\end{frame}
+
+%--- Effects - Development mode ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Effects - Development mode}
+In development mode:
+\begin{itemize}
+  \item components are mounted twice (and deleted once)
+  \item stress test the clean up code in effects
+  \item will mess upp any \code{console.log}
+\end{itemize}
+\end{frame}
+
+%--- Context ------------------------------------------------------------------------------
+\section{Context ---\\broadcasting in a tree}
+
+%--- Context, broadcasting in a tree ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Context, broadcasting in a tree}
+\begin{itemize}
+  \item \code{props} are convenient when communication components are few and close
+  \item do not scale
+  \item context can broadcast a value to all components in a tree
+  \item three steps:
+  \begin{itemize}
+    \item create the context
+    \item provide the value for a subtree
+    \item us the value in a component
+   \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Context, create ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Context, create}
+
+\begin{CodeBox}{Create the context in a separate file: MyContext.js}
+import { createContext } from "react";
+
+export const MyContext = createContext('default value');
+\end{CodeBox}
+\end{frame}
+
+%--- Context, provide ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Context, provide a value}
+\begin{CodeBox}{Provide a value in a JSX expression}
+import { MyContext } from 'MyContext';
+
+function App() {
+  return (
+    <MyContext.Provider value={'top level'}>
+      <ViewMyContext />
+      <MyContext.Provider value={'subtree'}>
+        <ViewMyContext />
+      </MyContext.Provider>
+    </MyContext.Provider>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Context, use ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Context, use}
+
+\begin{CodeBox}{Use the context in a component}
+import { useContext } from 'react';
+import { MyContext } from './MyContext.js';
+
+export function ViewMyContext() {
+  const myValue = useContext(MyContext);
+  return <p>context is: {myValue}</p>
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Reducer ------------------------------------------------------------------------------
+\section{Reducers ---\\Separating state logic}
+
+\begin{frame}[fragile] \frametitle{Reducers}
+Using handelrs:
+\begin{itemize}
+  \item \code{nextState = handler(event, currentState)}
+  \item mixing UI code with state logic
+  \item hard to reuse state logic in different UI components
+\end{itemize}
+\vspace{5mm}
+Reducers
+\begin{itemize}
+  \item separate view (render) from state logic (reducer) 
+  \item UI code emits actions, reducer manage state
+  \item pure function: \code{nextState = reducer(action, currentState)}
+  \item easy to test state logic
+  \item easy to reuse state logic
+  \item clear which operations are allowed on the state
+\end{itemize}
+\end{frame}
+
+%--- Action ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Action --- a plain JavaScript object}
+\begin{itemize}
+  \item \code{type} property, which action to execute on the state
+  \item contains all information needed to perform the action
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+{
+  type: "Add TODO",
+  task: { id, text, moreData}
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Reducer ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Reducer --- a pure JavaScript function}
+\begin{CodeBox}{}
+function tasksReducer(tasks, action) {
+  switch (action.type) {
+    case 'Delete TODO': {
+      return tasks.filter((t) => t.id !== action.id);
+    }
+    // more actions
+    default: {
+      throw Error('Unknown action: ' + action.type);
+    }
+  }
+}
+\end{CodeBox}
+\end{frame}
+
+%--- useReducer ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{useReducer}
+\begin{CodeBox}{}
+function MyComponent() {
+  const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+  
+  function handleDeleteTask(task) {
+    dispatch({
+      type: 'Delete TODO',
+      id: task.id,
+    });
+  }
+  
+  return <button onChange={handleDeleteTask}>delete</button>}
+}
+\end{CodeBox}
+\end{frame}
+
+%--- TODO ------------------------------------------------------------------------------
+\section{Redux ---\\ combining context and reducers}
+\begin{frame}[fragile] \frametitle{Redux}
+\begin{itemize}
+  \item first introduced by facebook (called flux then)
+  \item soved the never ending message count bug
+  \item simplifies component dependencies
+  \item component $\rightarrow$ store $\rightarrow$ component
+  \item store --- singel global app state
+\end{itemize}
+\end{frame}
+
+%--- Redux ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Redux --- TasksContext.js}
+\begin{CodeBox}{}
+const TasksContext = createContext(null);
+const TasksDispatchContext = createContext(null);
+
+export function useTasks() {
+  return useContext(TasksContext);
+}
+
+export function useTasksDispatch() {
+  return useContext(TasksDispatchContext);
+}
+
+function tasksReducer(tasks, action) {
+  // your code
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Redux ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Redux --- TasksContext.js}
+\begin{CodeBox}{}
+export function TasksProvider({ children }) {
+  const [tasks, dispatch] = useReducer(
+    tasksReducer,
+    initialTasks
+  );
+
+  return (
+    <TasksContext.Provider value={tasks}>
+      <TasksDispatchContext.Provider value={dispatch}>
+        {children}
+      </TasksDispatchContext.Provider>
+    </TasksContext.Provider>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Redux ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Redux --- App.js}
+\begin{CodeBox}{}
+function App() {
+  return (
+    <TasksProvider>
+      <MyAppComponents />
+    </TasksProvider>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Redux ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Redux --- TaskList.js}
+\begin{CodeBox}{}
+function TaskList() {
+  const tasks = useTasks();
+  const dispatch = useTasksDispatch();
+
+  function handleDelete(task){
+        dispatch({
+            type: 'Delete TODO',
+            task
+  });}
+  
+  return (<>tasks.map(todo => (
+               <ViewTODO onDelete={handleDelete} data={task} />)
+             </>);
+}
+\end{CodeBox}
+\end{frame}

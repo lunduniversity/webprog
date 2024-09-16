@@ -1,0 +1,65 @@
+%--- Summary ------------------------------------------------------------------------------
+\section{Summary ---\\ Rules of React}
+%--- Summary - Render Functions ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of React}
+render functions
+\begin{itemize}
+  \item called by react, when needed
+  \item must be pure function of \code{props} and state (\code{useState}, \code{useReducer})
+  \item no side effects, do not update state
+  \item may use hooks
+\end{itemize}
+\end{frame}
+%--- Summary - Event Handlers ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of React}
+event handlers and callback passed to \code{useEffect}
+\begin{itemize}
+  \item called after rendering
+  \item update state to trigger re-render
+  \item declare inside component function
+  \begin{itemize}
+    \item operates on data viewed by the user
+    \item may update state: \code{setState} and \code{dispatch} in the closure
+    \item latest state: \code{setState(currentState => computeNewState)}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%--- Summary - State ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of React}
+state
+\begin{itemize}
+  \item owned by react
+  \item read by render function
+  \begin{itemize}
+    \item \code{useState}
+    \item \code{useReducer}
+  \end{itemize}
+  \item update
+  \begin{itemize}
+    \item only event handlers and effect callbacks may call \code{setState} and \code{dispatch}
+    \item reducers computes the next state
+  \end{itemize}
+  \item immutable data structure
+\end{itemize}
+\end{frame}
+%--- Summary - Hooks ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of React}
+hooks
+\begin{itemize}
+  \item called by your render code and custom hooks
+  \item must be called in the same sequence every re-rener
+  \item call from top level, not in conditions or loops
+  \item may call other hooks
+  \item pure functions
+\end{itemize}
+\end{frame}
+%--- Summary - Reducers ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of React}
+reducer
+\begin{itemize}
+  \item called by react, once for each a \code{dispatch()}
+  \item pure function of previous state and the action
+  \item computes the next state
+  \item remember, state is immutable
+\end{itemize}
+\end{frame}

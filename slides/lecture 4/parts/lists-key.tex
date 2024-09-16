@@ -1,0 +1,40 @@
+%--- Lists and key ------------------------------------------------------------------------------
+\section{Lists and key}
+%--- Lists and key------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Lists and key}
+\begin{itemize}
+  \item JavaScript embedded in JSX may return a collection of react elements
+  \item updating the DOM is expensive
+  \item react only update parts of the DOM that have changed
+  \item you must help react understand how an array changes:
+  \begin{itemize}
+    \item each element must have a \code{key} property
+    \item unique among siblings
+    \item the value must be preserved over time
+    \item avoid array index as key (changes when elements are deleted)
+  \end{itemize}
+  \item using the key react can differentiate:
+  \begin{itemize}
+    \item element value changed --- state is preserved
+    \item element was replaced in the list --- new state
+    \item elements was deleted from the list
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Key example------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{\code{key} example}
+
+\begin{CodeBox}{}
+function MyList(props) { return (
+  <ul>
+    {props.list.map(row => (
+      <li key={row.id}>
+        {row.text}
+      </li>
+    ))}
+  </ul>);
+}
+\end{CodeBox}
+\end{frame}
+

@@ -1,0 +1,217 @@
+%--- Event Handling ------------------------------------------------------------------------------
+\section{Event Handling}
+%--- Handling Events------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Handling Events}
+\begin{itemize}
+  \item use the HTML event subscription mechanism
+  \item attributes are camelCase
+  \item attribute value a function: \code{onClick =\{myCallbackFunction\}}
+  \item called with one argument, a synthetic event according to the W3C spec
+  \item must use \code{preventDefault} to prevent default action
+\end{itemize}
+\begin{CodeBox}{}
+function ActionLink() {
+  function handleClick(e) {
+    e.preventDefault();
+    console.log('The link was clicked.');
+  }
+  return (
+    <a href="#" onClick={handleClick}>Click me</a>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- State ------------------------------------------------------------------------------
+\section{State}
+%--- Component State------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Component State}
+State is a components memory:
+  \begin{itemize}
+    \item preserves data between renderings
+    \item managed by react
+    \item use state hook to get a snapshot of the state
+    \item update using a set function
+  \end{itemize}
+\end{frame}
+
+%--- State Example ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{useState hook}
+\begin{CodeBox}{}
+function MyButton() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Clicked {count} times
+    </button>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Rules of components ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of Components}
+Rules of components
+\begin{enumerate}
+  \item the render function must be a pure function of \code{props} and state
+  \item state must be immutable
+\end{enumerate}
+
+\end{frame}
+
+%--- Render Cycle ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Render Cycle}
+\begin{enumerate}
+  \item render all components marked for update
+  \item commit - update the DOM
+  \item wait for external event
+  \item call all event handlers
+  \begin{itemize}
+    \item event handlers call the \code{setState} function
+    \item react queues all state updates
+  \end{itemize}
+  \item execute the state updates in the queue
+\begin{CodeBox}{}
+if (!Object.is(oldState, newState) && !sameProps() {
+  markComponentForUpdate
+ }
+\end{CodeBox}
+ \item goto 1
+\end{enumerate}
+\end{frame}
+
+%--- Rules of components ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of Components}
+Rules of components
+\begin{enumerate}
+  \item the render function must be a pure function of \code{props} and state
+  \item state must be immutable
+\end{enumerate}
+
+\vspace{5mm}
+Observations
+\begin{itemize}
+  \item if the render depends on other values that change
+  \begin{itemize}
+    \item the component will not re-render when needed
+  \end{itemize}
+  \item the render function may not have side effects
+  \begin{itemize}
+    \item the side effect may happen to to often or to seldom
+  \end{itemize}
+  \item render function may not call \code{setState}
+  \begin{itemize}
+    \item if you do, react will go to a infinit render-update loop
+  \end{itemize}
+  \item in render functions - treat state as read only, if not:
+  \begin{itemize}
+    \item different components will render different versions of the state
+    \item the component may not re-render when needed
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Rules for State ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rules of Components - State}
+\begin{itemize}
+  \item event handlers may call \code{setState}
+  \item event handlers are local functions in the render function
+  \begin{itemize}
+    \item \code{const [state, setState] = useState()} is in the closure
+    \item \code{setState} do not change the local variable
+    \item re-render $\rightarrow$ new closure and event handler functions
+    \item handlers always have the state viewed by the user
+  \end{itemize}
+  \item react updates the state after all event handlers finish
+  \begin{itemize}
+    \item all render functions see the same App state
+  \end{itemize}
+  \item re-rendering is triggered by:
+  \begin{itemize}
+    \item a new state value/object
+    \item new \code{props}
+  \end{itemize}
+  \item the state must be an immutable data structure, copy and modify
+\end{itemize}
+\end{frame}
+
+%--- Object and Array in State ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Object and Array in State}
+\begin{itemize}
+  \item copy object: \code{newState = \{...oldState\}}
+  \item copy array:
+  \begin{itemize}
+    \item \code{newState = \[...oldState\]}
+    \item \code{newState = oldState.map(}\\
+                 \code{(e, index) => index===modifyIndex ? newElement : e)}
+  \end{itemize}
+  \item safe array functions: 
+  \begin{itemize} 
+    \item \code{concat, filter, slice, map}
+    \item or copy first \code{[...arr]}
+  \end{itemize}
+  \item deep structures, copy all objects on the path \emph{root $\rightarrow$ modified value}\\ \code{ \{outer..., inner: \{ outer.inner, v: newValue \}\}}
+\end{itemize}
+\end{frame}
+
+%--- State over time ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{State over time}
+\begin{CodeBox}{use state at render time:}
+const [cnt, setCnt] = useState(0);
+handleClick(){
+  setCnt(cnt+1);
+  setCnt(cnt+1);
+}
+\end{CodeBox}
+
+\begin{CodeBox}{use the latest state:}
+const [cnt, setCnt] = useState(0);
+handleClick(){
+  setCnt(latestCnt => latestCnt + 1);
+  setCnt(latestCnt => latestCnt + 1);
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Lifting State Up ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Lifting State Up}
+Child $\rightarrow$ Parent communication
+\begin{itemize}
+  \item prop pass data down in the tree
+  \item data can be any JavaScript value, including functions
+  \item pass a \code{callBackFunction} function:
+  \begin{itemize}
+    \item \code{callBackFunction} can update the parents state (closure)
+    \item only use in handlers, never during rendering
+  \end{itemize}
+\end{itemize}
+Sibling $\leftrightarrow$ Sibling communication
+\begin{itemize}
+  \item lift state up - store the state in their nearest common ancestor
+  \item drill down - pass the state trough all intermediate components using \code{props}
+\end{itemize}
+\end{frame}
+
+%--- Lifting State Up Example ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Lifting State Up}
+\begin{CodeBox}{}
+function GreatestCommonAncestor() {
+  const [cnt, setCnt] = useState(0);
+  function handleClick() { setCnt(cnt + 1); }
+  return (<><MyView cnt={cnt} /><MyButton cnt={cnt} onClick={handleClick} /></>)
+}
+
+function MyView({ cnt }) {
+  return (<p>counter is {cnt}</p>);
+}
+function MyButton({ cnt, onClick }) {
+  return (<button onClick={onClick}>you have clicked me {cnt} times</button>);
+}
+\end{CodeBox}
+\end{frame}
+

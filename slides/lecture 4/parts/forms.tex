@@ -1,0 +1,124 @@
+%--- React Components ------------------------------------------------------------------------------
+\section{Forms}
+%--- Forms------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Forms}
+HTML forms
+\begin{itemize}
+  \item browser adds user input to DOM elements
+  \item user input is displayed
+  \item render is not a pure function of \code{props} and state
+\end{itemize}
+\end{frame}
+
+%--- Bound Component------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Bound Component}
+\begin{itemize}
+  \item component state is the ground truth
+  \begin{itemize}
+    \item user actions updates the component state
+    \begin{itemize}
+      \item event handlers update state
+    \end{itemize}
+    \item render is a pure function of state
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Bound Component example------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Bound Component Example}
+\begin{CodeBox}{}
+function BoundComponent() {
+  const [text, setText] = useState("");
+  function handleChange(event) {
+    setText(event.target.value);
+  }
+  return (
+    <form>
+      <label htmlFor="text">Namn</label>
+      <input type="text" value={text} onChange={handleChange} id="text"></input>
+    </form>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- parametrised event handler------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Parametrised Event Handler}
+
+\begin{CodeBox}{}
+<input type="text" name="givenName" 
+  value="this.state.givenName">
+\end{CodeBox}
+
+\begin{CodeBox}{}
+const [state, setState] = useState({});
+handleInputChange(event) {
+  const target = event.target;
+  const value =
+    target.type === 'checkbox' ?
+        target.checked : target.value;
+
+  this.setState({...state, 
+    [target.name]: value
+  });
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Unbound Component------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Unbound Component}
+\begin{itemize}
+  \item let the browser manage form state
+  \begin{itemize}
+    \item read the values from the DOM
+    \item useRef() refers to the DOM element
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%--- Unbound Component example------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Unbound Component Example}
+\begin{CodeBox}{}
+function UnboundComponent() {
+  const inputRef = useRef(null);
+  function handleSubmit(event) {
+    event.preventDefault();
+    alert(inputRef.current?.value);
+  }
+  return (
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="text2">Unbound component</label>
+      <input type="text" id="text2" ref={inputRef}></input>
+    </form>
+  );
+}
+\end{CodeBox}
+\end{frame}
+
+%--- Forms, file input------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Form, file input}
+\begin{CodeBox}{}
+<input type="file"/>
+\end{CodeBox}
+\vspace{8mm}
+
+\begin{itemize}
+  \item is read-only
+  \item must be uncontrolled
+\end{itemize}
+\end{frame}
+
+%--- React Hook Form ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{React Hook Form}
+
+\begin{itemize}
+  \item in this course we focus on the basic consepts
+  \item use controlled forms during labs
+  \item exam will  only cover controlled and uncontrolled forms
+  \item feel free to use frameworks in the project
+  \item React Hook Form is a popular framework
+\end{itemize}
+\end{frame}
+
+
+

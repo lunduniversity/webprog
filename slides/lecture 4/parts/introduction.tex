@@ -38,7 +38,27 @@ Current approach: react, vue.js, angular
 \end{itemize}
 \end{frame}
 
-%--- empty page ------------------------------------------------------------------------------
-%\begin{frame}[fragile] \frametitle{}
-%\end{frame}
+%--- react------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{React render functions}
+\begin{CodeBox}{}
+function HelloWorld() {
+  return (<h1>Hello, world!</h1>);
+}
+\end{CodeBox}
+
+\vspace{8mm}
+A render function:
+\begin{itemize}
+  \item returns a DOM like tree
+  \item easy to create instances
+  \begin{itemize}
+    \item uses JSX to describe the structure
+    \item babel translates JSX to JavaScript code - builds a tree of react elements
+  \end{itemize}
+  \item react injects the tree into the DOM
+  \item re-render when needed
+\end{itemize}
+
+\end{frame}
+
 
