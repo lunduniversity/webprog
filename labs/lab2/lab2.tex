@@ -147,7 +147,7 @@ There is one more thing you need to do for the foundation. The list of options i
 \emph{Reflection question 2:} In the code above, the \code{foundations} array is computed every time the component is rendered. The inventory changes very infrequent so you might think this is inefficient. Can you cache \code{foundations} so it is only computed when \code{props.inventory} changes? Hint, read about the second parameter to \code{useEffect}, ``Learn React''/``Escape Hatches''/``Synchronizing with Effects'', \url{https://react.dev/learn/synchronizing-with-effects}. Is it a good idea? Read You Might Not Need an Effect: \url{https://react.dev/learn/you-might-not-need-an-effect}
 
 \item Complete the form in \code{ComposeSalad} for the protein, extras and dressing. The initial state of the extras has selected Bacon and Fetaost. Make sure these are pre-selected in the html form (feel free to change the initial state when this works). Read all requirements and hints bellow.
-\begin{enumerate}
+\begin{itemize}
   \item Read and understand what should be stored in the component state, see \\\url{https://react.dev/learn/thinking-in-react#step-3-find-the-minimal-but-complete-representation-of-ui-state}.
 
   \item We have two states entities related to salads:
@@ -194,6 +194,24 @@ function Select({ label, onChange, value, options }) {
 }
 \end{Code}
 
+\subsubsection{Layout}
+\begin{itemize}
+\item Layout is not the focus of this lab. Do not spend to much time fixing how the page look.
+\item Bootstrap default is a 12 column layout. You can set the number of columns. This example places 4 elements per row:
+\begin{Code}
+      <div className="row row-cols-4">
+        <span className="col">One</span>
+        <span className="col">Two</span>
+        <span className="col">Three</span>
+        <span className="col">Four</span>
+        <span className="col">Five</span>
+      </div>
+\end{Code}
+\item Use \code{className="mt-4"} (margin top) to add more space above an element. 
+\item More details can be found in the documentation
+  \\\url{https://getbootstrap.com/docs/5.3/layout/grid/}
+  \\\url{https://getbootstrap.com/docs/5.3/utilities/spacing/}
+\end{itemize}
 
 \item Requirements:
 \begin{itemize}
@@ -209,12 +227,13 @@ function Select({ label, onChange, value, options }) {
   \item React is based on the \emph{model-view} design pattern. \code{ComposeSalad} is the view and component state and \code{this.props} is the model. \code{ComposeSalad} contains all functionality for viewing the model. \code{Salad} is not aware of how it is visualised. Do not put any view details, such as html/react elements, in the \code{salad} class. This makes your data structures portable. You can reuse the \code{Salad} class in an Angular or Vue.js application.
 \end{itemize}
 
-  \item \emph{optional assignment:} add a ``Caesar Salad'' quick compose button. When the user clicks the button, the form is pre-filled with the selections for a Caesar sallad.
 
-\end{enumerate}
+\end{itemize}
 \emph{Reflection question 4:} What triggers react to call the render function and update the DOM?
 \\\emph{Reflection question 5:} When the user change the html form state (DOM), does this change the state of your component?
 \\\emph{Reflection question 6:} What is the value of \code{this} in the event handling call-back functions?
+
+\item \emph{optional assignment:} add a ``Caesar Salad'' quick compose button. When the user clicks the button, the form is pre-filled with the selections for a Caesar sallad.
 
 
 \item Handle form submission. The salad in the form should be added to a shopping cart when the user submits the form. The shopping cart should be stores in the \code{App} component.
