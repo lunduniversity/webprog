@@ -66,8 +66,14 @@ Open the bootstrap documentation to get an overview of the different bootstrap c
 %\clearpage
 \subsection*{Set up}
 
-In the first lab you created JavaScript code to manage custom made salads. In this lab you will create a web page where a user can compose and order salads. On the course canvas page you find the instructions for creating a new react project. Follow this and replace \code{App.jsx} with the one in canvas. You should now have an app with a headline, a container box listing the extras, and a footer.
-
+In the first lab you created JavaScript code to manage custom made salads. In this lab you will create a web page where a user can compose and order salads. On the course canvas page you find the instructions for creating a new react project. Follow this and replace \code{App.jsx} with the one in canvas. You should now have an app with a headline, a container box listing the extras, and a footer. You will use the \code{Salad} class from lab 1. Remember to install the \code{uuid} package:
+\begin{Code}
+npm install uuid
+\end{Code}
+You also need to copy the source file to the \code{src} directory of your vite project and export the \code{Salad} class so you can import it in your react code:
+\begin{Code}
+export default Salad;
+\end{Code}
 \subsection*{Assignments}
 
 \begin{Assignments}
