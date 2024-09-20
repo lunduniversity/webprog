@@ -250,12 +250,15 @@ export default function Navbar() {
 
 \emph{Note:} Try this: Start to compose a salad by selecting a few ingredients, switch to the view order page, and the back to the compose salad page. What do you see? An empty form. The compose salad component it is deleted when you navigate away from and a new component is created when you return to the page. Consequently any earlier state is lost. To avoid this, you can lift the form state up in the component tree (bad design) or store the component state in a persistent storage, for example \code{localstorage}. You will get hands on experience with \code{localstorage} in lab 4. There are other tricks that can be used as well, for example keep \code{ComposeSalad} in the react component tree (move it from the route configuration to App) and hide it using CSS (\code{display:none}) when the compose salad tab is not selected.
 
-\item Now you should have a working app with three pages. What happens when you order a salad? The only thing you see is that the form is cleared. You need to switch to the view order page to see it in the shopping basket. This user experience is not so good. Fix this by jumping to the view order page on a successful form submit. Read about navigating programmatically at \url{https://reactrouter.com/en/main/hooks/use-navigate}. Update \code{ComposeSalad} so it jumps to the view order page and show a confirmation message when a salad is ordered. \emph{Hint:} add a child route to \code{view-order}, example url: ``\code{/view-order/confirm/123e4567-e89b-12d3-a456-426614174000}''. This should show a confirmation for salad 123e4567-e89b-12d3-a456-426614174000 and the shopping basket. 
-\\\emph{Reflection question}: What happens if the user writes an invalid uuid in the url?
+\item Now you should have a working app with three pages. What happens when you order a salad? The only thing you see is that the form is cleared. You need to switch to the view order page to see it in the shopping basket. This user experience is not so good. Fix this by jumping to the view order page on a successful form submit. Read about navigating programmatically at \url{https://reactrouter.com/en/main/hooks/use-navigate}. Update \code{ComposeSalad} so it jumps to the view order page and show a confirmation message when a salad is ordered.
 
-\emph{Note}, you need to \code{import "bootstrap/dist/js/bootstrap.bundle.min"} for the dismiss button of bootstraps alerts to work. Place the import in \code{App}.
+\emph{Hint:} Add a child route to \code{view-order}, example url:\\ \code{/view-order/confirm/123e4567-e89b-12d3-a456-426614174000}\\ This should show the shopping basket and a confirmation for salad 123e4567-e89b-12d3-a456-426614174000.
 
-\emph{Reflection Question:} What is the meaning of a leading / in a path, the difference between \code{<Link to="view-order/confirm/123e4567-e89b-12d3-a456-426614174000" />} and \\ \code{<Link to="/view-order/confirm/123e4567-e89b-12d3-a456-426614174000" />}. Try it, look in the browser url field.
+\emph{Note:} \code{useOutletContext()} will return the context from the nearest \code{<Outlet>}. Remember to forward the shopping basket in \code{ViewOrder}.
+
+\emph{Reflection question}: What happens if the user writes an invalid uuid in the url?
+
+\emph{Reflection Question:} What is the meaning of a leading / in a path, the difference between \code{navigate("view-order/confirm/123e4567-e89b-12d3-a456-426614174000")} and \\ \code{navigate("/view-order/confirm/123e4567-e89b-12d3-a456-426614174000")}. Try it, look in the browser url field.
 
 \item \emph{Optional assignment:} Create a component, \code{ViewIngredient}, that shows the information from \code{inventory} about an ingredient, i.e vegan, lactose et.c. You should be able to navigate to the \code{ViewIngredient} component by clicking on the extras in the \code{ComposeSalad} component. To solv this, you should:
 \begin{itemize}
