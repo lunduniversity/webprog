@@ -1,0 +1,240 @@
+%--- Promise ------------------------------------------------------------------------------
+\section{Promise}
+%--- Promise------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Promise}
+\begin{itemize}
+  \item is an object
+  \item wraps a current or future value
+  \item can have the states: \emph{pending}, \emph{fulfilled}, or \emph{rejected}
+  \item a promise is \emph{settled} when  \emph{fulfilled} or \emph{rejected}
+  \item can have exactly one result or error
+  \item cannot read state
+  \item cannot read value
+\end{itemize}
+\end{frame}
+
+%--- .then------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{.then}
+\begin{itemize}
+  \item \code{.then()} gives your the result when a promise is settled
+  \item parameters are two callback functions:
+  \begin{itemize}
+    \item success handler
+    \item reject handelr
+  \end{itemize}
+  \item called asynchronously
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+myPromise.then(
+  value => handleSuccess(value),
+  errorValue => handleFailure(errorValue),
+);
+\end{CodeBox}
+\end{frame}
+
+%--- chaining------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{chaining}
+\begin{itemize}
+  \item \code{.then()} always returns a promise
+  \item the promise wraps the return value of \code{then} handler:
+  \begin{itemize}
+    \item a promise, a copy is passed on
+    \item other value is wrapped inside a new resolved promise
+    \item don not return anything, a resolved promise with the value \code{undefined}
+    \item throws an exception: the exception is wrapped into a rejected promise
+  \end{itemize}
+  \item default handler: pass the value down the chain
+\end{itemize}
+\end{frame}
+
+%--- chaining------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{chaining}
+\begin{CodeBox}{}
+fetchFile(url).then(
+  data1 => fetchFile(data1.nextUrl)
+).then(
+  data2 => fetchFile(data2.nextUrl)
+).then(
+  data3 => fetchFile(data3.nextUrl)
+).then(
+  console.log,
+  error => failedToLoadFiles(error)
+);
+\end{CodeBox}
+\end{frame}
+
+%--- chaining 2 ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{chaining --- closure}
+\begin{CodeBox}{}
+const allFiles = {};
+fetchFile("one").then(
+  data1 => {
+    allFiles.data1 = data1;
+    return fetchFile(data1.nextUrl);
+  }
+).then(
+  data2 => {
+    allFiles.data2 = data2;
+    return fetchFile(fdata2.nextUrl)
+  }
+).then(
+  data3 => {
+    allFiles.data3 = data3;
+    console.log(JSON.stringify(allFiles));
+  },
+  error => failedToLoadFiles(error)
+);
+\end{CodeBox}
+\end{frame}
+
+%--- chaining 3 ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{chaining --- pass on}
+\begin{CodeBox}{}
+fetchFile("one").then(
+  data1 => fetchFile(data1.nextUrl)
+                .then(data2 => ({data1, data2}))
+).then(
+  (acc) => fetchFile(acc.data2.nextUrl)
+                            .then(data3 => ({...acc, file3}))
+).then(
+  allFiles => console.log(JSON.stringify(allFiles)),
+  error => failedToLoadFiles(error)
+);
+\end{CodeBox}
+\end{frame}
+
+%--- catch, finally------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{catch, finally}
+\begin{itemize}
+  \item \code{.catch()} handler for rejected promises
+  \item \code{.finally()}
+  \begin{itemize}
+    \item no argument is passed to the handler
+    \item return value is ignored
+    \item the settled promise from previous link is forwarded down the chain
+  \end{itemize}
+\end{itemize}
+\begin{CodeBox}{}
+myPromise.finally(
+  () => clearInterval(id)
+).catch(
+ error => {
+   bellyUp(error);
+   return "default value";
+ }
+).then(console.log);
+\end{CodeBox}
+\end{frame}
+
+%--- Promise.all------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Promise.all}
+\begin{itemize}
+  \item takes an iterable of promises as parameter 
+  \item return a promise that will settle when all input promises settles
+  \item will contain all values of the fulfilled promises
+  \item will be rejected as soon as any of the input promises is rejected
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{Parallell fetch}
+const promises = [
+  fetchFile("one"),
+  fetchFile("two"),
+  fetchFile("three")
+];
+Promise.all(promises).then(
+  console.log
+)
+\end{CodeBox}
+\end{frame}
+
+%--- Creating Promise------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Creating a Promise}
+\begin{itemize}
+  \item \code{new Promise(resolutionFunction)}
+  \item \code{resolutionFunction} is called directly
+\end{itemize}
+\vspace{10mm}
+\begin{CodeBox}{}
+const promise1 = new Promise(
+  (resolve, reject) => setTimeout(resolve, 10*1000, 'Hello'))
+);
+const promise2 = new Promise(
+  (resolve, reject) => reject('things went bad')
+);
+\end{CodeBox}
+\end{frame}
+
+%--- Rejected state ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Rejected State}
+A promise will go to the reject state if:
+\begin{itemize}
+  \item reject is called in the \code{resolutionFunction}
+  \item \code{throw} an error in the \code{resolutionFunction}
+  \item \code{throw} an error in  \code{handler} of \code{then(handler)} or {\tt catch(handler)}
+  \item remember: run time errors throws exceptions
+  \item recommendation: pass an \code{Error} object when rejecting a \code{Promise}
+\end{itemize}
+\vspace{0mm}
+\begin{CodeBox}{}
+const promise1 = new Promise(
+  (resolve, reject) => throw new Error('things went bad')
+);
+const promise2 = promise.then( data => {
+    const ref = undefined;
+    return resolve(ref.field);
+});
+\end{CodeBox}
+\end{frame}
+
+%--- Asynchronous Functions------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Asynchronous Functions}
+\code{async function foo() \{ /* body */ \}}
+\begin{itemize}
+  \item may finish later
+  \item the body starts to execute directly
+  \item returns a \code{Promise} object, same semantic as \code{.then()}
+\end{itemize}
+\vspace{5mm}
+\begin{CodeBox}{}
+async function one() {
+  return 1;
+}
+const inc = async x => x=1;
+
+one()
+.then(inc)
+.then(console.log);
+\end{CodeBox}
+\end{frame}
+
+%--- await------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{await}
+\begin{itemize}
+  \item can only be used inside \code{async} functions or top level code
+  \item waits for a promise to settle
+  \item returns the resolved value
+  \item If the promise is rejected, the await expression throws the rejected value.
+\end{itemize}
+\end{frame}
+
+%--- await------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{await}
+\begin{CodeBox}{}
+async function fetchAll(url) {
+  try {
+    const file1 = await fetchFile(url),
+    const file2 = await fetchFile(file1.nextUrl),
+    const file3 = await fetchFile(file2.nextUrl)
+    return {file1, file2, file3};
+  } catch(e) {
+    console.log('fetchFile throw an exception');
+    throw e;
+  }
+}
+
+fetchAll("one")
+.then(console.log);
+\end{CodeBox}
+\end{frame}
+

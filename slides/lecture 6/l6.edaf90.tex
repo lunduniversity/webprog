@@ -58,7 +58,7 @@
     language=Java,
     basicstyle = \ttfamily,
     showstringspaces=false,
-    morekeywords= {undefined, NaN, function, export, var, let, async}
+    morekeywords= {await, undefined, NaN, function, export, var, let, async}
   },
   title=#2,#1
 }
@@ -70,7 +70,7 @@
     language=Java,
     basicstyle = \ttfamily,
     showstringspaces=false,
-    morekeywords= {undefined, NaN, function, export, var, let, async}
+    morekeywords= {await undefined, NaN, function, export, var, let, async}
 }
 
 %%%%%%%%%%%%%%%%%%%%%
@@ -87,11 +87,11 @@
   \titlepage
 \end{frame}
 
-%---routing ---------------------------------------------------
+%---concurrency ---------------------------------------------------
 \include{parts/concurrency}
 
-%---form validation ---------------------------------------------------
-\include{parts/validation}
+%---promise ---------------------------------------------------
+\include{parts/promise}
 
 
 %%%%%%%%%%%

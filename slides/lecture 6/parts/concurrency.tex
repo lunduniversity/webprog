@@ -26,7 +26,7 @@
 \begin{CodeBox}{}
 let balance = 1000;
 \end{CodeBox}
-Lets do two transactions in parellel:
+Lets do two transactions in parallel:
   \begin{columns}[onlytextwidth]
     \begin{column}{0.4\textwidth}
       \begin{CodeBox}{}
@@ -48,6 +48,42 @@ balance = tmp;
   \end{columns}%
 \vspace{3mm}
 \code{balance} is either 2000 or 900. One transaction is lost.
+\end{frame}
+
+%--- Race Condition------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Race Condition}
+Race condition can lead to:
+\begin{itemize}
+  \item lost transaction (previous slide)
+  \item inconsistent state
+\end{itemize}
+\vspace{3mm}
+
+\begin{CodeBox}{}
+const seq = {cnt: 1, list: ['A ']};
+\end{CodeBox}
+Lets do two transactions in parallel:
+  \begin{columns}[onlytextwidth]
+    \begin{column}{0.4\textwidth}
+      \begin{CodeBox}{}
+seq. cnt++;
+
+
+
+seq.list.push('B ');
+      \end{CodeBox}
+    \end{column}
+  \begin{column}{0.55\textwidth}
+    \begin{CodeBox}{}
+for(let i=seq.cnt-1; i>=0; i++){
+  console.log(seq.list[i]);
+}
+    \end{CodeBox}
+    \end{column}
+    \begin{column}{0.3\textwidth}  \end{column}
+  \end{columns}%
+\vspace{3mm}
+Will print: \code{A undefined}
 \end{frame}
 
 %--- strategies for concurrency------------------------------------------------------------------------------
@@ -74,14 +110,14 @@ Functional approach:
 
 %--- Locks------------------------------------------------------------------------------
 \begin{frame}[fragile] \frametitle{Locks}
+Not part of this course
 \begin{itemize}
+  \item locks are covered in: EDAP10 - Concurrent Programming
   \item to address this, locks was introduced
   \item \emph{semaphores} is the commonly used low level lock
   \item only one thread can own the lock
   \item all other needs to wait
   \item not a problem for performance, only a tiny part of the program is serialized
-  \item for this course: you only need to know what a lock is
-  \item locks are covered in: EDAP10 - Concurrent Programming
 \end{itemize}
 \end{frame}
 
@@ -89,11 +125,14 @@ Functional approach:
 \begin{frame}[fragile] \frametitle{Deadlock}
 \begin{itemize}
   \item using locks can lead to deadlocks
-  \item classical example: dining philosopers
   \item can only occur when:
   \begin{itemize}
     \item a thread holds a resource while requesting another
     \item there is a cycle in the dependency graph
+  \end{itemize}
+  \item you should know, in JavaScript:
+  \begin{itemize}
+    \item using \code{while} to wait for another function to change a variable leads to deadlock
   \end{itemize}
   \item deadlock analysis is covered in: EDAP10 - Concurrent Programming
 \end{itemize}
@@ -151,6 +190,7 @@ Common in web frameworks, e.g. react component state
   \item advantages:
   \begin{itemize}
     \item no need for locks
+    \item inconsistent state can not occur (local state)
   \end{itemize}
   \item but:
   \begin{itemize}
@@ -158,19 +198,20 @@ Common in web frameworks, e.g. react component state
     \item you should break down your app into small functions
     \item \code{alert()} is blocking.
     \item asynchronous events can cause race conditions (read/write data from server)
+    \item lost transaction can occur
   \end{itemize}
 \end{itemize}
 \vspace{5mm}
 \end{frame}
 
 %--- Call Back Functions------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Call Back Functions}
+\begin{frame}[fragile] \frametitle{How do we wait for others to finish?}
 Call Back Functions
 \begin{itemize}
   \item no need for polling
   \item are central to JavaScript programming
   \item many APIs are based on call backs
-  \item most of the application code are the call back functions
+  \item reactive programming: most of the application code are the call back functions
   \item called when events occur
   \item you can not control the order in which your call back functions are called
 \end{itemize}
@@ -183,7 +224,7 @@ Current Thread Loop manage the execution of callback functions
   \item also called \emph{Event Loop}
   \item a queue of functions to execute
   \item functions in the queue are executed one by one, in sequence
-  \item remember, JavaScript is single threaded and execution can no be interrupted
+  \item remember, JavaScript is single threaded and execution can not be interrupted
   \item DOM and network events and JavaScript code will add new call back functions to the execution queue
 \end{itemize}
 \end{frame}
@@ -241,15 +282,15 @@ console.log('one');
 Nesting callbacks are common, but leads to callback hell
 \vspace{5mm}
 \begin{CodeBox}{}
-fetchFile(url, function(error, file1) {
+fetchFile(url, function(data1, error) {
   if (error) {
     handleError(error);
   } else {
-    fetchUrl(file1.nextUrl, function(error, file2) {
+    fetchFile(data1.nextUrl, function(data2, error) {
       if (error) {
         handleError(error);
       } else {
-        fetchFile(file2.nextUrl, function(error, file3) {
+        fetchFile(data2.nextUrl, function(data3, error) {
           if (error) {
             handleError(error);
           } else {
@@ -261,240 +302,3 @@ fetchFile(url, function(error, file1) {
   }
 });\end{CodeBox}
 \end{frame}
-
-%--- Promise ------------------------------------------------------------------------------
-\section{Promise}
-%--- Promise------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Promise}
-\begin{itemize}
-  \item wraps a value that eventually will be produced
-  \item can have the states: \emph{pending}, \emph{fulfilled}, or \emph{rejected}
-  \item a promise is \emph{settled} when  \emph{fulfilled} or \emph{rejected}
-  \item can have exactly one result or error
-\end{itemize}
-\begin{CodeBox}{}
-const promise1 = new Promise(resolutionFunction);
-function resolutionFunction(resolve, reject) {
-   ... when settled ...
-   resolve(fulfilledValue);
-       or
-   reject(rejectedValue);
-}
-);
-\end{CodeBox}
-\end{frame}
-
-%---Example------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Example}
-\vspace{5mm}
-\begin{CodeBox}{}
-const promise1 = new Promise(
-  (resolve, reject) => setTimeout(resolve, 10*1000, 1))
-);
-const promise2 = new Promise(
-  (resolve, reject) => reject('things went bad')
-);
-\end{CodeBox}
-\begin{itemize}
-  \item the resolution function is executed directly
-  \item commonly have asynchronous calls, \code{resolve()} will be called later
-  \item replace callback functions in modern APIs
-\end{itemize}
-\end{frame}
-
-%--- Reject------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Reject}
-\begin{itemize}
-  \item \code{throw} an error in the resolution function is the same as calling reject
-  \item recommendation: pass an \code{Error} object when rejecting a \code{Promise}
-  \item remember: run time errors throws exceptions
-\end{itemize}
-\vspace{5mm}
-\begin{CodeBox}{}
-const promise1 = new Promise(
-  (resolve, reject) => {
-    const ref = undefined;
-    resolve(ref.field);
-});
-const promise2 = new Promise(
-  (resolve, reject) => reject('things went bad')
-);
-\end{CodeBox}
-\end{frame}
-
-%--- .then------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{.then}
-\begin{itemize}
-  \item you can not read the state, or the result directly
-  \item \code{.then()} gives your the result when a promise is settled
-  \item parameters are two callback functions:
-  \begin{itemize}
-    \item success handler
-    \item reject handelr
-  \end{itemize}
-  \item called asynchronously
-\end{itemize}
-\vspace{5mm}
-\begin{CodeBox}{}
-myPromise.then(
-  value => handleSuccess(value),
-  errorValue => handleFailure(errorValue),
-);
-\end{CodeBox}
-\end{frame}
-
-%--- chaining------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{chaining}
-\begin{itemize}
-  \item \code{.then()} always returns a promise
-  \item the promise wraps the return value of \code{then} handler:
-  \begin{itemize}
-    \item a promise, a copy is passed on
-    \item other value is wrapped inside a new resolved promise
-    \item don not return anything, a resolved promise with the value \code{undefined}
-    \item throws an exception: the exception is wrapped into a rejected promise
-  \end{itemize}
-  \item if a handler is missing, the promise passed down the chain
-\end{itemize}
-\vspace{1mm}
-\begin{CodeBox}{}
-fetchFile(url).then(
-  file1 => fetchFile(file1.nextUrl)
-).then(
-  file2 => fetchFile(file2.nextUrl)
-).then(
-  console.log,
-  error => failedToLoadFiles(error)
-);
-\end{CodeBox}
-\end{frame}
-
-%--- chaining 2 ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{chaining --- closure}
-\begin{CodeBox}{}
-const allFiles = {};
-fetchFile("one").then(
-  file1 => {
-    allFiles.file1 = file1;
-    return fetchFile(file1.nextUrl);
-  }
-).then(
-  file2 => {
-    allFiles.file2 = file2;
-    return fetchFile(file2.nextUrl)
-  }
-).then(
-  file3 => {
-    allFiles.file3 = file3;
-    console.log(JSON.stringify(allFiles));
-  },
-  error => failedToLoadFiles(error)
-);
-\end{CodeBox}
-\end{frame}
-
-%--- chaining 3 ------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{chaining --- pass on}
-\begin{CodeBox}{}
-fetchFile("one").then(
-  file1 => fetchFile(file1.nextUrl)
-                .then(file2 => ({file1, file2}))
-).then(
-  ({file1, file2}) => fetchFile(file2.nextUrl)
-                            .then(file3 => ({file1, file2, file3}))
-).then(
-  allFiles => console.log(JSON.stringify(allFiles)),
-  error => failedToLoadFiles(error)
-);
-\end{CodeBox}
-\end{frame}
-
-%--- catch, finally------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{catch, finally}
-\begin{itemize}
-  \item \code{.catch()} handler for rejected promises
-  \item \code{.finally()}
-  \begin{itemize}
-    \item handler has no parameter
-    \item pass on the input parameter
-  \end{itemize}
-\end{itemize}
-\vspace{5mm}
-\begin{CodeBox}{}
-myPromise.finally(
-  _ => { done = true; }
-).catch(
- error => {
-   bellyUp(error);
-   return "default value";
- }
-).then(console.log);
-\end{CodeBox}
-\end{frame}
-
-%--- PromiseAll ------------------------------------------------------------------------------
-\section{PromiseAll}
-%--- Promise.all------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Promise.all}
-\begin{itemize}
-  \item takes an iterable of promises as parameter 
-  \item return a promise that will settle when the input promises settles
-  \item will contain all values of the fulfilled promises
-  \item will be rejected as soon as any of the input promises is rejected
-\end{itemize}
-\vspace{5mm}
-\begin{CodeBox}{Parallell fetch}
-const promises = [
-  fetchFile("one"),
-  fetchFile("two"),
-  fetchFile("three")
-];
-Promise.all(promises).then(
-  console.log
-)
-\end{CodeBox}
-\end{frame}
-
-
-%--- Asynchronous Functions------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{Asynchronous Functions}
-\code{async function foo() \{ /* body */ \}}
-\begin{itemize}
-  \item the body starts to execute directly
-  \item returns a \code{Promise} object, same semantic as \code{.then()}
-  \item the execution continues with the code after the function call
-\end{itemize}
-\vspace{5mm}
-\begin{CodeBox}{}
-async function one() {
-  return 1;
-}
-const inc = async x => x=1;
-
-one()
-.then(inc)
-.then(console.log);
-\end{CodeBox}
-\end{frame}
-
-%--- await------------------------------------------------------------------------------
-\begin{frame}[fragile] \frametitle{await}
-\begin{itemize}
-  \item can only be used inside \code{async} functions
-  \item waits for a promise to settle
-  \item returns the resolved value
-  \item If the promise is rejected, the await expression throws the rejected value.
-\end{itemize}
-\vspace{5mm}
-\begin{CodeBox}{}
-async function fetchAll(url) {
-  file1 = await fetchFile(url),
-  file2 = await fetchFile(file1.nextUrl),
-  file3 = await fetchFile(file2.nextUrl)
-  return {file1, file2, file3};
-}
-fetchAll("one")
-.then(console.log);
-\end{CodeBox}
-\end{frame}
-
