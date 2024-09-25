@@ -126,7 +126,7 @@ properties:
     \item \code{Component} -- a react component (JavaScript function)
     \item use one of them
   \end{itemize}
-  \item \code{caseSensitive}  -- if pattern matching is case sensitive (default fale)
+  \item \code{caseSensitive}  -- if pattern matching is case sensitive (default false)
   \item \code{children} -- nested routes
   \item error handling
   \begin{itemize}
@@ -422,4 +422,26 @@ We will return to react router data API:
 \end{itemize}
 \vspace{5mm}
 Based on \code{async} functions, so we need to cover that first.
+\end{frame}
+
+%--- Data API ------------------------------------------------------------------------------
+\begin{frame}[fragile] \frametitle{Data API}
+
+Load data, in router config:
+\begin{CodeBox}{}
+{
+  path: "about",
+  loader: edaf90Loader,
+  element: <p>denna sida beskriver appen</p>,
+}
+\end{CodeBox}
+\vspace{1mm}
+Using data in component:
+\begin{CodeBox}{}
+function About() {
+  const todos = useLoaderData();
+  return (todos.map(text => (<p>{text}</p>));
+}
+\end{CodeBox}
+
 \end{frame}
