@@ -12,19 +12,6 @@ The protocols of internet are layered
 \end{itemize}
 \end{frame}
 
-%--- MAC Address ------------------------------------------------------------------------------
-\begin{frame}[fragile]\frametitle{MAC Address}
-MAC address (simplified)
-\begin{itemize}
-  \item universally unique for each network interface
-  \item static, set when manufactured
-  \item manufaturer prefix
-  \item 6 bytes, 48 bits
-  \item used by the Data Link Layer
-  \item example: 01-23-45-67-89-AB
-\end{itemize}
-\end{frame}
-
 %--- IP Address ------------------------------------------------------------------------------
 \begin{frame}[fragile]\frametitle{IP Address}
 IP address
@@ -36,7 +23,6 @@ IP address
   \item used by the Transport Layer
   \item example: IPv4: 172.16.254.1, IPv6: 2001:db8:0:1234:0:567:8:1
 \end{itemize}
-Domain Name System (DNS)
 \end{frame}
 
 %--- Domain Name System (DNS)  ------------------------------------------------------------------------------
@@ -194,8 +180,8 @@ Data manipulation operations returns the updated object in the response body.
   \item avoid verbs, the http command contains this information
   \item plural names for collections
   \item use lower case letters.
-  \item avoid CamelCase since the path of the URLs are case insensitive.
-  \item separates words using the minus sign,\\  \texttt{/piano-chair/} vs \texttt{/piano\%20chair/})
+  \item avoid CamelCase since the path of the URLs is case insensitive.
+  \item do use kebab-case,\\  \texttt{/piano-chair/} not \texttt{/piano\%20chair/})
 \end{itemize}
 \end{frame}
 
