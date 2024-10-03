@@ -114,7 +114,7 @@ async function inventoryLoader() {
 There is a delay of 500 ms befor the component is rendered. Feel free to vary this during the lab. Most of the time you want it to be 0, but increase it when working on the spinner. You can get the data returned by the loader inside a component using a hook:
 \begin{Code}
 import { useLoaderData } from 'react-router-dom';
-function ComposeSalad({ onOrder: handleOrder }) {
+function ComposeSalad() {
   const inventory = useLoaderData();
   \\ more code
 }
