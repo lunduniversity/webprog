@@ -93,7 +93,14 @@ One way to inject code:
   \item check the documentation
   \item react:
   \begin{itemize}
-    \item escapes: \code{<p>\{htmlSnippet\}</p>}
+    \item escapes all stings form JavaScript in JSX: 
+    \begin
+    {CodeBox}{}
+    function MyComponent() {
+      const param = useParam();
+      return <p>could not find user {param.user}</p>;
+    }
+    \end{CodeBox}
   \end{itemize}
 \end{itemize}
 \end{frame}
